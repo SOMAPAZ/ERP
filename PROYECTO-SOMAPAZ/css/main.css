@@ -1,0 +1,12 @@
+main {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 16px;
+  width: 95vw;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.card {
+  margin: 0 auto;
+}
