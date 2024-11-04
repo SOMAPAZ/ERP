@@ -59,11 +59,11 @@ INSERT INTO user_type VALUES(4, 'Pensionado');
 
 --Table: roles
 INSERT INTO roles VALUES
-(1, 'Admin', ''),
-(2, 'Contable', ''),
-(3, 'Dev', ''),
-(4, 'Normal', ''),
-(5, 'Eventual', ''),
+(1, 'Admin'),
+(2, 'Contable'),
+(3, 'Dev'),
+(4, 'Normal'),
+(5, 'Eventual'),
 (6, 'Campo');
 
 --Table: employments
@@ -190,4 +190,5 @@ INSERT INTO `zone` VALUES(1, 'Sin definir'),
 (62, 'Tlalconteno'),
 (63, 'Xaltetela'),
 (64, 'Xalticpac'),
-(65, 'Xoxpan');
+(65, 'Xoxpan'),
+(66, 'Centro');
