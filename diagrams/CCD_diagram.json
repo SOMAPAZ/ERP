@@ -1,0 +1,2668 @@
+{
+  "fk_info": [
+    {
+      "schema": "master_facturaction",
+      "table": "consume_intake",
+      "column": "id_consumtype",
+      "foreign_key_name": "consume_intake_id_consumtype_fk",
+      "reference_schema": "master_facturaction",
+      "reference_table": "consume_type",
+      "reference_column": "id",
+      "fk_def": "FOREIGN KEY (id_consumtype) REFERENCES consume_type(id) ON UPDATE NO ACTION ON DELETE NO ACTION"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "consume_intake",
+      "column": "id_intaketype",
+      "foreign_key_name": "consume_intake_id_intaketype_fk",
+      "reference_schema": "master_facturaction",
+      "reference_table": "intake_type",
+      "reference_column": "id",
+      "fk_def": "FOREIGN KEY (id_intaketype) REFERENCES intake_type(id) ON UPDATE NO ACTION ON DELETE NO ACTION"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "column": "id_colony",
+      "foreign_key_name": "users_id_colony_fk",
+      "reference_schema": "master_facturaction",
+      "reference_table": "colony",
+      "reference_column": "id",
+      "fk_def": "FOREIGN KEY (id_colony) REFERENCES colony(id) ON UPDATE NO ACTION ON DELETE NO ACTION"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "column": "id_consumtype",
+      "foreign_key_name": "users_id_consumtype_fk",
+      "reference_schema": "master_facturaction",
+      "reference_table": "consume_type",
+      "reference_column": "id",
+      "fk_def": "FOREIGN KEY (id_consumtype) REFERENCES consume_type(id) ON UPDATE NO ACTION ON DELETE NO ACTION"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "column": "id_intaketype",
+      "foreign_key_name": "users_id_intaketype_fk",
+      "reference_schema": "master_facturaction",
+      "reference_table": "intake_type",
+      "reference_column": "id",
+      "fk_def": "FOREIGN KEY (id_intaketype) REFERENCES intake_type(id) ON UPDATE NO ACTION ON DELETE NO ACTION"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "column": "id_locality",
+      "foreign_key_name": "users_id_locality_fk",
+      "reference_schema": "master_facturaction",
+      "reference_table": "locality",
+      "reference_column": "id",
+      "fk_def": "FOREIGN KEY (id_locality) REFERENCES locality(id) ON UPDATE NO ACTION ON DELETE NO ACTION"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "column": "id_servicestatus",
+      "foreign_key_name": "users_id_servicestatus_fk",
+      "reference_schema": "master_facturaction",
+      "reference_table": "service_status",
+      "reference_column": "id",
+      "fk_def": "FOREIGN KEY (id_servicestatus) REFERENCES service_status(id) ON UPDATE NO ACTION ON DELETE NO ACTION"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "column": "id_servicetype",
+      "foreign_key_name": "users_id_servicetype_fk",
+      "reference_schema": "master_facturaction",
+      "reference_table": "service_type",
+      "reference_column": "id",
+      "fk_def": "FOREIGN KEY (id_servicetype) REFERENCES service_type(id) ON UPDATE NO ACTION ON DELETE NO ACTION"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "column": "id_zone",
+      "foreign_key_name": "users_id_zone_fk",
+      "reference_schema": "master_facturaction",
+      "reference_table": "zone",
+      "reference_column": "id",
+      "fk_def": "FOREIGN KEY (id_zone) REFERENCES zone(id) ON UPDATE NO ACTION ON DELETE NO ACTION"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "column": "id_usertype",
+      "foreign_key_name": "users_id_usertype_fk",
+      "reference_schema": "master_facturaction",
+      "reference_table": "user_type",
+      "reference_column": "id",
+      "fk_def": "FOREIGN KEY (id_usertype) REFERENCES user_type(id) ON UPDATE NO ACTION ON DELETE NO ACTION"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payments_agreements",
+      "column": "id_status_agreement_payment",
+      "foreign_key_name": "payments_agreements_id_status_agreement_payment_fk",
+      "reference_schema": "master_facturaction",
+      "reference_table": "status_agreement_payment",
+      "reference_column": "id",
+      "fk_def": "FOREIGN KEY (id_status_agreement_payment) REFERENCES status_agreement_payment(id) ON UPDATE NO ACTION ON DELETE NO ACTION"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payments_agreements",
+      "column": "id_agreement",
+      "foreign_key_name": "payments_agreements_id_agreement_fk",
+      "reference_schema": "master_facturaction",
+      "reference_table": "agreenmets",
+      "reference_column": "id",
+      "fk_def": "FOREIGN KEY (id_agreement) REFERENCES agreenmets(id) ON UPDATE NO ACTION ON DELETE NO ACTION"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "employments",
+      "column": "id_rol",
+      "foreign_key_name": "employments_id_rol_fk",
+      "reference_schema": "master_facturaction",
+      "reference_table": "roles",
+      "reference_column": "id",
+      "fk_def": "FOREIGN KEY (id_rol) REFERENCES roles(id) ON UPDATE NO ACTION ON DELETE NO ACTION"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "agreenmets",
+      "column": "id_status_agreement",
+      "foreign_key_name": "agreements_id_status_agreement_fk",
+      "reference_schema": "master_facturaction",
+      "reference_table": "status_agreements",
+      "reference_column": "id",
+      "fk_def": "FOREIGN KEY (id_status_agreement) REFERENCES status_agreements(id) ON UPDATE NO ACTION ON DELETE NO ACTION"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "agreenmets",
+      "column": "id_user",
+      "foreign_key_name": "agreenmets_id_user_fk",
+      "reference_schema": "master_facturaction",
+      "reference_table": "users",
+      "reference_column": "id",
+      "fk_def": "FOREIGN KEY (id_user) REFERENCES users(id) ON UPDATE NO ACTION ON DELETE NO ACTION"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "agreenmets",
+      "column": "id_employment",
+      "foreign_key_name": "agreenmets_id_employments_fk",
+      "reference_schema": "master_facturaction",
+      "reference_table": "employments",
+      "reference_column": "id",
+      "fk_def": "FOREIGN KEY (id_employment) REFERENCES employments(id) ON UPDATE NO ACTION ON DELETE NO ACTION"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "invoice_history",
+      "column": "id_user",
+      "foreign_key_name": "invoice_history_id_users_fk",
+      "reference_schema": "master_facturaction",
+      "reference_table": "users",
+      "reference_column": "id",
+      "fk_def": "FOREIGN KEY (id_user) REFERENCES users(id) ON UPDATE NO ACTION ON DELETE NO ACTION"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "column": "id_user",
+      "foreign_key_name": "payment_invoice_id_users_fk",
+      "reference_schema": "master_facturaction",
+      "reference_table": "users",
+      "reference_column": "id",
+      "fk_def": "FOREIGN KEY (id_user) REFERENCES users(id) ON UPDATE NO ACTION ON DELETE NO ACTION"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "rates",
+      "column": "id_consum_intake",
+      "foreign_key_name": "rates_id_consum_intake_fk",
+      "reference_schema": "master_facturaction",
+      "reference_table": "consume_intake",
+      "reference_column": "id",
+      "fk_def": "FOREIGN KEY (id_consum_intake) REFERENCES consume_intake(id) ON UPDATE NO ACTION ON DELETE NO ACTION"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "column": "id_employment",
+      "foreign_key_name": "billing_id_employments_fk",
+      "reference_schema": "master_facturaction",
+      "reference_table": "employments",
+      "reference_column": "id",
+      "fk_def": "FOREIGN KEY (id_employment) REFERENCES employments(id) ON UPDATE NO ACTION ON DELETE NO ACTION"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "column": "id_user",
+      "foreign_key_name": "billing_id_user_fk",
+      "reference_schema": "master_facturaction",
+      "reference_table": "users",
+      "reference_column": "id",
+      "fk_def": "FOREIGN KEY (id_user) REFERENCES users(id) ON UPDATE NO ACTION ON DELETE NO ACTION"
+    }
+  ],
+  "pk_info": [
+    {
+      "schema": "master_facturaction",
+      "table": "agreenmets",
+      "column": "id",
+      "pk_def": "PRIMARY KEY (id)"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "column": "id",
+      "pk_def": "PRIMARY KEY (id)"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "colony",
+      "column": "id",
+      "pk_def": "PRIMARY KEY (id)"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "consume_intake",
+      "column": "id",
+      "pk_def": "PRIMARY KEY (id)"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "consume_type",
+      "column": "id",
+      "pk_def": "PRIMARY KEY (id)"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "employments",
+      "column": "id",
+      "pk_def": "PRIMARY KEY (id)"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "intake_type",
+      "column": "id",
+      "pk_def": "PRIMARY KEY (id)"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "invoice_history",
+      "column": "id",
+      "pk_def": "PRIMARY KEY (id)"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "locality",
+      "column": "id",
+      "pk_def": "PRIMARY KEY (id)"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "column": "id",
+      "pk_def": "PRIMARY KEY (id)"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payments_agreements",
+      "column": "id",
+      "pk_def": "PRIMARY KEY (id)"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "rates",
+      "column": "id",
+      "pk_def": "PRIMARY KEY (id)"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "roles",
+      "column": "id",
+      "pk_def": "PRIMARY KEY (id)"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "service_status",
+      "column": "id",
+      "pk_def": "PRIMARY KEY (id)"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "service_type",
+      "column": "id",
+      "pk_def": "PRIMARY KEY (id)"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "status_agreement_payment",
+      "column": "id",
+      "pk_def": "PRIMARY KEY (id)"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "status_agreements",
+      "column": "id",
+      "pk_def": "PRIMARY KEY (id)"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "user_type",
+      "column": "id",
+      "pk_def": "PRIMARY KEY (id)"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "column": "id",
+      "pk_def": "PRIMARY KEY (id)"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "zone",
+      "column": "id",
+      "pk_def": "PRIMARY KEY (id)"
+    }
+  ],
+  "columns": [
+    {
+      "schema": "master_facturaction",
+      "table": "colony",
+      "name": "id",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "1",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "colony",
+      "name": "name",
+      "type": "varchar",
+      "character_maximum_length": "240",
+      "precision": null,
+      "ordinal_position": "2",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "consume_type",
+      "name": "id",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "1",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "consume_type",
+      "name": "name",
+      "type": "varchar",
+      "character_maximum_length": "48",
+      "precision": null,
+      "ordinal_position": "2",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "intake_type",
+      "name": "id",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "1",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "intake_type",
+      "name": "name",
+      "type": "varchar",
+      "character_maximum_length": "48",
+      "precision": null,
+      "ordinal_position": "2",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "locality",
+      "name": "id",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "1",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "locality",
+      "name": "name",
+      "type": "varchar",
+      "character_maximum_length": "48",
+      "precision": null,
+      "ordinal_position": "2",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "service_status",
+      "name": "id",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "1",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "service_status",
+      "name": "name",
+      "type": "varchar",
+      "character_maximum_length": "48",
+      "precision": null,
+      "ordinal_position": "2",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "service_type",
+      "name": "id",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "1",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "service_type",
+      "name": "name",
+      "type": "varchar",
+      "character_maximum_length": "48",
+      "precision": null,
+      "ordinal_position": "2",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "user_type",
+      "name": "id",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "1",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "user_type",
+      "name": "name",
+      "type": "varchar",
+      "character_maximum_length": "48",
+      "precision": null,
+      "ordinal_position": "2",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "zone",
+      "name": "id",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "1",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "zone",
+      "name": "name",
+      "type": "varchar",
+      "character_maximum_length": "240",
+      "precision": null,
+      "ordinal_position": "2",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "status_agreements",
+      "name": "id",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "1",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "status_agreements",
+      "name": "name",
+      "type": "varchar",
+      "character_maximum_length": "240",
+      "precision": null,
+      "ordinal_position": "2",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "status_agreement_payment",
+      "name": "id",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "1",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "status_agreement_payment",
+      "name": "name",
+      "type": "varchar",
+      "character_maximum_length": "240",
+      "precision": null,
+      "ordinal_position": "2",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "roles",
+      "name": "id",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "1",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "roles",
+      "name": "name",
+      "type": "varchar",
+      "character_maximum_length": "24",
+      "precision": null,
+      "ordinal_position": "2",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "consume_intake",
+      "name": "id",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "1",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "consume_intake",
+      "name": "id_intaketype",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "2",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "consume_intake",
+      "name": "id_consumtype",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "3",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "id",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "1",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "user",
+      "type": "varchar",
+      "character_maximum_length": "240",
+      "precision": null,
+      "ordinal_position": "2",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "lastname",
+      "type": "varchar",
+      "character_maximum_length": "240",
+      "precision": null,
+      "ordinal_position": "3",
+      "nullable": true,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "phone",
+      "type": "varchar",
+      "character_maximum_length": "12",
+      "precision": null,
+      "ordinal_position": "4",
+      "nullable": true,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "address",
+      "type": "varchar",
+      "character_maximum_length": "240",
+      "precision": null,
+      "ordinal_position": "5",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "reference",
+      "type": "mediumtext",
+      "character_maximum_length": "16777215",
+      "precision": null,
+      "ordinal_position": "6",
+      "nullable": true,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "id_colony",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "7",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "id_locality",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "8",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "id_zone",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "9",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "block",
+      "type": "varchar",
+      "character_maximum_length": "48",
+      "precision": null,
+      "ordinal_position": "10",
+      "nullable": true,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "int_num",
+      "type": "varchar",
+      "character_maximum_length": "10",
+      "precision": null,
+      "ordinal_position": "11",
+      "nullable": true,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "ext_num",
+      "type": "varchar",
+      "character_maximum_length": "10",
+      "precision": null,
+      "ordinal_position": "12",
+      "nullable": true,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "mail",
+      "type": "varchar",
+      "character_maximum_length": "48",
+      "precision": null,
+      "ordinal_position": "13",
+      "nullable": true,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "rfc",
+      "type": "char",
+      "character_maximum_length": "13",
+      "precision": null,
+      "ordinal_position": "14",
+      "nullable": true,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "clave_elector",
+      "type": "char",
+      "character_maximum_length": "18",
+      "precision": null,
+      "ordinal_position": "15",
+      "nullable": true,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "id_usertype",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "16",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "id_intaketype",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "17",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "id_servicetype",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "18",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "id_servicestatus",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "19",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "id_consumtype",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "20",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payments_agreements",
+      "name": "id",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "1",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payments_agreements",
+      "name": "id_agreement",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "2",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payments_agreements",
+      "name": "payment_number",
+      "type": "int",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "3",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payments_agreements",
+      "name": "quantity_months",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "4",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payments_agreements",
+      "name": "amount",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "5",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payments_agreements",
+      "name": "date_payment",
+      "type": "date",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "6",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payments_agreements",
+      "name": "id_status_agreement_payment",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "7",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "employments",
+      "name": "id",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "1",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "employments",
+      "name": "name",
+      "type": "varchar",
+      "character_maximum_length": "24",
+      "precision": null,
+      "ordinal_position": "2",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "employments",
+      "name": "lastaname",
+      "type": "varchar",
+      "character_maximum_length": "48",
+      "precision": null,
+      "ordinal_position": "3",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "employments",
+      "name": "mail",
+      "type": "varchar",
+      "character_maximum_length": "48",
+      "precision": null,
+      "ordinal_position": "4",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "employments",
+      "name": "password",
+      "type": "char",
+      "character_maximum_length": "60",
+      "precision": null,
+      "ordinal_position": "5",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "employments",
+      "name": "id_rol",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "6",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "agreenmets",
+      "name": "id",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "1",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "agreenmets",
+      "name": "id_user",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "2",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "agreenmets",
+      "name": "foliate",
+      "type": "varchar",
+      "character_maximum_length": "11",
+      "precision": null,
+      "ordinal_position": "3",
+      "nullable": true,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "agreenmets",
+      "name": "beneficiary",
+      "type": "varchar",
+      "character_maximum_length": "48",
+      "precision": null,
+      "ordinal_position": "4",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "agreenmets",
+      "name": "phone_benef",
+      "type": "varchar",
+      "character_maximum_length": "12",
+      "precision": null,
+      "ordinal_position": "5",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "agreenmets",
+      "name": "debt",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "6",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "agreenmets",
+      "name": "period_init",
+      "type": "date",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "7",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "agreenmets",
+      "name": "period_end",
+      "type": "date",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "8",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "agreenmets",
+      "name": "months",
+      "type": "tinyint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "9",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "agreenmets",
+      "name": "advance_payment",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "10",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "agreenmets",
+      "name": "comment",
+      "type": "varchar",
+      "character_maximum_length": "240",
+      "precision": null,
+      "ordinal_position": "11",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "agreenmets",
+      "name": "discharge_date",
+      "type": "date",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "12",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "agreenmets",
+      "name": "id_status_agreement",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "13",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "agreenmets",
+      "name": "id_employment",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "14",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "invoice_history",
+      "name": "id",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "1",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "invoice_history",
+      "name": "id_user",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "2",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "invoice_history",
+      "name": "folio",
+      "type": "varchar",
+      "character_maximum_length": "11",
+      "precision": null,
+      "ordinal_position": "3",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "invoice_history",
+      "name": "date_invoice",
+      "type": "varchar",
+      "character_maximum_length": "16",
+      "precision": null,
+      "ordinal_position": "4",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "invoice_history",
+      "name": "date_initial",
+      "type": "varchar",
+      "character_maximum_length": "16",
+      "precision": null,
+      "ordinal_position": "5",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "invoice_history",
+      "name": "date_final",
+      "type": "varchar",
+      "character_maximum_length": "16",
+      "precision": null,
+      "ordinal_position": "6",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "invoice_history",
+      "name": "amount",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 4
+      },
+      "ordinal_position": "7",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "id",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "1",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "id_user",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "2",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "folio",
+      "type": "varchar",
+      "character_maximum_length": "11",
+      "precision": null,
+      "ordinal_position": "3",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "date",
+      "type": "varchar",
+      "character_maximum_length": "16",
+      "precision": null,
+      "ordinal_position": "4",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "date_initial",
+      "type": "varchar",
+      "character_maximum_length": "16",
+      "precision": null,
+      "ordinal_position": "5",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "date_final",
+      "type": "varchar",
+      "character_maximum_length": "16",
+      "precision": null,
+      "ordinal_position": "6",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "cancelated",
+      "type": "tinyint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "7",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "current_water",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "8",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "current_water_discount",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "9",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "water_late",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "10",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "water_iva",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 4
+      },
+      "ordinal_position": "11",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "water_surcharge",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "12",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "water_surcharge_discount",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "13",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "current_drain",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "14",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "current_drain_discount",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "15",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "drain_late",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "16",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "drain_iva",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 4
+      },
+      "ordinal_position": "17",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "drain_surcharge",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "18",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "drain_surcharge_discount",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "19",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "subtotal",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "20",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "iva",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 4
+      },
+      "ordinal_position": "21",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "total",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "22",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "rates",
+      "name": "id",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "1",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "rates",
+      "name": "id_consum_intake",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "2",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "rates",
+      "name": "year",
+      "type": "int",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "3",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "rates",
+      "name": "amount",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 4
+      },
+      "ordinal_position": "4",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "id",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "1",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "id_user",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "2",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "year",
+      "type": "int",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "3",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "month",
+      "type": "tinyint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "4",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "water",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "5",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "water_late",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "6",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "water_iva",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "7",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "water_late_discount",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "8",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "drain",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "9",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "drain_late",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "10",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "drain_late_discount",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "11",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "drain_iva",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "12",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "sanitation",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "13",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "sanitation_late",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "14",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "sanitation_late_discount",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "15",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "sanitation_iva",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "16",
+      "nullable": false,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "date_billing",
+      "type": "varchar",
+      "character_maximum_length": "16",
+      "precision": null,
+      "ordinal_position": "17",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "foliate",
+      "type": "varchar",
+      "character_maximum_length": "6",
+      "precision": null,
+      "ordinal_position": "18",
+      "nullable": false,
+      "default": "",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "id_agreement",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "19",
+      "nullable": true,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "advance_payment",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "20",
+      "nullable": true,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "advance_payment_water",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "21",
+      "nullable": true,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "advance_payment_drain",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "22",
+      "nullable": true,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "advance_payment_sanitation",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "23",
+      "nullable": true,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "advance_payment_iva",
+      "type": "decimal",
+      "character_maximum_length": "null",
+      "precision": {
+        "precision": 10,
+        "scale": 2
+      },
+      "ordinal_position": "24",
+      "nullable": true,
+      "default": "",
+      "collation": ""
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "id_employment",
+      "type": "bigint",
+      "character_maximum_length": "null",
+      "precision": null,
+      "ordinal_position": "25",
+      "nullable": true,
+      "default": "",
+      "collation": ""
+    }
+  ],
+  "indexes": [
+    {
+      "schema": "master_facturaction",
+      "table": "colony",
+      "name": "PRIMARY",
+      "size": "-1",
+      "column": "id",
+      "index_type": "btree",
+      "cardinality": 23,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": true
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "consume_type",
+      "name": "PRIMARY",
+      "size": "-1",
+      "column": "id",
+      "index_type": "btree",
+      "cardinality": 13,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": true
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "intake_type",
+      "name": "PRIMARY",
+      "size": "-1",
+      "column": "id",
+      "index_type": "btree",
+      "cardinality": 5,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": true
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "locality",
+      "name": "PRIMARY",
+      "size": "-1",
+      "column": "id",
+      "index_type": "btree",
+      "cardinality": 1,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": true
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "service_status",
+      "name": "PRIMARY",
+      "size": "-1",
+      "column": "id",
+      "index_type": "btree",
+      "cardinality": 3,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": true
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "service_type",
+      "name": "PRIMARY",
+      "size": "-1",
+      "column": "id",
+      "index_type": "btree",
+      "cardinality": 3,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": true
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "user_type",
+      "name": "PRIMARY",
+      "size": "-1",
+      "column": "id",
+      "index_type": "btree",
+      "cardinality": 4,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": true
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "zone",
+      "name": "PRIMARY",
+      "size": "-1",
+      "column": "id",
+      "index_type": "btree",
+      "cardinality": 79,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": true
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "status_agreements",
+      "name": "PRIMARY",
+      "size": "-1",
+      "column": "id",
+      "index_type": "btree",
+      "cardinality": 3,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": true
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "status_agreement_payment",
+      "name": "PRIMARY",
+      "size": "-1",
+      "column": "id",
+      "index_type": "btree",
+      "cardinality": 3,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": true
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "roles",
+      "name": "PRIMARY",
+      "size": "-1",
+      "column": "id",
+      "index_type": "btree",
+      "cardinality": 6,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": true
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "consume_intake",
+      "name": "PRIMARY",
+      "size": "-1",
+      "column": "id",
+      "index_type": "btree",
+      "cardinality": 19,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": true
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "consume_intake",
+      "name": "consume_intake_id_consumtype_fk",
+      "size": "16384",
+      "column": "id_consumtype",
+      "index_type": "btree",
+      "cardinality": 13,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": false
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "consume_intake",
+      "name": "consume_intake_id_intaketype_fk",
+      "size": "16384",
+      "column": "id_intaketype",
+      "index_type": "btree",
+      "cardinality": 4,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": false
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "PRIMARY",
+      "size": "-1",
+      "column": "id",
+      "index_type": "btree",
+      "cardinality": 3427,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": true
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "users_id_colony_fk",
+      "size": "131072",
+      "column": "id_colony",
+      "index_type": "btree",
+      "cardinality": 22,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": false
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "users_id_consumtype_fk",
+      "size": "163840",
+      "column": "id_consumtype",
+      "index_type": "btree",
+      "cardinality": 12,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": false
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "users_id_intaketype_fk",
+      "size": "114688",
+      "column": "id_intaketype",
+      "index_type": "btree",
+      "cardinality": 4,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": false
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "users_id_locality_fk",
+      "size": "98304",
+      "column": "id_locality",
+      "index_type": "btree",
+      "cardinality": 1,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": false
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "users_id_zone_fk",
+      "size": "147456",
+      "column": "id_zone",
+      "index_type": "btree",
+      "cardinality": 76,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": false
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "users_id_servicestatus_fk",
+      "size": "114688",
+      "column": "id_servicestatus",
+      "index_type": "btree",
+      "cardinality": 3,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": false
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "users_id_servicetype_fk",
+      "size": "114688",
+      "column": "id_servicetype",
+      "index_type": "btree",
+      "cardinality": 3,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": false
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "name": "users_id_usertype_fk",
+      "size": "114688",
+      "column": "id_usertype",
+      "index_type": "btree",
+      "cardinality": 4,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": false
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payments_agreements",
+      "name": "PRIMARY",
+      "size": "-1",
+      "column": "id",
+      "index_type": "btree",
+      "cardinality": 0,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": true
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payments_agreements",
+      "name": "payments_agreements_id_status_agreement_payment_fk",
+      "size": "16384",
+      "column": "id_status_agreement_payment",
+      "index_type": "btree",
+      "cardinality": 0,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": false
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payments_agreements",
+      "name": "payments_agreements_id_agreement_fk",
+      "size": "16384",
+      "column": "id_agreement",
+      "index_type": "btree",
+      "cardinality": 0,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": false
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "employments",
+      "name": "PRIMARY",
+      "size": "-1",
+      "column": "id",
+      "index_type": "btree",
+      "cardinality": 17,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": true
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "employments",
+      "name": "employments_id_rol_fk",
+      "size": "16384",
+      "column": "id_rol",
+      "index_type": "btree",
+      "cardinality": 6,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": false
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "agreenmets",
+      "name": "PRIMARY",
+      "size": "-1",
+      "column": "id",
+      "index_type": "btree",
+      "cardinality": 0,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": true
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "agreenmets",
+      "name": "agreenmets_id_user_fk",
+      "size": "16384",
+      "column": "id_user",
+      "index_type": "btree",
+      "cardinality": 0,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": false
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "agreenmets",
+      "name": "agreements_id_status_agreement_fk",
+      "size": "16384",
+      "column": "id_status_agreement",
+      "index_type": "btree",
+      "cardinality": 0,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": false
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "agreenmets",
+      "name": "agreenmets_id_employments_fk",
+      "size": "16384",
+      "column": "id_employment",
+      "index_type": "btree",
+      "cardinality": 0,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": false
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "invoice_history",
+      "name": "PRIMARY",
+      "size": "-1",
+      "column": "id",
+      "index_type": "btree",
+      "cardinality": 34854,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": true
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "invoice_history",
+      "name": "invoice_history_id_users_fk",
+      "size": "1589248",
+      "column": "id_user",
+      "index_type": "btree",
+      "cardinality": 3040,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": false
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "PRIMARY",
+      "size": "-1",
+      "column": "id",
+      "index_type": "btree",
+      "cardinality": 1,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": true
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "name": "payment_invoice_id_users_fk",
+      "size": "1589248",
+      "column": "id_user",
+      "index_type": "btree",
+      "cardinality": 1,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": false
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "rates",
+      "name": "PRIMARY",
+      "size": "-1",
+      "column": "id",
+      "index_type": "btree",
+      "cardinality": 176,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": true
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "rates",
+      "name": "rates_id_consum_intake_fk",
+      "size": "16384",
+      "column": "id_consum_intake",
+      "index_type": "btree",
+      "cardinality": 8,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": false
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "PRIMARY",
+      "size": "-1",
+      "column": "id",
+      "index_type": "btree",
+      "cardinality": 0,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": true
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "billing_id_user_fk",
+      "size": "17350656",
+      "column": "id_user",
+      "index_type": "btree",
+      "cardinality": 0,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": false
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "name": "billing_id_employments_fk",
+      "size": "6832128",
+      "column": "id_employment",
+      "index_type": "btree",
+      "cardinality": 0,
+      "direction": "asc",
+      "column_position": 1,
+      "unique": false
+    }
+  ],
+  "tables": [
+    {
+      "schema": "master_facturaction",
+      "table": "colony",
+      "rows": 23,
+      "type": "BASE TABLE",
+      "engine": "InnoDB",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "consume_type",
+      "rows": 13,
+      "type": "BASE TABLE",
+      "engine": "InnoDB",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "intake_type",
+      "rows": 5,
+      "type": "BASE TABLE",
+      "engine": "InnoDB",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "locality",
+      "rows": 1,
+      "type": "BASE TABLE",
+      "engine": "InnoDB",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "service_status",
+      "rows": 3,
+      "type": "BASE TABLE",
+      "engine": "InnoDB",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "service_type",
+      "rows": 3,
+      "type": "BASE TABLE",
+      "engine": "InnoDB",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "user_type",
+      "rows": 4,
+      "type": "BASE TABLE",
+      "engine": "InnoDB",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "zone",
+      "rows": 79,
+      "type": "BASE TABLE",
+      "engine": "InnoDB",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "status_agreements",
+      "rows": 3,
+      "type": "BASE TABLE",
+      "engine": "InnoDB",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "status_agreement_payment",
+      "rows": 3,
+      "type": "BASE TABLE",
+      "engine": "InnoDB",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "roles",
+      "rows": 6,
+      "type": "BASE TABLE",
+      "engine": "InnoDB",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "consume_intake",
+      "rows": 19,
+      "type": "BASE TABLE",
+      "engine": "InnoDB",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "users",
+      "rows": 3427,
+      "type": "BASE TABLE",
+      "engine": "InnoDB",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payments_agreements",
+      "rows": 0,
+      "type": "BASE TABLE",
+      "engine": "InnoDB",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "employments",
+      "rows": 17,
+      "type": "BASE TABLE",
+      "engine": "InnoDB",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "agreenmets",
+      "rows": 0,
+      "type": "BASE TABLE",
+      "engine": "InnoDB",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "invoice_history",
+      "rows": 34854,
+      "type": "BASE TABLE",
+      "engine": "InnoDB",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "payment_invoice",
+      "rows": 33647,
+      "type": "BASE TABLE",
+      "engine": "InnoDB",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "rates",
+      "rows": 176,
+      "type": "BASE TABLE",
+      "engine": "InnoDB",
+      "collation": "utf8mb4_general_ci"
+    },
+    {
+      "schema": "master_facturaction",
+      "table": "billing",
+      "rows": 0,
+      "type": "BASE TABLE",
+      "engine": "InnoDB",
+      "collation": "utf8mb4_general_ci"
+    }
+  ],
+  "views": [],
+  "database_name": "master_facturaction",
+  "version": "8.0.39"
+}
