@@ -2,6 +2,9 @@
 export default {
   content: ["./views/**/*.{html,js,php}"],
   theme: {
+    fontFamily: {
+      poppins: ["Poppins", "monospace"],
+    },
     extend: {
       colors: {
         "primary-base": "#2563eb",
