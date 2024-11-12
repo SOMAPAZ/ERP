@@ -27,8 +27,8 @@ export default {
         "background-light": "#ffffff",
         "background-dark": "#e2e8f0",
 
-        "text-base": "#000000",
-        "text-light": "#ffffff",
+        "font-base": "#000000",
+        "font-light": "#ffffff",
 
         "error-base": "#f00e1c",
       },
