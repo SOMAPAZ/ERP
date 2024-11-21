@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./views/**/*.{html,js,php}"],
+  content: ["./views/**/*.{html,js,php}", "./public/build/js/*.js"],
   theme: {
     fontFamily: {
       poppins: ["Poppins", "monospace"],
@@ -10,6 +10,7 @@ export default {
         "primary-base": "#2563eb",
         "primary-light": "#3b82f6",
         "primary-dark": "#1d4ed8",
+        "primary-fulldark": "#5f0346",
 
         "secondary-base": "#0ea5e9",
         "secondary-light": "#38bdf8",
@@ -31,6 +32,12 @@ export default {
         "font-light": "#ffffff",
 
         "error-base": "#f00e1c",
+        "link-base": "#5ab7ff",
+
+        "subtitle-base": "#9ca3af",
+        "subtitle-base-dark": "#374151",
+
+        "alert-color": "#38485F",
       },
     },
   },
