@@ -1,30 +1,16 @@
--- Crear la tabla fixed
-CREATE TABLE fixed (
-  id BIGINT NOT NULL PRIMARY KEY,
-  id_intaketype BIGINT,
-  id_consumtype BIGINT,
-  dateinit VARCHAR(16),
-  datefin VARCHAR(16),
-  mount DECIMAL(10,2),
-  factor BIGINT,
-  cuota DECIMAL,
-  FOREIGN KEY (id_intaketype) REFERENCES intake_type (id),
-  FOREIGN KEY (id_consumtype) REFERENCES consume_type (id)
-) ENGINE=InnoDB;
+
 
 -- Crear la tabla measured
 CREATE TABLE measured (
   id BIGINT NOT NULL PRIMARY KEY,
-  dateinit VARCHAR(16),
-  datefin VARCHAR(16),
-  amount DECIMAL(10,2),
-  factor BIGINT,
-  liminf BIGINT,
-  limsup BIGINT,
-  modocobro BIGINT,
-  excm3 DECIMAL(10,2),
   id_intaketype BIGINT,
   id_consumtype BIGINT,
+  year VARCHAR(16),
+  amount DECIMAL(10,2),
+  liminf BIGINT,
+  limsup BIGINT,
+  excm3 DECIMAL(10,2),
+  
   FOREIGN KEY (id_intaketype) REFERENCES intake_type (id),
   FOREIGN KEY (id_consumtype) REFERENCES consume_type (id)
 ) ENGINE=InnoDB;
@@ -38,10 +24,11 @@ CREATE TABLE services (
 -- Crear la tabla service_rights
 CREATE TABLE service_rights (
   id BIGINT NOT NULL PRIMARY KEY,
-  year BIGINT,
-  amount DECIMAL(10,2),
   id_service BIGINT,
   id_intaketype BIGINT,
+  year BIGINT,
+  iva BIGINIT,
+  amount DECIMAL(10,2),
   FOREIGN KEY (id_service) REFERENCES services (id),
   FOREIGN KEY (id_intaketype) REFERENCES intake_type (id)
 ) ENGINE=InnoDB;
