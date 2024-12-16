@@ -34,3 +34,33 @@ CREATE TABLE service_rights (
   FOREIGN KEY (id_service) REFERENCES services (id),
   FOREIGN KEY (id_intaketype) REFERENCES intake_type (id)
 ) ENGINE=InnoDB;
+
+
+CREATE TABLE account (
+  id bigint NOT NULL PRIMARY KEY,
+  name varchar(500)
+);
+
+
+CREATE TABLE formats (
+  id bigint NOT NULL PRIMARY KEY,
+  id_account bigint,
+  year bigint,
+  amount decimal,
+  iva bigint,
+  edit bigint
+);
+
+
+CREATE TABLE notification (
+  id bigint NOT NULL PRIMARY KEY,
+  id_account bigint,
+  year bigint,
+  amount decimal,
+  iva bigint,
+  edit bigint
+);
+
+
+ALTER TABLE account ADD CONSTRAINT accounts_id_fk FOREIGN KEY (id) REFERENCES formats (id_account);
+ALTER TABLE account ADD CONSTRAINT accounts_id_fk FOREIGN KEY (id) REFERENCES notification (id_account);
