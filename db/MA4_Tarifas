@@ -7,9 +7,11 @@ CREATE TABLE measured (
   id_consumtype BIGINT,
   year VARCHAR(16),
   amount DECIMAL(10,2),
-  liminf BIGINT,
+  iva BIGINIT,
+  liminf DECIMAL(10,2),
   limsup BIGINT,
   excm3 DECIMAL(10,2),
+  iva_exc BIGINIT
   
   FOREIGN KEY (id_intaketype) REFERENCES intake_type (id),
   FOREIGN KEY (id_consumtype) REFERENCES consume_type (id)
@@ -32,21 +34,3 @@ CREATE TABLE service_rights (
   FOREIGN KEY (id_service) REFERENCES services (id),
   FOREIGN KEY (id_intaketype) REFERENCES intake_type (id)
 ) ENGINE=InnoDB;
-
--- Crear la tabla account
-CREATE TABLE account (
-  id BIGINT NOT NULL PRIMARY KEY,
-  name VARCHAR(16)
-) ENGINE=InnoDB;
-
--- Crear la tabla formats
-CREATE TABLE formats (
-  id BIGINT NOT NULL,
-  id_account BIGINT,
-  amount DECIMAL(10,2),
-  iva BIGINT,
-  editable BIGINT,
-  PRIMARY KEY (id),
-  FOREIGN KEY (id_account) REFERENCES account (id)
-) ENGINE=InnoDB;
-
