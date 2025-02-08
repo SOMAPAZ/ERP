@@ -8,7 +8,7 @@ export default class Alerta {
 
   render() {
     const alerta = document.createElement("div");
-    alerta.className = 'text-center w-full text-white bg-red-600 px-5 py-2 font-bold uppercase text-sm rounded alert';
+    alerta.className = 'w-full bg-red-200 text-red-800 text-sm my-2 py-2 px-4 rounded text-center font-bold alert';
     alerta.textContent = this.msg;
 
     const alertaPrevia = document.querySelector(".alert");

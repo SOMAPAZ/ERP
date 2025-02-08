@@ -64,6 +64,7 @@ $router->post('/api/materiales-reportes', [ReportesController::class, 'materiale
 
 //Actions Usuarios
 $router->get('/api/usuarios', [UsersController::class, 'usersAPI']);
+$router->get('/api/users', [UsersController::class, 'datosBusqueda']);
 
 //Actions CAJA
 $router->get('/consultar', [CajaController::class, 'index']);

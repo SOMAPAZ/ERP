@@ -95,4 +95,18 @@ class Usuario extends ActiveRecord
         $this->drain = $arg['drain'] ?? null;
         $this->adeudos = $arg['adeudo'] ?? 0;
     }
+
+    public static function getAllUniques($id = '')
+    {
+        $query = "SELECT `id`, CONCAT(`user` , ' ' , `lastname`) AS nombre, `address` as direccion FROM " . self::$tabla;
+        $id ? $query .= " WHERE id = $id LIMIT 1" : '';
+        $consulta = self::$db->query($query);
+
+        $res = [];
+        while ($row = $consulta->fetch_assoc()) {
+            $res[] = $row;
+        }
+
+        return $res;
+    }
 }
