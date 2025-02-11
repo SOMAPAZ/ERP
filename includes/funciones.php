@@ -252,3 +252,15 @@ function desformatearMonto(string|null $monto): float
 
     return floatval($monto);
 }
+
+
+// Funciones caja
+
+function calcular($array): float
+{
+    $monto = array_reduce($array, function ($acc, $act) {
+        return $acc + $act;
+    }, 0);
+
+    return $monto;
+}

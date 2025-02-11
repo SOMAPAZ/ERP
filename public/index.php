@@ -6,6 +6,7 @@ use MVC\Router;
 use Controllers\PDFController;
 use Controllers\CajaController;
 use Controllers\AdminController;
+use Controllers\DeudaController;
 use Controllers\LoginController;
 use Controllers\UsersController;
 use Controllers\ReportesController;
@@ -64,10 +65,12 @@ $router->post('/api/materiales-reportes', [ReportesController::class, 'materiale
 
 //Actions Usuarios
 $router->get('/api/usuarios', [UsersController::class, 'usersAPI']);
+$router->get('/api/usuario', [UsersController::class, 'usuario']);
 $router->get('/api/users', [UsersController::class, 'datosBusqueda']);
 
 //Actions CAJA
 $router->get('/consultar', [CajaController::class, 'index']);
+$router->get('/deuda-usuario', [DeudaController::class, 'totalDebt']);
 $router->post('/api/deuda-mostrar', [CajaController::class, 'getDeuda']);
 $router->post('/api/pago-total', [CajaController::class, 'setPagoTotal']);
 $router->post('/api/pago-parcial', [CajaController::class, 'setPagoParciales']);

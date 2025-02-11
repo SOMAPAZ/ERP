@@ -4,4 +4,8 @@ const limpiarHTML = (position) => {
   }
 };
 
-export { limpiarHTML };
+const formatNum = (num) => {
+  return num.toLocaleString("en-US")
+}
+
+export { limpiarHTML, formatNum };

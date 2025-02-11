@@ -19,7 +19,7 @@ export default class PostDatos {
         }
     }
 
-    static async crearFormData(inputs) {
+    static crearFormData(inputs) {
         const objValues = Validar.validarInputs(inputs);
 
         if(objValues === false) {

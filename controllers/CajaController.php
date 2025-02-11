@@ -2,7 +2,6 @@
 
 namespace Controllers;
 
-use DateTime;
 use MVC\Router;
 use APIs\UsuariosAPI;
 use Empleados\Empleado;
