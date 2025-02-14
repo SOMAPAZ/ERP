@@ -71,6 +71,7 @@ $router->get('/api/users', [UsersController::class, 'datosBusqueda']);
 //Actions CAJA
 $router->get('/consultar', [CajaController::class, 'index']);
 $router->get('/deuda-usuario', [DeudaController::class, 'totalDebt']);
+$router->get('/deuda-desglosada', [DeudaController::class, 'desgloseDebt']);
 $router->post('/api/deuda-mostrar', [CajaController::class, 'getDeuda']);
 $router->post('/api/pago-total', [CajaController::class, 'setPagoTotal']);
 $router->post('/api/pago-parcial', [CajaController::class, 'setPagoParciales']);

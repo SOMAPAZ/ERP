@@ -8,4 +8,8 @@ const formatNum = (num) => {
   return num.toLocaleString("en-US")
 }
 
-export { limpiarHTML, formatNum };
+const roundAndFloat = (number) => {
+  return parseFloat(number.toFixed(2));
+}
+
+export { limpiarHTML, formatNum, roundAndFloat };

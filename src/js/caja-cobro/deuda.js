@@ -1,5 +1,5 @@
 import Alerta from "../classes/Alerta.js";
-import { formatNum, limpiarHTML } from "../helpers/funciones.js";
+import { formatNum, limpiarHTML, roundAndFloat } from "../helpers/funciones.js";
 import GetDatos from "../classes/GetData.js"
 import Modal from "../classes/Modal.js";
 import PostDatos from "../classes/PostData.js";
@@ -8,13 +8,17 @@ import PostDatos from "../classes/PostData.js";
   const form = document.querySelector("#formulario-busqueda");
   const divError = document.querySelector("#error");
   const inputBusqueda = document.querySelector("#busqueda");
+  const listadoCoincidencias = document.querySelector("#listado-coincidencias ul");
 
   const divDatosUser = document.querySelector("#datos-usuario");
   const divDeudaUser = document.querySelector("#deuda-usuario");
   const divBoton = document.querySelector("#boton");
+  let username = ''
 
-  let resUser;
-  let resDebt;
+  let resUser = [];
+  let resDebt = [];
+
+  let copiaDebt = [];
 
   let deudaGral = {
     agua: 0,
@@ -34,7 +38,8 @@ import PostDatos from "../classes/PostData.js";
 
   const validarInput = (e) => {
     e.preventDefault();
-    if(inputBusqueda.value.trim() === "") {
+    username = inputBusqueda.value.trim();
+    if(username === "") {
       new Alerta({ 
         msg: "Debe ingresar un ID, Nombre o Dirección Válido", 
         position: divError 
@@ -43,41 +48,41 @@ import PostDatos from "../classes/PostData.js";
       return;
     };
 
-    obtenerID(inputBusqueda.value)
-    form.reset();
+    obtenerID()
   }
 
   const consultarInfoUsuario = async (id) => {
     const urlUser = `${location.origin}/api/usuario?id=${id}`;
     const urlDebt = `${location.origin}/deuda-usuario?id=${id}`;
-    resUser = await GetDatos.consultar(urlUser);
-    resDebt = await GetDatos.consultar(urlDebt);
+
+    [resUser, resDebt] = await Promise.all([
+      GetDatos.consultar(urlUser),
+      GetDatos.consultar(urlDebt)
+    ])
+
     renderUsuario()
-    renderizarDeuda()
+    renderizarDeuda(resDebt)
   }
 
-  const obtenerID = (valor) => {    
+  const obtenerID = () => {    
     let idUser;
-    const indexOf = valor.indexOf(" - ");
+    const indexOf = username.indexOf(" - ");
 
     if(indexOf === -1) {
-      if(isNaN(parseInt(valor))) {
+      if(isNaN(parseInt(username))) {
         Alerta.Toast.fire({
           icon: "error",
-          title: `El id '${valor}' no es válido`,
+          title: `'${username}' no es un ID válido`,
         });
         return;
       }
-
-      idUser = parseInt(valor)
+      idUser = parseInt(username)
     } else {
-
-      idUser = parseInt(valor.substring(0, indexOf));
-
+      idUser = parseInt(username.substring(0, indexOf));
     }
     
     consultarInfoUsuario(idUser);
-    limpiarHTML(document.querySelector("#listado-coincidencias"));
+    form.reset()
   }
 
   const renderUsuario = () => {
@@ -154,17 +159,17 @@ import PostDatos from "../classes/PostData.js";
     divDatosUser.appendChild(div);
   }
 
-  const renderizarDeuda = () => {
+  const renderizarDeuda = (response, desc = false) => {
     limpiarHTML(divDeudaUser);
     limpiarHTML(divBoton);
 
     const divDeuda = document.createElement('DIV')
     divDeuda.className = "rounded-lg border dark:border-gray-700 dark:bg-gray-800 dark:text-white shadow w-full mx-auto px-4 md:px-10 py-6";
 
-    if(resDebt.estado === 'pagado') {
+    if(response.estado === 'pagado') {
       const p = document.createElement('P')
       p.className = "text-center font-black uppercase text-lg"
-      p.textContent = resDebt.msg;
+      p.textContent = response.msg;
       
       divDeuda.appendChild(p)
       divDeudaUser.appendChild(divDeuda)
@@ -178,45 +183,45 @@ import PostDatos from "../classes/PostData.js";
     ul.className = "grid grid-cols-1 sm:grid-cols-2"
     
     const liAgua = document.createElement('LI')
-    liAgua.innerHTML = `<span class="font-bold">Agua</span>: $ ${formatNum(resDebt.agua)}`;
+    liAgua.innerHTML = `<span class="font-bold">Agua</span>: $ ${formatNum(response.agua)}`;
     const liDren = document.createElement('LI')
-    liDren.innerHTML = `<span class="font-bold">Drenaje:</span> $ ${formatNum(resDebt.drenaje)}`;
+    liDren.innerHTML = `<span class="font-bold">Drenaje:</span> $ ${formatNum(response.drenaje)}`;
     const liRec = document.createElement('LI')
     liRec.innerHTML = `
     <div>
-      <span class="font-bold">Recargos:</span> $ ${formatNum(resDebt.recargos.total)}
+      <span class="font-bold">Recargos:</span> $ ${formatNum(response.recargos.total)}
       <p class="font-bold text-gray-600 dark:text-gray-400 ms-6">- Agua: <span class="font-normal">
-        $  ${formatNum(resDebt.recargos.agua)}
+        $  ${formatNum(response.recargos.agua)}
       </span></p>
       <p class="font-bold text-gray-600 dark:text-gray-400 ms-6">- Drenaje: <span class="font-normal">
-        $  ${formatNum(resDebt.recargos.drenaje)}
+        $  ${formatNum(response.recargos.drenaje)}
       </span></p>
     </div>
     `;
     const liIva = document.createElement('LI')
     liIva.innerHTML = `
     <div>
-    <span class="font-bold">IVA:</span> $ ${formatNum(resDebt.iva.total)}
+    <span class="font-bold">IVA:</span> $ ${formatNum(response.iva.total)}
     <p class="font-bold text-gray-600 dark:text-gray-400 ms-6">- Agua: <span class="font-normal">
-    $ ${formatNum(resDebt.iva.agua)}
+    $ ${formatNum(response.iva.agua)}
     </span></p>
     <p class="font-bold text-gray-600 dark:text-gray-400 ms-6">- Drenaje: <span class="font-normal">
-    $ ${formatNum(resDebt.iva.drenaje)}
+    $ ${formatNum(response.iva.drenaje)}
     </span></p>
     </div>
     `;
     const liMeses = document.createElement('LI')
     liMeses.innerHTML = `
     <div>
-      <span class="font-bold">Meses totales:</span> ${resDebt.meses.totales}
-        <p class="font-bold text-gray-600 dark:text-gray-400 ms-6">- Rezagados: <span class="font-normal">${resDebt.meses.rezagados}</span></p>
-      <p class="font-bold text-gray-600 dark:text-gray-400 ms-6">- Naturales: <span class="font-normal">${resDebt.meses.naturales}</span></p>
+      <span class="font-bold">Meses totales:</span> ${response.meses.totales}
+        <p class="font-bold text-gray-600 dark:text-gray-400 ms-6">- Rezagados: <span class="font-normal">${response.meses.rezagados}</span></p>
+      <p class="font-bold text-gray-600 dark:text-gray-400 ms-6">- Naturales: <span class="font-normal">${response.meses.naturales}</span></p>
     </div>
     `;
       
     const liTotal = document.createElement('LI')
     liTotal.className = "text-2xl text-gray-900 underline dark:text-yellow-200"
-    liTotal.innerHTML = `<span class="font-black">Total:</span> $ ${formatNum(resDebt.total)}`;
+    liTotal.innerHTML = `<span class="font-black">Total:</span> $ ${formatNum(response.total)}`;
 
     ul.appendChild(liAgua)
     ul.appendChild(liDren)
@@ -237,19 +242,26 @@ import PostDatos from "../classes/PostData.js";
     const btnDescRecPorc = document.createElement("BUTTON");
     btnDescRecPorc.className = "text-gray-800 dark:text-white flex items-center justify-center sm:w-full md:w-auto uppercase bg-gray-200 dark:bg-gray-800 text-xs py-2 px-6 rounded-sm hover:bg-gray-300 dark:hover:bg-gray-600 gap-2";
     btnDescRecPorc.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg><p class="font-bold text-xs">Descuento</p>`;
+    btnDescRecPorc.id = "btnDescRecPorc";
     btnDescRecPorc.onclick = formDescRec;
-
+    
     const btnAvanzados = document.createElement("A");
     btnAvanzados.className = "text-gray-900 dark:text-white flex items-center justify-center sm:w-full md:w-auto uppercase text-xs py-2 px-6 rounded-sm gap-2";
     btnAvanzados.innerHTML = `<svg class="h-6 w-6 text-gray-900 dark:text-white"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />  <circle cx="12" cy="12" r="3" /></svg><p class="font-bold text-xs">Configurar</p>`;
     btnAvanzados.href = `/consultar-avanzados?usuario=${resUser.id}`;
 
+    const btnEliminarDesc = document.createElement("BUTTON");
+    btnEliminarDesc.className = "text-red-800 dark:text-white flex items-center justify-center sm:w-full md:w-auto uppercase bg-red-200 dark:bg-red-800 text-xs py-2 px-6 rounded-sm hover:bg-red-300 dark:hover:bg-red-600 gap-2";
+    btnEliminarDesc.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg><p class="font-bold text-xs">Eliminar descuento</p>`;
+    btnEliminarDesc.onclick = () => resetear();
+
     divBoton.appendChild(btnPagar);
     divBoton.appendChild(btnDescRecPorc);
+    desc ? divBoton.appendChild(btnEliminarDesc) : ''
     divBoton.appendChild(btnAvanzados);
   }
 
-  function confirmarPago() {
+  const confirmarPago = () => {
     Swal.fire({
       title: `¿Realizar pago por $${formatNum(resDebt.total)} MN?`,
       text: "Esta acción no se puede deshacer",
@@ -257,11 +269,7 @@ import PostDatos from "../classes/PostData.js";
       showCancelButton: true,
       confirmButtonText: "Confirmar pago",
       cancelButtonText: "Cancelar",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        guardarPago();
-      }
-    });
+    }).then(result => result.isConfirmed ? guardarPago() : '');
   }
 
   async function guardarPago() {
@@ -334,10 +342,11 @@ import PostDatos from "../classes/PostData.js";
     }
   }
 
-  function formDescRec() {
+  const formDescRec = () => {
     const formulario = document.createElement("FORM");
     formulario.className = "p-4 md:p-5";
     formulario.innerHTML = `<svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>`;
+    formulario.onsubmit = e => e.preventDefault()
     const h3 = document.createElement("H3");
     h3.className = "mb-5 text-lg font-normal text-gray-500 dark:text-gray-400";
     h3.textContent = "Ingrese el monto de recargos a descontar";
@@ -371,7 +380,7 @@ import PostDatos from "../classes/PostData.js";
     Modal.renderModal(formulario, btnConfirm)
   }
 
-  function cambiarTipoDesc(e) {
+  const cambiarTipoDesc = (e) => {
     e.preventDefault()
     let tipoDesc = e.target;
 
@@ -387,7 +396,10 @@ import PostDatos from "../classes/PostData.js";
     PostDatos.crearFormData(inputs);
 
     const number = divModal.querySelector('input').value;
+    let descuentoAplicado = 0;
     const tipo = document.querySelector(".default-modal #botton-desc-tipo").dataset.tipo;
+    copiaDebt = structuredClone(resDebt);
+
     if(tipo === "1") {
 
       if(number > 100) {
@@ -396,75 +408,38 @@ import PostDatos from "../classes/PostData.js";
           title: "Debe ingresar un porcentaje menor al 100%",
         });
         return;
+      }
+
+      descuentoAplicado = number;
+    }
+      
+    if(tipo === "2") {
+      const pesos = parseFloat(number)
+      if(pesos > resDebt.recargos.total) {
+        Alerta.Toast.fire({
+          icon: "error",
+          title: "Debe ingresar una cantidad menor al total de recargos",
+        });
+        return;
+      }
+      descuentoAplicado = (pesos * 100) / resDebt.recargos.total
     }
 
-      // const descA = ((number/100) * recAgua);
-      // const descD = ((number/100) * recDrenaje);
-      
-      // Swal.fire({
-      //     title: "Confirmar descuento",
-      //     html: `<p>¿Está seguro de realizar el siguiente descuento?</p>
-      //     <ul style="padding:1rem">
-      //     <li>Desc Rec Agua: $ ${descA.toFixed(2)} MNX</li>
-      //     <li>Desc Rec Drenaje: $ ${descD.toFixed(2)} MNX</li>
-      //     </ul>
-      //     <p style="font-weight:700; font-size:1.5rem">Total a descontar: $ ${(descA + descD).toFixed(2)} MNX</p>`,
-      //     icon: "warning",
-      //     showCancelButton: true,
-      //     confirmButtonText: "Confirmar",
-      //     cancelButtonText: "Cancelar",
-      //     reverseButtons: true
-      // }).then(result => {
-      //     if (result.value) {
-      //       console.log('Confirmado');
-      //       aplicarDescRecParc(descA, descD);
-      //       input.parentElement.parentElement.parentElement.parentElement?.remove();
-      //       Toast.fire({
-      //         icon: "success",
-      //         title: "Descuento aplicado correctamente",
-      //       });
-      //     }   
-      //   });
-        
-      //   return;
-      }
-      
-    // if(number > recAgua + recDrenaje) {
-    //   Toast.fire({
-    //     icon: "error",
-    //     title: `Debe ingresar un monto menor a ${recAgua + recDrenaje}`,
-    //   });
-    //   return;
-    // }
+    copiaDebt.recargos.agua = roundAndFloat(resDebt.recargos.agua - (resDebt.recargos.agua * (descuentoAplicado/100)))
+    copiaDebt.recargos.drenaje = roundAndFloat(resDebt.recargos.drenaje - (resDebt.recargos.drenaje * (descuentoAplicado/100)))
+    copiaDebt.recargos.total = roundAndFloat(resDebt.recargos.total - (resDebt.recargos.total * (descuentoAplicado/100)))
+    copiaDebt.total = roundAndFloat(copiaDebt.total - (resDebt.recargos.total * (descuentoAplicado/100)))
 
-    // const per = (number * 100) / (recAgua + recDrenaje);
-    //     const descA = ((per/100) * recAgua);
-    //     const descD = ((per/100) * recDrenaje);
+    renderizarDeuda(copiaDebt, true)
+    document.querySelector('#btnDescRecPorc').classList.add("hidden")
+    document.querySelector('.default-modal')?.remove();
+    return;
+  }
 
-    //     Swal.fire({
-    //       title: "Confirmar descuento",
-    //       html: `<p>¿Está seguro de realizar el siguiente descuento?</p>
-    //       <ul style="padding:1rem">
-    //           <li>Desc Rec Agua: $ ${descA.toFixed(2)} MNX</li>
-    //           <li>Desc Rec Drenaje: $ ${descD.toFixed(2)} MNX</li>
-    //       </ul>
-    //       <p style="font-weight:700; font-size:1.5rem">Total a descontar: $ ${(descA + descD).toFixed(2)} MNX</p>`,
-    //       icon: "warning",
-    //       showCancelButton: true,
-    //       confirmButtonText: "Confirmar",
-    //       cancelButtonText: "Cancelar",
-    //       reverseButtons: true
-    //   }).then(result => {
-    //       if (result.value) {
-    //         console.log('Confirmado');
-    //        aplicarDescRecParc(descA, descD);
-    //        input.parentElement.parentElement.parentElement.parentElement?.remove();
-    //        Toast.fire({
-    //           icon: "success",
-    //           title: "Descuento aplicado correctamente",
-    //         });
-    //       }   
-    //   });
+  const resetear = () => {
+    renderizarDeuda(resDebt)
+    copiaDebt = []
+    document.querySelector('#btnDescRecPorc').classList.remove("hidden")
   }
 
   function aplicarDescRecParc(descA, descD) {

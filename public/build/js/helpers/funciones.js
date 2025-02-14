@@ -1,1 +1,1 @@
-const limpiarHTML=i=>{for(;i.firstChild;)i.removeChild(i.firstChild)},formatNum=i=>i.toLocaleString("en-US");export{limpiarHTML,formatNum};
+const limpiarHTML=o=>{for(;o.firstChild;)o.removeChild(o.firstChild)},formatNum=o=>o.toLocaleString("en-US"),roundAndFloat=o=>parseFloat(o.toFixed(2));export{limpiarHTML,formatNum,roundAndFloat};
