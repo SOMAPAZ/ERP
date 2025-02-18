@@ -63,6 +63,14 @@ class UsersController
         }
 
         $usuario = Usuario::find($id);
+        if(!$usuario) {
+            echo json_encode($res = [
+                'tipo' => 'Error',
+                'msg' => 'El usuario no existe'
+            ]);
+            return;
+        }
+        
         $usuario->id_colony = Colonia::find($usuario->id_colony)->name;
         $usuario->id_locality = Localidad::find($usuario->id_locality)->name;
         $usuario->id_zone = Zona::find($usuario->id_zone)->name;

@@ -81,6 +81,8 @@ $router->post('/api/condonacion-parcial', [CajaController::class, 'setCondonacio
 $router->post('/api/condonacion-unico', [CajaController::class, 'setCondonacionUnico']);
 $router->post('/api/condonacion-recargos', [CajaController::class, 'setCondonacionRecargos']);
 
+
+$router->get('/pagar-total', [CajaController::class, 'viewPagoTotal']);
 $router->get('/consultar-avanzados', [CajaController::class, 'getAvanzados']);
 
 // Actions Notificaciones

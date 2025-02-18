@@ -14,21 +14,33 @@ class DeudaController
         $str = $_SERVER["QUERY_STRING"] ?? '';
         !$str ? $id = '' : $id = s($_GET['id']);
 
-        if (!$id) {
-            $res = [
-                'tipo' => 'Error',
-                'msg' => 'Es requerido el id'
-            ];
-
+        try {
+            if (!$id) {
+                $res = [
+                    'tipo' => 'Error',
+                    'msg' => 'Es requerido el id'
+                ];
+    
+                echo json_encode($res);
+                return;
+            }
+    
+            $usuario = Usuario::find($id);
+            if(!$usuario) {
+                echo json_encode($res = [
+                    'tipo' => 'Error',
+                    'msg' => 'El usuario no existe'
+                ]);
+                return;
+            }
+            $meses = Facturacion::belongsTo('id_user', $id);
+            $res = self::calcularTotal($meses, $usuario);
+    
             echo json_encode($res);
-            return;
+        } catch (\Throwable $th) {
+            echo json_encode($th);
         }
 
-        $usuario = Usuario::find($id);
-        $meses = Facturacion::belongsTo('id_user', $id);
-        $res = self::calcularTotal($meses, $usuario);
-
-        echo json_encode($res);
     }
 
     public static function desgloseDebt()
@@ -37,23 +49,26 @@ class DeudaController
         permisosCaja();
         $str = $_SERVER["QUERY_STRING"] ?? '';
         !$str ? $id = '' : $id = s($_GET['id']);
-
-        if (!$id) {
-            $res = [
-                'tipo' => 'Error',
-                'msg' => 'Es requerido el id'
-            ];
-
+        try {
+            if (!$id) {
+                $res = [
+                    'tipo' => 'Error',
+                    'msg' => 'Es requerido el id'
+                ];
+    
+                echo json_encode($res);
+                return;
+            }
+            $usuario = Usuario::find($id);
+            $meses = Facturacion::belongsTo('id_user', $id);
+    
+            $res = self::calcularParciales($meses, $usuario);
+    
             echo json_encode($res);
-            return;
+        } catch (\Throwable $th) {
+            echo json_encode($th);
         }
 
-        $usuario = Usuario::find($id);
-        $meses = Facturacion::belongsTo('id_user', $id);
-
-        $res = self::calcularParciales($meses, $usuario);
-
-        echo json_encode($res);
     }
 
     private static function calcularTotal($arr, $user)
@@ -70,13 +85,18 @@ class DeudaController
 
         foreach ($arr as $adeudo) {
             if (intval($adeudo->estado) === 0) {
+                if(($user->id_usertype === "3" || $user->id_usertype === "4") && $adeudo->if_recargo !== "1") {
+                    $adeudo->monto_agua = $adeudo->monto_agua * 0.7;
+                } elseif($adeudo->if_recargo !== "1" && $user->id_usertype === "2") {
+                    $adeudo->monto_agua = $adeudo->monto_agua * 0.5;
+                }
+
                 array_push($agua, $adeudo->monto_agua);
                 $user->drain == 1 ? array_push($drenaje, ($adeudo->monto_agua) * 0.25) : '';
 
                 if (intval($adeudo->if_recargo) === 1) {
                     $meses++;
                     $mesesContador = $meses;
-
 
                     if ($user->drain == 1) {
                         if ($mesesContador > 0) array_push($recargoDrenaje, (($adeudo->monto_agua) * 0.25) * 0.0113 * $mesesContador);
@@ -85,11 +105,13 @@ class DeudaController
                     if ($mesesContador > 0) array_push($recargoAgua, ($adeudo->monto_agua) * 0.0113 * $mesesContador);
 
                     $mesesContador--;
+                    strlen($adeudo->mes) === 1 ? $mesFR = '0' . $adeudo->mes : $mesFR = $adeudo->mes;
+                    array_push($fechas_rez, date("{$adeudo->year}-{$mesFR}-08"));
                 }
-                array_push($fechas_rez, date("{$adeudo->year}-{$adeudo->mes}-08"));
             }
 
-            array_push($fechas, date("{$adeudo->year}-{$adeudo->mes}-08"));
+            strlen($adeudo->mes) === 1 ? $mesF = '0' . $adeudo->mes : $mesF = $adeudo->mes;
+            array_push($fechas, date("{$adeudo->year}-{$mesF}-08"));
         }
 
         $montoAgua = calcular($agua);
@@ -113,8 +135,8 @@ class DeudaController
                 'periodo' => [
                     'inicio' => $fechas[0],
                     'final' => $fechas[count($arr) - 1],
-                    'inicio_rez' => $fechas_rez[0],
-                    'final_rez' => $fechas_rez[count($arr) - (count($arr) - $meses) - 1]
+                    'inicio_rez' => count($fechas_rez) > 0 ? $fechas_rez[0] : '',
+                    'final_rez' => count($fechas_rez) > 0 ? $fechas_rez[count($arr) - (count($arr) - $meses) - 1] : ''
                 ],
                 'estado' => 'debe',
                 'agua' => round($montoAgua, 2),
@@ -159,6 +181,13 @@ class DeudaController
         foreach ($arr as $d) {
             if (intval($d->estado) === 0) {
                 $mesesRezagados--;
+
+                if ($d->if_recargo !== "1" && ($user->id_usertype === "3" || $user->id_usertype === "4")) { 
+                    $d->monto_agua = $d->monto_agua * 0.7;
+                } elseif ($d->if_recargo !== "1" && $user->id_usertype === "2") {
+                    $d->monto_agua = $d->monto_agua * 0.5;
+                }
+                
                 $agua = round($d->monto_agua, 2);
                 $drain = $user->drain == 1 ? round($d->monto_agua * 0.25, 2) : 0;
                 $iva_agua = $user->id_consumtype !== '2' ? round($d->monto_agua * 0.16, 2) : 0;
@@ -173,6 +202,7 @@ class DeudaController
                 $totalGral = round($total_natural + $total_iva + $total_rec, 2);
 
                 $args[] = [
+                    'idxDB' => $d->id,
                     'fecha' => date("{$d->year}-{$d->mes}-08"),
                     'year' => $d->year,
                     'mes' => $d->mes,

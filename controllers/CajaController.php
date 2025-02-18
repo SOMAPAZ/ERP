@@ -23,27 +23,13 @@ class CajaController
         ]);
     }
 
-    public static function getDeuda()
-    {
+    public static function viewPagoTotal(Router $router) {
         isAuth();
         permisosCaja();
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = s($_POST['id_user']);
-
-            $listadoAdeudo = Facturacion::belongsToDebt('id_user', $id);
-            $rezagados = Facturacion::consultarRezagados('id_user', $id);
-            $usuario = new UsuariosAPI();
-            $informacionUsuario = $usuario->consultar($id);
-
-            $respuesta = [
-                'deuda_usuario' => $listadoAdeudo,
-                'data_usuario' => array_shift($informacionUsuario),
-                'rezagados' => count($rezagados),
-            ];
-
-            echo json_encode($respuesta);
-        }
+        $router->render('caja/pago-total', [
+            'links' => self::$links,
+        ]);
     }
 
     public static function setPagoTotal()

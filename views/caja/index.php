@@ -20,7 +20,7 @@
                     <button type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-indigo-700 hover:bg-indigo-800 font-medium rounded text-sm px-4 py-2 dark:bg-indigo-600 dark:hover:bg-indigo-700">Buscar</button>
                 </div>
             </form>
-            <div id="listado-coincidencias" class="mt-2">
+            <div id="listado-coincidencias" class="my-2">
                 <ul class="space-y-2"></ul>
             </div>
         </div>

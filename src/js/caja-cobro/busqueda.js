@@ -1,4 +1,4 @@
-import { limpiarHTML } from "../helpers/funciones.js";
+import { limpiarHTML } from "../helpers/index.js";
 import GetDatos from "../classes/GetData.js"
 
 (() => {  
@@ -24,6 +24,10 @@ import GetDatos from "../classes/GetData.js"
         const con = `${usuario.id} - ${usuario.nombre} - ${usuario.direccion}`;
         return con.toLowerCase().includes(valor.toLowerCase());
       });
+
+      limpiarHTML(document.querySelector("#datos-usuario"));
+      limpiarHTML(document.querySelector("#deuda-usuario"));
+      limpiarHTML(document.querySelector("#boton"));
 
       coincidencias.map((coincidencia) => {
         const li = document.createElement("LI");

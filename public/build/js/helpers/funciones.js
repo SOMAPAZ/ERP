@@ -1,1 +1,1 @@
-const limpiarHTML=o=>{for(;o.firstChild;)o.removeChild(o.firstChild)},formatNum=o=>o.toLocaleString("en-US"),roundAndFloat=o=>parseFloat(o.toFixed(2));export{limpiarHTML,formatNum,roundAndFloat};
+const limpiarHTML=r=>{for(;r.firstChild;)r.removeChild(r.firstChild)},formatNum=r=>r.toLocaleString("en-US"),roundAndFloat=r=>parseFloat(r.toFixed(2)),getSearch=()=>{const r=new URLSearchParams(window.location.search);return Object.fromEntries(r.entries())};export{limpiarHTML,formatNum,roundAndFloat,getSearch};

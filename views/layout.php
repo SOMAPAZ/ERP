@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
     <?= $cdn ?? '' ?>
+    <!-- <script src="https://unpkg.com/@tailwindcss/browser@4"></script> -->
     <link rel="stylesheet" href="build/css/app.css">
 </head>
 

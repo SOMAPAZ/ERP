@@ -2,7 +2,7 @@ import FetchDatos from "../classes/FetchDatos.js";
 import Formulario from "../classes/Formulario.js";
 import Modal from "../classes/Modal.js";
 import PostDatos from "../classes/PostData.js";
-import { limpiarHTML } from "../functions/funciones.js";
+import { limpiarHTML } from "../helpers/index.js";
 
 (() => {
   const tablaRoles = document.querySelector("#table-roles tbody");

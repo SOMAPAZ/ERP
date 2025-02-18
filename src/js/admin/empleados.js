@@ -2,7 +2,7 @@ import Formulario from "../classes/Formulario.js";
 import Modal from "../classes/Modal.js";
 import PostDatos from "../classes/PostData.js";
 import GetDatos from "../classes/GetData.js";
-import { limpiarHTML } from "../helpers/funciones.js";
+import { limpiarHTML } from "../helpers/index.js";
 
 (() => {
   const tablaEmpleados = document.querySelector("#table-employees tbody");
