@@ -77,7 +77,7 @@ $router->post('/api/pago-total', [CajaController::class, 'setPagoTotal']);
 $router->post('/api/pago-parcial', [CajaController::class, 'setPagoParciales']);
 $router->post('/api/pago-unico', [CajaController::class, 'setPagoUnico']);
 
-$router->post('/api/condonacion-parcial', [CajaController::class, 'setCondonacionParciales']);
+$router->post('/condonacion-parcial', [CajaController::class, 'setCondonaciones']);
 $router->post('/api/condonacion-unico', [CajaController::class, 'setCondonacionUnico']);
 $router->post('/api/condonacion-recargos', [CajaController::class, 'setCondonacionRecargos']);
 

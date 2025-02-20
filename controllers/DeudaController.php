@@ -95,7 +95,7 @@ class DeudaController
                 $user->drain == 1 ? array_push($drenaje, ($adeudo->monto_agua) * 0.25) : '';
 
                 if (intval($adeudo->if_recargo) === 1) {
-                    $meses++;
+                    if(intval($adeudo->estado) === 0) $meses++;
                     $mesesContador = $meses;
 
                     if ($user->drain == 1) {
@@ -173,7 +173,7 @@ class DeudaController
         $args = [];
 
         $meses = array_reduce($arr, function ($acc, $act) {
-            return $acc + $act->if_recargo;
+            return $acc + (intval($act->estado) === 0 ? $act->if_recargo : 0);
         }, 0);
 
         $mesesRezagados = $meses + 1;

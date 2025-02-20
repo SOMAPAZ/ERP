@@ -81,12 +81,17 @@ class Facturacion extends ActiveRecord
         return $resultado;
     }
 
-    public static function condonarParcial($id_user, $mesI, $mesF, $year1, $year2)
+    public static function condoneTo($arguments)
     {
-        $query = "UPDATE facturacion SET estado = '4' WHERE id_user = {$id_user} AND `mes` BETWEEN {$mesI} AND {$mesF} AND `year` BETWEEN {$year1} AND {$year2};";
-        $resultado = self::$db->query($query);
+        $processSuccess = true;
+        foreach($arguments as &$arg) :
+            $query = "UPDATE " .self::$tabla. " SET estado = 4 WHERE id = {$arg};";
+            $resultado = self::$db->query($query);
 
-        return $resultado;
+            !$resultado ? $processSuccess = false : $processSuccess = true;
+        endforeach;
+
+        return $processSuccess;
     }
 
     public static function condonarUno($id_user, $mes, $year)

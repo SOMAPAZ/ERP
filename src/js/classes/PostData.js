@@ -2,7 +2,7 @@ import Validar from "./Validar.js";
 
 export default class PostDatos {
     static async guardarDatos(url, args) {
-        const data = await PostDatos.crearFormData(args);
+        const data = PostDatos.crearFormData(args);
 
         if(data === false) return null;
 
@@ -40,6 +40,23 @@ export default class PostDatos {
         const data = new FormData();
         data.append("id", idx);
         
+        try {     
+            const response = await fetch(url, {
+                method: "POST",
+                body: data,
+            });
+    
+            const result = await response.json();
+            return result;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    static async enviarArray(url, args) {
+        const data = new FormData();
+        data.append('args', args)
+
         try {     
             const response = await fetch(url, {
                 method: "POST",

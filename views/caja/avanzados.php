@@ -74,9 +74,6 @@
                     <th scope="col" class="px-6 py-3">
                         Total
                     </th>
-                    <th scope="col" class="px-6 py-3">
-                        Action
-                    </th>
                 </tr>
             </thead>
             <tbody></tbody>

@@ -36,4 +36,10 @@ const formatDateText = (date) => {
   return fecha.toLocaleDateString('es-MX', opciones)
 }
 
-export { limpiarHTML, formatNum, roundAndFloat, getSearch, saveLocalStorage, getLocalStorage, deleteLocalStorage, formatDateText };
+const formatDateMY = (date) => {
+  const opciones = { year: 'numeric', month: 'long'};
+  const fecha = new Date(date);
+  return fecha.toLocaleDateString('es-MX', opciones)
+}
+
+export { limpiarHTML, formatNum, roundAndFloat, getSearch, saveLocalStorage, getLocalStorage, deleteLocalStorage, formatDateText, formatDateMY };

@@ -193,7 +193,7 @@ class CajaController
         }
     }
 
-    public static function setCondonacionParciales()
+    public static function setCondonaciones()
     {
         isAuth();
         permisosCaja();
@@ -201,22 +201,24 @@ class CajaController
         date_default_timezone_set('America/Mexico_City');
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $explode = explode(',', $_POST['args']);
+            $insert = Facturacion::condoneTo($explode);
 
-            $mes1 = explode("/", $_POST['mes_inicio'])[1];
-            $mes2 = explode("/", $_POST['mes_fin'])[1];
-            $year1 = explode("/", $_POST['mes_inicio'])[2];
-            $year2 = explode("/", $_POST['mes_fin'])[2];
-
-            $resultado = Facturacion::condonarParcial(s($_POST['id_user']), $mes1, $mes2, $year1, $year2);
-
-            if ($resultado) {
-                $respuesta = [
+            if($insert) {
+                $res = [
                     'tipo' => 'Exito',
-                    'mensaje' => 'Condonación guardada correctamente',
+                    'title' => 'Actualizado con exito',
+                    'text' => 'Condonación realizada correctamente'
+                ];
+            } else {
+                $res = [
+                    'tipo' => 'Error',
+                    'title' => 'Hubo un error',
+                    'text' => 'No se puedo realizar la condonación'
                 ];
             }
 
-            echo json_encode($respuesta);
+            echo json_encode($res);
         }
     }
 
