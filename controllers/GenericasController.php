@@ -25,7 +25,7 @@ class GenericasController
         isAuth();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id_category = s($_POST['id_category']);
+            $id_category = s($_POST['args']);
             $existe = Categoria::where('id', $id_category);
 
             if (!$existe) {

@@ -112,13 +112,16 @@ class ReportesController
             $resultado = $reporte->crearReporte($reporte->id);
 
             if ($resultado) {
+                $rep = Reporte::where('id', $reporte->id);
+                $rep->id_category = Categoria::find($rep->id_category)->name;
+                $rep->id_incidence = Incidencias::find($rep->id_incidence)->name;
+                $rep->id_priority = Prioridad::find($rep->id_priority)->name;
+
                 $respuesta = [
                     'tipo' => "Exito",
                     'mensaje' => "El reporte ha sido creado correctamente con el folio {$reporte->id}",
                     'folio' => $reporte->id,
-                    'prioridad' => $reporte->id_priority,
-                    'fecha' => $reporte->created,
-                    'idUser' => $reporte->id_user
+                    'reporte' => $rep
                 ];
             }
 

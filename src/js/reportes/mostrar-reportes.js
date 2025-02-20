@@ -54,19 +54,19 @@
     obtenerReportes();
 
     new obtenerOpciones({
-      url: "http://localhost:5000/api/categorias",
+      url: "http://localhost:3000/api/categorias",
       arreglo: categorias,
       input: inputCategoria,
     });
 
     new obtenerOpciones({
-      url: "http://localhost:5000/api/incidencias",
+      url: "http://localhost:3000/api/incidencias",
       arreglo: incidencias,
       input: inputIncidencia,
     });
 
     new obtenerOpciones({
-      url: "http://localhost:5000/api/prioridades",
+      url: "http://localhost:3000/api/prioridades",
       arreglo: prioridades,
       input: inputPrioridad,
     });
@@ -106,7 +106,7 @@
 
   async function obtenerReportes() {
     try {
-      const URL = "http://localhost:5000/api-reportes";
+      const URL = "http://localhost:3000/api-reportes";
       const response = await fetch(URL);
       const resultado = await response.json();
 
@@ -359,7 +359,7 @@
     datos.append("folio", folio);
 
     try {
-      const URL = "http://localhost:5000/api/reporte/eliminar";
+      const URL = "http://localhost:3000/api/reporte/eliminar";
       const response = await fetch(URL, {
         method: "POST",
         body: datos,
