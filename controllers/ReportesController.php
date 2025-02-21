@@ -233,6 +233,7 @@ class ReportesController
         date_default_timezone_set('America/Mexico_City');
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
             $folio = s($_POST['folio']);
             $reporte = Reporte::where('id', $folio);
 
@@ -251,13 +252,19 @@ class ReportesController
             $resultado = $reporte->guardar();
 
             if ($resultado) {
+                $rep = Reporte::where('id', $folio);
+                $rep->id_category = Categoria::find($rep->id_category)->name;
+                $rep->id_incidence = Incidencias::find($rep->id_incidence)->name;
+                $rep->id_priority = Prioridad::find($rep->id_priority)->name;
+
                 $respuesta = [
                     'tipo' => "Exito",
                     'mensaje' => "El reporte {$folio} ha sido actualizado correctamente",
                     'folio' => $folio,
                     'prioridad' => $reporte->id_priority,
                     'fecha' => $reporte->created,
-                    'idUser' => $reporte->id_user
+                    'idUser' => $reporte->id_user,
+                    'reporte' => $rep
                 ];
             }
 
@@ -371,5 +378,23 @@ class ReportesController
         }
 
         echo json_encode($materiales);
+    }
+
+    public static function JSONreporte() {
+        isAuth();
+
+        $folioRep = s($_GET['folio']);
+        $reporte = Reporte::where('id', $folioRep);
+
+        if (!$reporte) {
+            header("Location: /reportes");
+            return;
+        }
+
+        $reporte->id_category = Categoria::find($reporte->id_category);
+        $reporte->id_incidence = Incidencias::find($reporte->id_incidence);
+        $reporte->id_priority = Prioridad::find($reporte->id_priority);
+
+        echo json_encode($reporte);
     }
 }

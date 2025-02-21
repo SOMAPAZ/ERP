@@ -52,6 +52,7 @@ $router->get('/reportes', [ReportesController::class, 'index']);
 $router->get('/reporte', [ReportesController::class, 'reporte']);
 $router->get('/generar-reporte', [ReportesController::class, 'formReporte']);
 $router->get('/editar-reporte', [ReportesController::class, 'editFormReporte']);
+$router->get('/api/reporteID', [ReportesController::class, 'JSONreporte']);
 $router->post('/api/reporte', [ReportesController::class, 'generarReporte']);
 $router->post('/api/reporte/editar', [ReportesController::class, 'actualizarReporte']);
 $router->post('/api/reporte/eliminar', [ReportesController::class, 'eliminarReporte']);
