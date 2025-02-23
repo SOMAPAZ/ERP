@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="build/css/app.css">
 </head>
 
-<body class="bg-white dark:bg-gray-900 font-rubik">
+<body class="bg-gray-100 dark:bg-gray-900 font-rubik">
     <?php $login = isset($login) ? $login : false; ?>
     <?php if (!$login): ?>
 

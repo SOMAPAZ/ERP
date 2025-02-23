@@ -5,7 +5,7 @@ export default class PostDatos {
         const data = PostDatos.crearFormData(args);
 
         if(data === false) return null;
-
+        
         try {     
             const response = await fetch(url, {
                 method: "POST",

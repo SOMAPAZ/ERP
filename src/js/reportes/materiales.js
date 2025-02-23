@@ -1,83 +1,32 @@
+import GetDatos from "../classes/GetData.js"
+import Modal from "../classes/Modal.js"
+import PostDatos from "../classes/PostData.js"
+import Alerta from "../classes/Alerta.js"
+import { getSearch, limpiarHTML } from "../helpers/index.js"
+
 (() => {
   const btnAgregarMateriales = document.querySelector("#btn-add-material");
   const contenedorMateriales = document.querySelector("#render-materiales");
   let materiales = [];
   let unidades = [];
   let materialRep = [];
-  let unidad;
 
   document.addEventListener("DOMContentLoaded", () => {
-    obtenerMateriales();
-    obtenerUnidades();
-    obtenerMatRep();
-
-    btnAgregarMateriales.addEventListener("click", () => {
-      mostrarModal();
-    });
+    obtenerDatos();
+    btnAgregarMateriales.addEventListener("click", () => mostrarModal());
   });
 
-  async function obtenerMateriales() {
-    try {
-      const URL = `${location.origin}/api/materiales`;
-      const response = await fetch(URL);
-      const resultado = await response.json();
-      materiales = resultado;
-    } catch (error) {
-      console.log(error);
-    }
+  const obtenerDatos = async () => {
+    [materiales, unidades, materialRep] = await Promise.all([
+      GetDatos.consultar(`${location.origin}/api/materiales`),
+      GetDatos.consultar(`${location.origin}/api/unidades`),
+      GetDatos.consultar(`${location.origin}/api/materiales-reportes?id_report=${getSearch().folio}`)
+    ])
+
+    renderizarMaterialesUtilizados();
   }
 
-  async function obtenerUnidades() {
-    try {
-      const URL = `${location.origin}/api/unidades`;
-      const response = await fetch(URL);
-      const resultado = await response.json();
-      unidades = resultado;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async function obtenerMatRep() {
-    const formData = new FormData();
-    formData.append("id_report", obtenerFolio());
-
-    try {
-      const URL = `${location.origin}/api/materiales-reportes`;
-      const response = await fetch(URL, {
-        method: "POST",
-        body: formData,
-      });
-      const resultado = await response.json();
-      materialRep = resultado;
-
-      renderizarMaterialesUtilizados();
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  function mostrarModal() {
-    const bgModal = document.createElement("DIV");
-    bgModal.className =
-      "overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 bottom-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full bg-gray-800 bg-opacity-50 dark:bg-opacity-80 modal-form";
-
-    const contenedorModal = document.createElement("DIV");
-    contenedorModal.className =
-      "relative p-4 w-full max-w-2xl mx-auto mt-20 max-h-full";
-
-    const contenido = document.createElement("DIV");
-    contenido.className =
-      "relative bg-white rounded-lg shadow dark:bg-gray-700";
-
-    const header = document.createElement("DIV");
-    header.className =
-      "flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600";
-    const h3 = document.createElement("H3");
-    h3.className = "text-xl font-semibold text-gray-900 dark:text-white";
-    h3.textContent = "Añadir información";
-    header.appendChild(h3);
-
+  const mostrarModal = () => {
     //Contenido
     const bodyModal = document.createElement("DIV");
     bodyModal.className = "p-4 md:p-5 space-y-4";
@@ -88,6 +37,20 @@
 
     const divContainer = document.createElement("DIV");
     divContainer.className = "flex flex-col gap-6";
+
+    const h3 = document.createElement("H3");
+    h3.className = "text-lg font-medium text-gray-900 dark:text-white mb-5";
+    h3.textContent = 'Ingrese los datos solicitados';
+    const divAlerta = document.createElement('DIV');
+    divAlerta.id = 'div-notif';
+    
+    formulario.appendChild(h3);
+    formulario.appendChild(divAlerta);
+    
+    const inputFolio = document.createElement('INPUT')
+    inputFolio.value = getSearch().folio;
+    inputFolio.classList.add('hidden', 'input-form')
+    inputFolio.name = 'id_report'
 
     //
     const materialDiv = document.createElement("DIV");
@@ -100,7 +63,7 @@
 
     const inputMaterial = document.createElement("INPUT");
     inputMaterial.className =
-      "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white uppercase";
+      "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white uppercase input-form";
     inputMaterial.type = "text";
     inputMaterial.name = "material";
     inputMaterial.id = "material";
@@ -118,7 +81,7 @@
     divContainer.appendChild(materialDiv);
     //
 
-    generarInputs(divContainer, "number", "cantidad");
+    generarInputs(divContainer, "number", "quantity");
 
     //
     const divUnidad = document.createElement("DIV");
@@ -130,8 +93,8 @@
 
     const inputUnidad = document.createElement("SELECT");
     inputUnidad.className =
-      "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white uppercase";
-    inputUnidad.name = "unidad";
+      "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white uppercase input-form";
+    inputUnidad.name = "id_unity";
     inputUnidad.id = "unidad";
 
     const emptyOption = document.createElement("OPTION");
@@ -151,42 +114,20 @@
 
     divContainer.appendChild(divUnidad);
     //
-
+    formulario.appendChild(inputFolio);
     formulario.appendChild(divContainer);
 
-    const footer = document.createElement("DIV");
-    footer.className =
-      "flex items-center justify-end gap-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600";
-
     const btnAgregar = document.createElement("BUTTON");
-    btnAgregar.className =
-      "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800";
+    btnAgregar.className = "text-white bg-blue-700 hover:bg-blue-800 font-medium rounded text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 ";
     btnAgregar.textContent = "Agregar";
 
     btnAgregar.onclick = guardarMateriales;
 
-    const btnCancelar = document.createElement("BUTTON");
-    btnCancelar.className =
-      "text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800";
-
-    btnCancelar.textContent = "Cancelar";
-    btnCancelar.onclick = () => document.querySelector(".modal-form")?.remove();
-
     bodyModal.appendChild(formulario);
-
-    footer.appendChild(btnCancelar);
-    footer.appendChild(btnAgregar);
-
-    contenido.appendChild(header);
-    contenido.appendChild(bodyModal);
-    contenido.appendChild(footer);
-
-    contenedorModal.appendChild(contenido);
-    bgModal.appendChild(contenedorModal);
-    document.querySelector("main").appendChild(bgModal);
+    Modal.renderModal(bodyModal, btnAgregar)
   }
 
-  function coincidirMaterial(e) {
+  const coincidirMaterial = (e) => {
     const valorInput = e.target.value.trim();
     if (valorInput === "") {
       const divAdd = document.querySelector("#contenedorMateriales");
@@ -201,53 +142,26 @@
     renderizarCoincidencias(coincidencias);
   }
 
-  function renderizarCoincidencias(coincidencias) {
+  const renderizarCoincidencias = (coincidencias) => {
     const divAdd = document.querySelector("#contenedorMateriales");
+    limpiarHTML(divAdd);
 
-    limpiarAnterior(divAdd);
     const ul = document.createElement("UL");
     ul.classList.add("space-y-1", "z-40", "mt-2");
     if (coincidencias.length === 0) {
       const li = document.createElement("LI");
-      li.classList.add(
-        "block",
-        "rounded-lg",
-        "bg-gray-100",
-        "px-4",
-        "py-2",
-        "text-sm",
-        "font-medium",
-        "text-gray-700",
-        "dark:bg-gray-800",
-        "dark:text-gray-200",
-        "uppercase",
-        "cursor-pointer"
-      );
+      li.className = "block rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200 uppercase cursor-pointer"
       li.textContent = "Sin coincidencias";
-      li.onclick = () => {
-        limpiarAnterior(divAdd);
-      };
+      li.onclick = () => limpiarHTML(divAdd);
       ul.appendChild(li);
 
       divAdd.appendChild(ul);
       return;
     }
+
     coincidencias.forEach((coincidencia) => {
       const li = document.createElement("LI");
-      li.classList.add(
-        "block",
-        "rounded-lg",
-        "bg-gray-100",
-        "px-4",
-        "py-2",
-        "text-sm",
-        "font-medium",
-        "text-gray-700",
-        "dark:bg-gray-800",
-        "dark:text-gray-200",
-        "uppercase",
-        "cursor-pointer"
-      );
+      li.className = "block rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200 uppercase cursor-pointer";
       li.onclick = function () {
         autocompletar(coincidencia, divAdd);
         unidad = coincidencia.id;
@@ -260,84 +174,69 @@
     });
   }
 
-  function renderizarMaterialesUtilizados() {
-    limpiarAnterior(contenedorMateriales);
+  const renderizarMaterialesUtilizados = () => {
+    limpiarHTML(contenedorMateriales);
+
+
     if (materialRep.length === 0) {
-      contenedorMateriales.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400 col-span-2">No hay materiales registrados</p>`;
+      contenedorMateriales.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400 mt-5">No hay materiales registrados</p>`;
       return;
     }
+
     materialRep.forEach((mat) => {
-      const { cantidad, unidad, material } = mat;
-      console.log(mat);
+      const { quantity, id_unity, material } = mat;
+      const contenedorMat = document.createElement("DIV");
+      contenedorMat.className = "w-full flex flex-col sm:flex-row sm:justify-betweenn gap-4 p-2 sm:items-center bg-white dark:bg-gray-800 dark:border-gray-700";
 
       const div = document.createElement("DIV");
-      div.className =
-        "bg-gray-100 dark:bg-gray-800 rounded flex p-4 h-full items-center text-xs";
-      div.innerHTML = `                    
-      <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="text-indigo-400 w-6 h-6 flex-shrink-0 mr-4" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path><path d="M22 4L12 14.01l-3-3"></path></svg>
-      `;
+      div.className = "sm:w-3/4 md:w-4/6 lg:w-3/4 bg-white dark:bg-gray-800 flex p-4 items-center";
+      const paragraph = document.createElement("P");
+      paragraph.className = "font-medium text-gray-800 dark:text-white";
+      paragraph.textContent = `${quantity} ${id_unity} de ${material}`;
 
-      const span = document.createElement("SPAN");
-      span.className = "title-font font-medium text-gray-800 dark:text-white";
-      span.textContent = `${cantidad} ${unidad} de ${material}`;
+      div.appendChild(paragraph);
 
-      div.appendChild(span);
+      const divBtns = document.createElement('DIV');
+      divBtns.className = "sm:w-1/4 md:w-2/6 lg:w-1/4 flex flex-col gap-2 lg:flex-row justify-end"
 
-      contenedorMateriales.appendChild(div);
+      const btnEliminar = document.createElement("BUTTON");
+      btnEliminar.className = "w-full lg:w-auto px-2 py-2 md:py-1 text-xs leadindg-5 font-semibold rounded cursor-pointer bg-red-200 text-red-800 flex flew-row flex-nowrap items-center justify-center gap-2 uppercase hover:bg-red-300";
+      btnEliminar.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg><p class="font-bold text-xs">Eliminar</p>`;
+      btnEliminar.onclick = () => confirmarEliminar(mat);
+
+      divBtns.appendChild(btnEliminar)
+
+      contenedorMat.appendChild(div);
+      contenedorMat.appendChild(divBtns);
+      contenedorMateriales.appendChild(contenedorMat);
     });
   }
 
-  async function guardarMateriales(e) {
-    const padre = e.target.parentElement.parentElement;
-    const mat = padre.querySelector("#material").value.trim();
-    const uni = padre.querySelector("#unidad").value.trim();
-    const cant = padre.querySelector("#cantidad").value.trim();
+  const guardarMateriales = async () => {
+    const URL = `${location.origin}/api/material`;
+    const inputs = document.querySelectorAll('.input-form');
 
-    if (mat === "" || uni === "" || cant === "") {
-      mostrarAlerta("Todos los campos son obligatorios");
-      return;
-    }
+    const res = await PostDatos.guardarDatos(URL, inputs);
 
-    const datos = new FormData();
-    datos.append("id_report", obtenerFolio());
-    datos.append("id_material", unidad);
-    datos.append("id_unity", uni);
-    datos.append("quantity", cant);
-
-    try {
-      const URL = `${location.origin}/api/material`;
-      const response = await fetch(URL, {
-        method: "POST",
-        body: datos,
+    if (res.tipo === "Exito") {
+      Alerta.Toast.fire({
+        title: res.tipo,
+        text: res.mensaje,
+        icon: "success",
       });
-      const resultado = await response.json();
 
-      console.log(resultado);
-      if (resultado.tipo === "Exito") {
-        Swal.fire({
-          title: resultado.tipo,
-          text: resultado.mensaje,
-          icon: "success",
-        });
+      const modal = document.querySelector(".default-modal");
+      if (modal) modal.remove();
 
-        const modal = document.querySelector(".modal-form");
-        if (modal) modal.remove();
+      const materialObj = {
+        quantity: res.cantidad,
+        id_report: getSearch().folio,
+        id_unity: res.unidad,
+        material: res.material,
+      };
 
-        const materialObj = {
-          cantidad: cant,
-          id_report: obtenerFolio(),
-          unidad: resultado.unidad,
-          material: resultado.material,
-        };
-
-        console.log(materialObj);
-
-        materialRep = [...materialRep, materialObj];
-
-        renderizarMaterialesUtilizados();
-      }
-    } catch (error) {
-      console.log(error);
+      materialRep = [...materialRep, materialObj];
+      renderizarMaterialesUtilizados();
     }
   }
 
@@ -352,7 +251,7 @@
 
     const input = document.createElement("INPUT");
     input.className =
-      "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white uppercase";
+      "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white uppercase input-form";
     input.type = tipo;
     input.name = data;
     input.id = data;
@@ -365,38 +264,23 @@
   }
 
   function autocompletar(coincidencia, div) {
-    limpiarAnterior(div);
+    limpiarHTML(div);
     const input = div.parentElement.querySelector("INPUT");
     input.value = coincidencia.name;
   }
 
-  function limpiarAnterior(div) {
-    while (div.firstChild) {
-      div.removeChild(div.firstChild);
-    }
-  }
-
-  function mostrarAlerta(mensaje) {
-    const divAlerta = document.createElement("DIV");
-
-    divAlerta.className =
-      "rounded border-s-4 mt-3 border-red-500 bg-red-50 p-4 dark:border-red-600 dark:bg-red-900 alerta";
-    divAlerta.innerHTML = `<strong class="block font-medium text-red-700 dark:text-red-200">${mensaje}</strong>`;
-
-    document.querySelector(".alerta")?.remove();
-
-    const formulario = document.querySelector("#formulario-add-material");
-
-    formulario.parentElement.insertBefore(divAlerta, formulario);
-
-    setTimeout(() => {
-      divAlerta.remove();
-    }, 5000);
-  }
-
-  function obtenerFolio() {
-    const folioParams = new URLSearchParams(window.location.search);
-    const report = Object.fromEntries(folioParams.entries());
-    return report.folio;
+  const confirmarEliminar = (mat) => {
+    Swal.fire({
+      title: `¿Estás seguro de eliminar el material?`,
+      text: "Esta acción no se puede deshacer",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        eliminarMaterial(mat);
+      }
+    });
   }
 })();

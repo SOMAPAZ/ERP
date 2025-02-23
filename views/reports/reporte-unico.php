@@ -1,6 +1,6 @@
 <?php require_once __DIR__ . '/../templates/nav-bar.php'; ?>
 
-<section class="bg-white py-4 antialiased dark:bg-gray-900 md:py-8 h-auto">
+<section class="py-4 antialiased dark:bg-gray-900 md:py-8 h-auto">
     <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
         <div class="lg:flex lg:items-center lg:justify-between lg:gap-4">
             <h2 class="shrink-0 font-black text-xl text-gray-900 dark:text-white sm:text-4xl text-center">
@@ -85,9 +85,9 @@
             </div>
         </div>
 
-        <div class="space-y-4 mt-10">
-            <div id="render-notas" class="text-gray-800 dark:text-gray-200 font-semibold text-lg border-t border-gray-400 dark:border-gray-600 p-6 grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-            <div id="render-materiales" class="text-gray-800 dark:text-gray-200 font-semibold text-lg border-y border-gray-400 dark:border-gray-600 text-center p-6 grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        <div class="space-y-4 divide-y divide-gray-200 mt-10">
+            <div id="render-notas" class="text-gray-800 dark:text-gray-200 font-semibold text-lg gap-4 divide-y divide-gray-300 dark:divide-gray-600"></div>
+            <div id="render-materiales" class="text-gray-800 dark:text-gray-200 font-semibold text-lg gap-4 divide-y divide-gray-300 dark:divide-gray-600"></div>
         </div>
     </div>
 </section>

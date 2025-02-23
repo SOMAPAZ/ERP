@@ -13,7 +13,7 @@ class Material extends ActiveRecord
         'quantity',
         'id_report',
         'id_unity',
-        'id_material',
+        'material',
         'id_employee',
         'created'
     ];
@@ -22,7 +22,7 @@ class Material extends ActiveRecord
     public $id_report;
     public $quantity;
     public $id_unity;
-    public $id_material;
+    public $material;
     public $id_employee;
     public $created;
 
@@ -32,7 +32,7 @@ class Material extends ActiveRecord
         $this->id_report = $args['id_report'] ?? null;
         $this->quantity = $args['quantity'] ?? null;
         $this->id_unity = $args['id_unity'] ?? null;
-        $this->id_material = $args['id_material'] ?? null;
+        $this->material = $args['material'] ?? null;
         $this->id_employee = $args['id_employee'] ?? null;
         $this->created = $args['created'] ?? '';
     }

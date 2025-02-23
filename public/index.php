@@ -58,11 +58,11 @@ $router->post('/api/reporte/editar', [ReportesController::class, 'actualizarRepo
 $router->post('/api/reporte/eliminar', [ReportesController::class, 'eliminarReporte']);
 $router->get('/api-reportes', [ReportesController::class, 'reportesAPI']);
 
-$router->post('/api/notas-reportes', [ReportesController::class, 'notasAPI']);
+$router->get('/api/notas-reportes', [ReportesController::class, 'notasAPI']);
 $router->post('/api/nota-reporte', [ReportesController::class, 'generarNotaReporte']);
 $router->post('/api/nota-reporte/eliminar', [ReportesController::class, 'eliminarNota']);
 $router->post('/api/material', [ReportesController::class, 'guardarMateriales']);
-$router->post('/api/materiales-reportes', [ReportesController::class, 'materialesAPI']);
+$router->get('/api/materiales-reportes', [ReportesController::class, 'materialesAPI']);
 
 //Actions Usuarios
 $router->get('/api/usuarios', [UsersController::class, 'usersAPI']);

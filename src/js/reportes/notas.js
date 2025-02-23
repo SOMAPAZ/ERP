@@ -1,3 +1,9 @@
+import GetDatos from "../classes/GetData.js"
+import Modal from "../classes/Modal.js"
+import PostDatos from "../classes/PostData.js"
+import Alerta from "../classes/Alerta.js"
+import { getSearch, limpiarHTML } from "../helpers/index.js"
+
 (() => {
   const contenedorNotas = document.querySelector("#render-notas");
   const btnAgregarNota = document.querySelector("#btn-add-note");
@@ -5,80 +11,43 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     obtenerNotas();
-
-    btnAgregarNota.addEventListener("click", () => {
-      mostrarModal();
-    });
+    btnAgregarNota.addEventListener("click", () => mostrarModal());
   });
 
-  async function obtenerNotas() {
-    const formData = new FormData();
-    formData.append("id_report", obtenerFolio());
-
-    try {
-      const URL = `${location.origin}/api/notas-reportes`;
-      const response = await fetch(URL, {
-        method: "POST",
-        body: formData,
-      });
-      const resultado = await response.json();
-      notas = resultado;
-      console.log(notas);
-
-      renderizarNotas();
-    } catch (error) {
-      console.log(error);
-    }
+  const obtenerNotas = async () => {
+    const URL = `${location.origin}/api/notas-reportes?id_report=${getSearch().folio}`;
+    notas = await GetDatos.consultar(URL)
+    renderizarNotas();
   }
 
-  function obtenerFolio() {
-    const folioParams = new URLSearchParams(window.location.search);
-    const report = Object.fromEntries(folioParams.entries());
-    return report.folio;
-  }
-
-  function mostrarModal() {
-    const bgModal = document.createElement("DIV");
-    bgModal.className =
-      "overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 bottom-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full bg-gray-800 bg-opacity-50 dark:bg-opacity-80 modal-form";
-
-    const contenedorModal = document.createElement("DIV");
-    contenedorModal.className =
-      "relative p-4 w-full max-w-2xl mx-auto mt-20 max-h-full";
-
-    const contenido = document.createElement("DIV");
-    contenido.className =
-      "relative bg-white rounded-lg shadow dark:bg-gray-700";
-
-    const header = document.createElement("DIV");
-    header.className =
-      "flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600";
-    const h3 = document.createElement("H3");
-    h3.className = "text-xl font-semibold text-gray-900 dark:text-white";
-    h3.textContent = "Añadir información";
-    header.appendChild(h3);
-
-    //Contenido
+  const mostrarModal = () => {
     const bodyModal = document.createElement("DIV");
-    bodyModal.className = "p-4 md:p-5 space-y-4";
+    bodyModal.className = "p-4 space-y-4 mb-4";
 
     const formulario = document.createElement("FORM");
-    formulario.id = "formulario-add-informacion";
+    formulario.id = "formulario-add-nota";
     formulario.setAttribute("autocomplete", "off");
     formulario.setAttribute("enctype", "multipart/form-data");
 
     const divContainer = document.createElement("DIV");
     divContainer.className = "flex flex-col gap-6";
 
+    const h3 = document.createElement("H3");
+    h3.className = "text-lg font-medium text-gray-900 dark:text-white mb-5";
+    h3.textContent = 'Ingrese los datos solicitados';
+    const divAlerta = document.createElement('DIV');
+    divAlerta.id = 'div-notif';
+    
+    formulario.appendChild(h3);
+    formulario.appendChild(divAlerta);
+
     const divNota = document.createElement("DIV");
     const labelNota = document.createElement("LABEL");
-    labelNota.className =
-      "block mb-2 text-sm font-medium text-gray-900 dark:text-white";
+    labelNota.className = "block mb-2 text-sm font-medium text-gray-900 dark:text-white";
     labelNota.textContent = "Agregue una nota";
     const textareaNota = document.createElement("TEXTAREA");
-    textareaNota.className =
-      "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white uppercase";
-    textareaNota.name = "nota";
+    textareaNota.className = "inputs-form bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white uppercase";
+    textareaNota.name = "note";
     textareaNota.id = "nota";
     textareaNota.placeholder = "Nota del Reporte";
     divNota.appendChild(labelNota);
@@ -86,16 +55,14 @@
 
     const divImagen = document.createElement("DIV");
     const labelImagen = document.createElement("LABEL");
-    labelImagen.className =
-      "block mb-2 text-sm font-medium text-gray-900 dark:text-white";
+    labelImagen.className = "block mb-2 text-sm font-medium text-gray-900 dark:text-white";
     labelImagen.textContent = "Tu evidencia";
-    labelImagen.for = "evidencia";
+    labelImagen.for = "image";
     const inputImagen = document.createElement("INPUT");
-    inputImagen.className =
-      "block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 file:bg-gray-200 file:text-gray-600 dark:file:bg-gray-900 dark:file:text-white file:border-0 file:p-2.5 file:cursor-pointer";
-    inputImagen.id = "evidencia";
+    inputImagen.className = "inputs-form block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 file:bg-gray-200 file:text-gray-600 dark:file:bg-gray-900 dark:file:text-white file:border-0 file:p-2.5 file:cursor-pointer";
+    inputImagen.id = "image";
     inputImagen.type = "file";
-    inputImagen.name = "evidencia";
+    inputImagen.name = "image";
     inputImagen.accept = ".jpg,.png,.jpeg";
 
     divImagen.appendChild(labelImagen);
@@ -105,53 +72,32 @@
     divContainer.appendChild(divImagen);
 
     formulario.appendChild(divContainer);
-
-    const footer = document.createElement("DIV");
-    footer.className =
-      "flex items-center justify-end gap-4 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600";
+    bodyModal.appendChild(formulario)
 
     const btnAgregar = document.createElement("BUTTON");
-    btnAgregar.className =
-      "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800";
+    btnAgregar.className = "text-white bg-blue-700 hover:bg-blue-800 font-medium rounded text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700";
     btnAgregar.textContent = "Agregar";
 
     btnAgregar.onclick = guardarNotas;
-
-    const btnCancelar = document.createElement("BUTTON");
-    btnCancelar.className =
-      "text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800";
-
-    btnCancelar.textContent = "Cancelar";
-    btnCancelar.onclick = () => document.querySelector(".modal-form")?.remove();
-
-    bodyModal.appendChild(formulario);
-
-    footer.appendChild(btnCancelar);
-    footer.appendChild(btnAgregar);
-
-    contenido.appendChild(header);
-    contenido.appendChild(bodyModal);
-    contenido.appendChild(footer);
-
-    contenedorModal.appendChild(contenido);
-    bgModal.appendChild(contenedorModal);
-    document.querySelector("main").appendChild(bgModal);
+    Modal.renderModal(bodyModal, btnAgregar )
   }
 
-  async function guardarNotas(e) {
-    const divPadre = e.target.parentElement.parentElement;
-    const nota = divPadre.querySelector("#nota").value.trim();
-    const imagen = divPadre.querySelector("#evidencia").files[0];
+  const guardarNotas = async () => {
+    const inputNota = document.querySelector('#nota').value.trim();
+    const inputImage = document.querySelector('#image').files[0]
 
-    if (nota === "" && imagen === undefined) {
-      mostrarAlerta("No puedes dejar ambos campos en blanco");
+    if (inputNota === "" && inputImage === undefined) {
+      new Alerta({ 
+        msg: 'No puede dejar ambos campos vacíos', 
+        position: document.querySelector("#div-notif"),
+      })
       return;
     }
 
     const datos = new FormData();
-    datos.append("id_report", obtenerFolio());
-    datos.append("note", nota);
-    datos.append("image", imagen);
+    datos.append("id_report", getSearch().folio);
+    datos.append("note", inputNota);
+    datos.append("image", inputImage);
 
     try {
       const URL = `${location.origin}/api/nota-reporte`;
@@ -168,13 +114,13 @@
           icon: "success",
         });
 
-        const modal = document.querySelector(".modal-form");
+        const modal = document.querySelector(".default-modal");
         if (modal) modal.remove();
 
         const notaObj = {
           id: resultado.id,
           created: resultado.created,
-          note: nota,
+          note: inputNota,
           image: resultado.imagen,
         };
 
@@ -187,27 +133,9 @@
     }
   }
 
-  function mostrarAlerta(mensaje) {
-    const divAlerta = document.createElement("DIV");
-
-    divAlerta.className =
-      "rounded border-s-4 mt-6 border-red-500 bg-red-50 p-4 dark:border-red-600 dark:bg-red-900 alerta";
-    divAlerta.innerHTML = `<strong class="block font-medium text-red-700 dark:text-red-200">${mensaje}</strong>`;
-
-    document.querySelector(".alerta")?.remove();
-
-    const formulario = document.querySelector("#formulario-add-informacion");
-
-    formulario.parentElement.insertBefore(divAlerta, formulario);
-
-    setTimeout(() => {
-      divAlerta.remove();
-    }, 5000);
-  }
-
-  function renderizarNotas() {
+  const renderizarNotas = () => {
     let numNota = 1;
-    limpiarHTML();
+    limpiarHTML(contenedorNotas);
 
     if (notas.length === 0) {
       contenedorNotas.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400 col-span-2">No hay notas registradas</p>`;
@@ -218,33 +146,27 @@
       const { note, image, created } = nota;
 
       const contenedorNota = document.createElement("DIV");
-      contenedorNota.className =
-        "items-center bg-gray-50 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700";
+      contenedorNota.className = "w-full flex flex-col sm:flex-row sm:justify-betweenn space-y-8 gap-4 p-4 sm:items-center bg-white dark:bg-gray-800 dark:border-gray-700";
 
       const divImg = document.createElement("DIV");
-      divImg.className = "px-3";
+      divImg.className = "sm:w-1/4 md:w-1/6";
       if (image === "") {
-        divImg.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-32 mx-auto md:mx-0"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
-            `;
+        divImg.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-32 mx-auto md:mx-0"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>`;
       } else {
         const imagen = document.createElement("IMG");
         imagen.src = `images/${image}`;
         imagen.alt = "Nota-imagen";
-        imagen.className =
-          "w-full max-w-32 aspect-square rounded-lg mx-auto mt-3";
-
+        imagen.className ="w-full block";
         divImg.appendChild(imagen);
       }
 
       contenedorNota.appendChild(divImg);
 
       const divTexto = document.createElement("DIV");
-      divTexto.className = "p-3";
+      divTexto.className = "sm:w-2/4 md:w-3/6 lg:w-4/6";
 
       const h3 = document.createElement("H3");
-      h3.className =
-        "text-lg font-bold tracking-tight text-gray-900 dark:text-white";
+      h3.className = "text-lg font-bold tracking-tight text-gray-900 dark:text-white";
       h3.textContent = `Nota ${numNota++}`;
 
       const span = document.createElement("SPAN");
@@ -260,35 +182,34 @@
         p.textContent = note;
       }
 
-      const btnEliminar = document.createElement("BUTTON");
-      btnEliminar.className =
-        "flex mx-auto md:mx-0 items-center justify-center uppercase bg-red-600 text-font-light text-xs py-1 px-3 rounded-md shadow-md hover:bg-red-500 gap-2";
-      btnEliminar.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
-        <p class="font-bold text-xs">Eliminar</p>
-      `;
-      btnEliminar.onclick = () => {
-        confirmarEliminar(nota);
-      };
+      const divBtns = document.createElement('DIV');
+      divBtns.className = "sm:w-1/4 md:w-2/6 lg:flex-1 flex flex-col gap-2 lg:flex-row"
 
+      const btnEliminar = document.createElement("BUTTON");
+      btnEliminar.className = "w-full px-2 py-2 md:py-1 text-xs leadindg-5 font-semibold rounded cursor-pointer bg-red-200 text-red-800 flex flew-row flex-nowrap items-center justify-center gap-2 uppercase hover:bg-red-300";
+      btnEliminar.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg><p class="font-bold text-xs">Eliminar</p>`;
+      btnEliminar.onclick = () => confirmarEliminar(nota);
+
+      const btnAgregarReporte = document.createElement("BUTTON");
+      btnAgregarReporte.className = "w-full px-2 py-2 md:py-1 text-xs leadindg-5 font-semibold rounded cursor-pointer bg-green-200 text-green-800 flex flew-row flex-nowrap items-center justify-center gap-2 uppercase hover:bg-green-300";
+      btnAgregarReporte.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 dark:text-white"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg><p class="font-bold text-xs">Agregar</p>`;
+      btnAgregarReporte.onclick = () => agregarPDF(nota);
+
+      divBtns.appendChild(btnAgregarReporte)
+      divBtns.appendChild(btnEliminar)
+      
       divTexto.appendChild(h3);
       divTexto.appendChild(span);
       divTexto.appendChild(p);
-      divTexto.appendChild(btnEliminar);
 
       contenedorNota.appendChild(divTexto);
+      contenedorNota.appendChild(divBtns);
 
       contenedorNotas.appendChild(contenedorNota);
     });
   }
 
-  function limpiarHTML() {
-    while (contenedorNotas.firstChild) {
-      contenedorNotas.removeChild(contenedorNotas.firstChild);
-    }
-  }
-
-  function confirmarEliminar(nota) {
+  const confirmarEliminar = (nota) => {
     Swal.fire({
       title: `¿Estás seguro de eliminar la nota?`,
       text: "Esta acción no se puede deshacer",
@@ -303,31 +224,19 @@
     });
   }
 
-  async function eliminarNota(nota) {
-    const datos = new FormData();
-    datos.append("id", nota.id);
-
-    try {
-      const URL = `${location.origin}/api/nota-reporte/eliminar`;
-      const response = await fetch(URL, {
-        method: "POST",
-        body: datos,
+  const eliminarNota = async (nota) => {
+    const URL = `${location.origin}/api/nota-reporte/eliminar`;
+    const res = await PostDatos.eliminarDatos(URL, nota.id)
+    if (res.tipo === "Exito") {
+      Alerta.Toast.fire({
+        title: res.tipo,
+        text: res.mensaje,
+        icon: "success",
       });
-      const resultado = await response.json();
 
-      if (resultado.tipo === "Exito") {
-        Swal.fire({
-          title: resultado.tipo,
-          text: resultado.mensaje,
-          icon: "success",
-        });
+      notas = [...notas].filter((nota) => nota.id !== res.id);
 
-        notas = [...notas].filter((nota) => nota.id !== resultado.id);
-
-        renderizarNotas();
-      }
-    } catch (error) {
-      console.log(error);
+      renderizarNotas();
     }
   }
 })();

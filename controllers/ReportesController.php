@@ -135,6 +135,7 @@ class ReportesController
         date_default_timezone_set('America/Mexico_City');
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
             $nombreImagen = md5(uniqid(rand(), true)) . ".jpg";
 
             $nota = new Notas();
@@ -184,6 +185,7 @@ class ReportesController
         date_default_timezone_set('America/Mexico_City');
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
             $material = new Material($_POST);
             $material->id_employee = s($_SESSION['empleado_id']);
             $material->created = date('Y-m-d H:i:s');
@@ -191,14 +193,14 @@ class ReportesController
             $resultado = $material->guardar();
 
             if ($resultado) {
-                $mat = Materiales::where('id', $material->id_material);
                 $und = Unidades::where('id', $material->id_unity);
 
                 $respuesta = [
                     'tipo' => "Exito",
                     'mensaje' => "El material ha sido registrado correctamente",
-                    'material' => $mat->name,
+                    'material' => $material->material,
                     'unidad' => $und->name,
+                    'cantidad' => $material->quantity
                 ];
             }
 
@@ -363,7 +365,7 @@ class ReportesController
     {
         isAuth();
 
-        $notas = Notas::belongsTo('id_report', s($_POST['id_report']));
+        $notas = Notas::belongsTo('id_report', s($_GET['id_report']));
 
         echo json_encode($notas);
     }
@@ -372,9 +374,11 @@ class ReportesController
     {
         isAuth();
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $folio = s($_POST['id_report']);
-            $materiales = MaterialRepAPI::obtenerMateriales($folio);
+        $folio = s($_GET['id_report']);
+        $materiales = Material::belongsTo('id_report', $folio);
+
+        foreach($materiales as $material) {
+            $material->id_unity = Unidades::find($material->id_unity)->name;
         }
 
         echo json_encode($materiales);
