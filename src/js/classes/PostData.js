@@ -36,6 +36,23 @@ export default class PostDatos {
         
     }
 
+    static async actualizarDato(url, idx) {
+        const data = new FormData();
+        data.append("id", idx);
+        
+        try {     
+            const response = await fetch(url, {
+                method: "POST",
+                body: data,
+            });
+    
+            const result = await response.json();
+            return result;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    
     static async eliminarDatos(url, idx) {
         const data = new FormData();
         data.append("id", idx);

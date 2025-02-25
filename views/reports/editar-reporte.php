@@ -6,6 +6,7 @@
 <article class="mx-auto max-w-screen-lg px-4 2xl:px-0">
         <div class="lg:flex lg:items-center lg:justify-between lg:gap-4">
             <h2 class="shrink-0 font-black text-xl text-gray-900 dark:text-white sm:text-4xl uppercase text-center">Editar Reporte: <?= $reporte->id ?></h2>
+            <a class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700" href="/reporte?folio=<?= $reporte->id ?>">Volver</a>
         </div>
 
         <form class="mt-6 border p-5 border-gray-300 shadow rounded-lg border-dashed" id="formulario-reporte" autocomplete="off">

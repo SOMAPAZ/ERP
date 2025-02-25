@@ -56,13 +56,19 @@ $router->get('/api/reporteID', [ReportesController::class, 'JSONreporte']);
 $router->post('/api/reporte', [ReportesController::class, 'generarReporte']);
 $router->post('/api/reporte/editar', [ReportesController::class, 'actualizarReporte']);
 $router->post('/api/reporte/eliminar', [ReportesController::class, 'eliminarReporte']);
+$router->get('/reporte/estado', [ReportesController::class, 'statusReporte']);
+$router->post('/reporte/estado/actualizar', [ReportesController::class, 'actualizarStatusReporte']);
 $router->get('/api-reportes', [ReportesController::class, 'reportesAPI']);
 
 $router->get('/api/notas-reportes', [ReportesController::class, 'notasAPI']);
 $router->post('/api/nota-reporte', [ReportesController::class, 'generarNotaReporte']);
 $router->post('/api/nota-reporte/eliminar', [ReportesController::class, 'eliminarNota']);
 $router->post('/api/material', [ReportesController::class, 'guardarMateriales']);
+$router->post('/api/material/eliminar', [ReportesController::class, 'eliminarMateriales']);
+$router->get('/reporte/evidencias', [ReportesController::class, 'obtenerEvidencias']);
+$router->post('/reporte/evidencias-guardar', [ReportesController::class, 'guardarEvidencias']);
 $router->get('/api/materiales-reportes', [ReportesController::class, 'materialesAPI']);
+$router->get('/reporte/pdf', [PDFController::class, 'reportePDF']);
 
 //Actions Usuarios
 $router->get('/api/usuarios', [UsersController::class, 'usersAPI']);

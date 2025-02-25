@@ -101,8 +101,8 @@ import { getSearch, limpiarHTML } from "../helpers/index.js"
     emptyOption.value = "";
     emptyOption.textContent = "- Seleccione una unidad -";
     inputUnidad.appendChild(emptyOption);
-    unidades.forEach((unidad) => {
-      const { id, name } = unidad;
+    unidades.forEach((u) => {
+      const { id, name } = u;
       const option = document.createElement("OPTION");
       option.value = id;
       option.textContent = name;
@@ -164,7 +164,6 @@ import { getSearch, limpiarHTML } from "../helpers/index.js"
       li.className = "block rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200 uppercase cursor-pointer";
       li.onclick = function () {
         autocompletar(coincidencia, divAdd);
-        unidad = coincidencia.id;
       };
 
       li.textContent = coincidencia.name;
@@ -229,6 +228,7 @@ import { getSearch, limpiarHTML } from "../helpers/index.js"
       if (modal) modal.remove();
 
       const materialObj = {
+        id: res.id,
         quantity: res.cantidad,
         id_report: getSearch().folio,
         id_unity: res.unidad,
@@ -263,7 +263,7 @@ import { getSearch, limpiarHTML } from "../helpers/index.js"
     div.appendChild(inputDiv);
   }
 
-  function autocompletar(coincidencia, div) {
+  const autocompletar = (coincidencia, div) => {
     limpiarHTML(div);
     const input = div.parentElement.querySelector("INPUT");
     input.value = coincidencia.name;
@@ -282,5 +282,26 @@ import { getSearch, limpiarHTML } from "../helpers/index.js"
         eliminarMaterial(mat);
       }
     });
+  }
+
+  const eliminarMaterial = async (mat) => {
+    const URL = `${location.origin}/api/material/eliminar`;
+    const res = await PostDatos.eliminarDatos(URL, mat.id);
+
+    if(res.tipo === 'Exito') {
+      Alerta.Toast.fire({
+        icon: 'success',
+        title: 'Proceso exitoso',
+        text: res.mensaje
+      })
+      materialRep = [...materialRep].filter( m => (m.id).toString() !== (res.id).toString())
+      renderizarMaterialesUtilizados();
+    } else {
+      Alerta.Toast.fire({
+        icon: 'error',
+        title: 'Upss!',
+        text: 'Ocurrio un error'
+      })
+    }
   }
 })();

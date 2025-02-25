@@ -2,16 +2,21 @@ import GetDatos from "../classes/GetData.js"
 import Modal from "../classes/Modal.js"
 import PostDatos from "../classes/PostData.js"
 import Alerta from "../classes/Alerta.js"
-import { getSearch, limpiarHTML } from "../helpers/index.js"
+import {getSearch, limpiarHTML } from "../helpers/index.js"
 
 (() => {
   const contenedorNotas = document.querySelector("#render-notas");
   const btnAgregarNota = document.querySelector("#btn-add-note");
+  const btnAddBag = document.querySelector('#btn-bag-img')
   let notas = [];
+  let imagenes = [];
+  let guardadasEv = [];
 
   document.addEventListener("DOMContentLoaded", () => {
+    verificarExisteEv();
     obtenerNotas();
-    btnAgregarNota.addEventListener("click", () => mostrarModal());
+    btnAgregarNota.addEventListener("click", mostrarModal);
+    btnAddBag.addEventListener('click', modalImagenes);
   });
 
   const obtenerNotas = async () => {
@@ -185,17 +190,34 @@ import { getSearch, limpiarHTML } from "../helpers/index.js"
       const divBtns = document.createElement('DIV');
       divBtns.className = "sm:w-1/4 md:w-2/6 lg:flex-1 flex flex-col gap-2 lg:flex-row"
 
+      const existe = imagenes.find( im => im.image === nota.image);
       const btnEliminar = document.createElement("BUTTON");
-      btnEliminar.className = "w-full px-2 py-2 md:py-1 text-xs leadindg-5 font-semibold rounded cursor-pointer bg-red-200 text-red-800 flex flew-row flex-nowrap items-center justify-center gap-2 uppercase hover:bg-red-300";
+      btnEliminar.className = "w-full px-2 py-2 md:py-1 text-xs leadindg-5 font-semibold rounded cursor-pointer bg-red-200 text-red-800 flex flew-row flex-nowrap items-center justify-center gap-2 uppercase hover:bg-red-300 disabled:opacity-10 disabled:cursor-not-allowed";
       btnEliminar.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg><p class="font-bold text-xs">Eliminar</p>`;
+
+
+      if(existe || guardadasEv.length === 3){
+        btnEliminar.setAttribute('disabled', true)
+      } else {
+        btnEliminar.removeAttribute('disabled')
+      }
+
       btnEliminar.onclick = () => confirmarEliminar(nota);
 
       const btnAgregarReporte = document.createElement("BUTTON");
-      btnAgregarReporte.className = "w-full px-2 py-2 md:py-1 text-xs leadindg-5 font-semibold rounded cursor-pointer bg-green-200 text-green-800 flex flew-row flex-nowrap items-center justify-center gap-2 uppercase hover:bg-green-300";
-      btnAgregarReporte.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 dark:text-white"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg><p class="font-bold text-xs">Agregar</p>`;
-      btnAgregarReporte.onclick = () => agregarPDF(nota);
+      btnAgregarReporte.className = "w-full px-2 py-2 md:py-1 text-xs leadindg-5 font-semibold rounded cursor-pointer bg-green-200 text-green-800 flex flew-row flex-nowrap items-center justify-center gap-2 uppercase hover:bg-green-300 disabled:opacity-10 disabled:cursor-not-allowed";
+      btnAgregarReporte.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg><p class="font-bold text-xs">Agregar</p>`;
 
-      divBtns.appendChild(btnAgregarReporte)
+
+      if(existe || guardadasEv.length === 3) {
+        btnAgregarReporte.setAttribute('disabled', true)
+      } else {
+        btnAgregarReporte.removeAttribute('disabled');
+      }
+
+      btnAgregarReporte.onclick = () => agregarBag(nota);
+
+      if (image !== "" || guardadasEv.length !== 3) divBtns.appendChild(btnAgregarReporte);
       divBtns.appendChild(btnEliminar)
       
       divTexto.appendChild(h3);
@@ -237,6 +259,137 @@ import { getSearch, limpiarHTML } from "../helpers/index.js"
       notas = [...notas].filter((nota) => nota.id !== res.id);
 
       renderizarNotas();
+    }
+  }
+
+  const agregarBag = (nota) => {
+    const existe = imagenes.find( imag => imag.id === nota.id)
+    
+    if(imagenes.length === 3) {
+      Alerta.Toast.fire({
+        icon: 'error',
+        text: 'Solo se permiten 3 evidencias por reporte'
+      });
+      return;
+    }
+
+    if(!existe && imagenes.length < 3) {
+      Alerta.Toast.fire({
+        icon: 'success',
+        text: 'Evidencia agregada'
+      });
+      
+      imagenes = [...imagenes, nota];
+    }
+
+    renderizarNotas();
+  }
+
+  const modalImagenes = () => {
+    document.querySelector('.default-modal')?.remove();
+    verificarExisteEv();
+
+    const btnAgregar = document.createElement("BUTTON");
+    btnAgregar.className = "text-white bg-blue-700 hover:bg-blue-800 font-medium rounded text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 disabled:opacity-10";
+    btnAgregar.textContent = "Guardar";
+    imagenes.length === 0 ? btnAgregar.setAttribute('disabled', true) : btnAgregar.removeAttribute('disabled')
+    btnAgregar.onclick = confirmarEvidencias;
+
+    const divImages = document.createElement('DIV');
+    divImages.className = "w-full p-5 grid sm:grid-cols-2 md:grid-cols-3 gap-3"
+
+    if(imagenes.length > 0) {
+      imagenes.forEach( ima => {
+        const divImage = document.createElement('DIV');
+        divImage.className = 'flex flex-col gap-5'
+
+        const imagen = document.createElement("IMG");
+        imagen.src = `images/${ima.image}`;
+        imagen.alt = "imagen-pdf";
+        imagen.className ="w-full block";
+
+        const btnEliminar = document.createElement("BUTTON");
+        btnEliminar.className = "w-full px-2 py-2 md:py-1 text-xs leadindg-5 font-semibold rounded cursor-pointer bg-red-200 text-red-800 flex flew-row flex-nowrap items-center justify-center gap-2 uppercase hover:bg-red-300 disabled:opacity-10";
+        btnEliminar.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg><p class="font-bold text-xs">Eliminar</p>`;
+        btnEliminar.onclick = () => eliminarEvidenciaPDF(ima);
+
+        divImage.appendChild(imagen);
+        divImage.appendChild(btnEliminar);
+
+        divImages.appendChild(divImage);
+      })
+    } else {
+      const parrafo = document.createElement('P');
+      parrafo.textContent = 'No hay imagenes seleccionadas'
+      parrafo.className = 'sm:col-span-2 md:col-span-3 text-center uppercase text-gray-900 dark:text-gray-200 font-black'
+      divImages.appendChild(parrafo);
+    }
+
+    Modal.renderModal(divImages, btnAgregar)
+  }
+
+  const eliminarEvidenciaPDF = (ima) => {
+    imagenes = imagenes.filter( evi => evi.id !== ima.id)
+    modalImagenes();
+    renderizarNotas();
+    Alerta.Toast.fire({
+      icon: 'success',
+      text: 'Evidencia eliminada'
+    });
+  }
+
+  const confirmarEvidencias = () => {
+    if(imagenes.length < 3) {
+      Alerta.Toast.fire({
+        icon: 'error',
+        title: 'Acción denegada',
+        text: 'Debe seleccionar al menos 3 imagenes'
+      })
+      return;
+    }
+
+    Swal.fire({
+      title: `¿Estás seguro de guardar estas evidencias?`,
+      text: "Esta acción no se puede deshacer",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, guardar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        guardarEvidencias();
+      }
+    });
+  }
+
+  const verificarExisteEv = async () => {
+    const url = `${location.origin}/reporte/evidencias?folio=${getSearch().folio}`
+    guardadasEv = await GetDatos.consultar(url);
+    guardadasEv.length === 3 ? btnAddBag.setAttribute('disabled', true) : btnAddBag.removeAttribute('disabled')
+  }
+
+  const guardarEvidencias = async () => {
+    const url = `${location.origin}/reporte/evidencias-guardar`;
+    const res = await PostDatos.enviarArray(url, JSON.stringify(imagenes));
+
+    if(res.tipo === 'Error') {
+      Alerta.Toast.fire({
+        icon: 'error',
+        title: 'Upss!',
+        text: res.msg
+      })
+      return;
+    }
+    
+    if(res.tipo === 'Exito') {
+      Alerta.Toast.fire({
+        icon: 'success',
+        title: 'Guardado',
+        text: res.msg
+      })
+
+      document.querySelector('.default-modal')?.remove();
+      verificarExisteEv();
     }
   }
 })();

@@ -5,17 +5,16 @@ namespace Controllers;
 use MVC\Router;
 use Empleados\Empleado;
 use APIs\ReportesAPI;
-use APIs\MaterialRepAPI;
 use Reportes\Categoria;
 use Reportes\Reporte;
 use Reportes\Notas;
 use Reportes\Incidencias;
 use Reportes\Prioridad;
-use Reportes\Materiales;
 use Reportes\Material;
 use Reportes\Unidades;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Reportes\Evidencias;
 
 class ReportesController
 {
@@ -51,8 +50,6 @@ class ReportesController
         $prioridad = Prioridad::where('id', $reporte->id_priority);
         $realizado = Empleado::where('id', $reporte->employee_id);
 
-        // dd($realizado);
-
         $router->render('reports/reporte-unico', [
             'links' => self::$links,
             'apartado' => self::$apartado,
@@ -61,7 +58,7 @@ class ReportesController
             'categoria' => $categoria,
             'incidencia' => $incidencia,
             'prioridad' => $prioridad,
-            'realizado' => $realizado
+            'realizado' => $realizado,
         ]);
     }
 
@@ -102,7 +99,7 @@ class ReportesController
             }
 
             $secuencialNuevo = str_pad($secuencial + 1, 4, '0', STR_PAD_LEFT);
-            $reporte->id_employee_sup = 6;
+            $reporte->id_employee_sup = s($_SESSION['empleado_id']);
 
             $year = date('y');
             $mes = date('m');
@@ -194,13 +191,15 @@ class ReportesController
 
             if ($resultado) {
                 $und = Unidades::where('id', $material->id_unity);
+                $res = Material::where('created', $material->created);
 
                 $respuesta = [
                     'tipo' => "Exito",
                     'mensaje' => "El material ha sido registrado correctamente",
                     'material' => $material->material,
                     'unidad' => $und->name,
-                    'cantidad' => $material->quantity
+                    'cantidad' => $material->quantity,
+                    'id' => $res->id
                 ];
             }
 
@@ -352,6 +351,46 @@ class ReportesController
             }
         }
     }
+    public static function eliminarMateriales()
+    {
+        isAuth();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = s($_POST['id']);
+            $nota = Material::where('id', $id);
+
+            if (!$nota) {
+                $respuesta = [
+                    'tipo' => 'Error',
+                    'mensaje' => 'Hubo un error al eliminar el material'
+                ];
+
+                echo json_encode($respuesta);
+                return;
+            }
+
+            $resultado = $nota->eliminar();
+
+            if (!$resultado) {
+                $respuesta = [
+                    'tipo' => 'Error',
+                    'mensaje' => 'Hubo un error al eliminar el material'
+                ];
+
+                echo json_encode($respuesta);
+                return;
+            }
+
+            if ($resultado) {
+                $respuesta = [
+                    'tipo' => 'Exito',
+                    'mensaje' => 'Material eliminado correctamente',
+                    'id' => $id
+                ];
+                echo json_encode($respuesta);
+            }
+        }
+    }
 
     public static function reportesAPI()
     {
@@ -384,7 +423,8 @@ class ReportesController
         echo json_encode($materiales);
     }
 
-    public static function JSONreporte() {
+    public static function JSONreporte() 
+    {
         isAuth();
 
         $folioRep = s($_GET['folio']);
@@ -400,5 +440,86 @@ class ReportesController
         $reporte->id_priority = Prioridad::find($reporte->id_priority);
 
         echo json_encode($reporte);
+    }
+
+    public static function statusReporte()
+    {
+        isAuth();
+
+        $estado = Reporte::where('id', s($_GET['folio']));
+
+        echo json_encode($estado->id_status);
+    }
+
+    public static function actualizarStatusReporte()
+    {
+        isAuth();
+
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $informacion = explode(',', $_POST['args']);
+            
+            $reporte = Reporte::where('id', $informacion[1]);
+
+            $reporte->id_status = $informacion[0];
+
+            if($informacion[0] == '3') {
+                $reporte->id_employee_sup = s($_SESSION['empleado_id']);
+            }
+
+            $res = $reporte->guardar();
+
+            if($res) {
+                $respuesta = [
+                    'tipo' => 'Exito',
+                    'msg' => 'Estado del reporte actualizado'
+                ];
+                echo json_encode($respuesta);
+            }
+        }
+    }
+
+    public static function guardarEvidencias() {
+        isAuth();
+
+        if($_SERVER['REQUEST_METHOD'] === 'POST'){
+            $arrays = json_decode($_POST['args']);
+
+            $datos = [];
+            
+            foreach($arrays as $array) {
+                $datos[] = [
+                    'id_report' => $array->id_report, 
+                    'image' =>$array->image
+                ];
+            }
+
+            foreach($datos as $dato) {
+                $evidencia = new Evidencias($dato);
+                $res = $evidencia->guardar();
+
+                if(!$res) {
+                    echo json_encode([
+                        'tipo' => 'Error',
+                        'msg' => 'Hubo un error al guardar los datos'
+                    ]);
+                    return;
+                }
+            }
+
+            echo json_encode([
+                'tipo' => 'Exito',
+                'msg' => 'Evidencias guardadas correctamente',
+                'datos' => $datos
+            ]);
+        }
+    }
+
+    public static function obtenerEvidencias() {
+        isAuth();
+
+        $folio = s($_GET['folio']);
+        $evidencias = Evidencias::belongsTo('id_report', $folio);
+
+        echo json_encode($evidencias);
     }
 }
