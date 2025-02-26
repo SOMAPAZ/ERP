@@ -1,0 +1,1 @@
+export default class Paginacion{static definirURL(t,e){let i=e.map((t=>{let e=Object.keys(t)[0];return`${e}=${t[e]}`})).join("&");return`${location.origin}/${t}?${i}`}static getDatos(t,e=[]){if(0===e.length)return;return this.definirURL(t,e)}}

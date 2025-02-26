@@ -34,6 +34,8 @@ import { limpiarHTML } from "../helpers/index.js";
     empleados.forEach((empleado) => {
       const { id, nombre, apellido, correo, telefono, rol } = empleado;
 
+      if(id === '0') return;
+
       const row = document.createElement("TR");
       row.className =
         "whitespace-nowrap bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600";

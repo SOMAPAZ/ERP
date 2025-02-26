@@ -1,4 +1,5 @@
 import Validar from "./Validar.js";
+import Alerta from "./Alerta.js";
 
 export default class PostDatos {
     static async guardarDatos(url, args) {
@@ -15,6 +16,11 @@ export default class PostDatos {
             const result = await response.json();
             return result;
         } catch (error) {
+            Alerta.Toast.fire({
+                icon: 'error',
+                title: 'Upss!',
+                text: 'Hubo un error, recargue la pagina'
+            })
             console.error(error);
         }
     }
@@ -49,13 +55,18 @@ export default class PostDatos {
             const result = await response.json();
             return result;
         } catch (error) {
+            Alerta.Toast.fire({
+                icon: 'error',
+                title: 'Upss!',
+                text: 'Hubo un error, recargue la pagina'
+            })
             console.error(error);
         }
     }
     
-    static async eliminarDatos(url, idx) {
+    static async eliminarDatos(url, idx, name = 'id') {
         const data = new FormData();
-        data.append("id", idx);
+        data.append(name, idx);
         
         try {     
             const response = await fetch(url, {
@@ -66,6 +77,11 @@ export default class PostDatos {
             const result = await response.json();
             return result;
         } catch (error) {
+            Alerta.Toast.fire({
+                icon: 'error',
+                title: 'Upss!',
+                text: 'Hubo un error, recargue la pagina'
+            })
             console.error(error);
         }
     }
@@ -83,6 +99,11 @@ export default class PostDatos {
             const result = await response.json();
             return result;
         } catch (error) {
+            Alerta.Toast.fire({
+                icon: 'error',
+                title: 'Upss!',
+                text: 'Hubo un error, recargue la pagina'
+            })
             console.error(error);
         }
     }

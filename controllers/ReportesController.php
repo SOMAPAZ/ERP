@@ -396,8 +396,25 @@ class ReportesController
     {
         isAuth();
 
-        $reportes = ReportesAPI::obtenerReportes();
-        echo json_encode($reportes);
+        $status = s($_GET['s']);
+        $limit = s($_GET['limit']);
+        $offset = s($_GET['offset']);
+
+        $reportes = Reporte::belongsToPaginacion('id_status', $status, $offset, $limit);
+        foreach($reportes as $reporte) {
+            $reporte->id_priority = Prioridad::find($reporte->id_priority);
+            $reporte->id_category = Categoria::find($reporte->id_category)->name;
+            $reporte->id_incidence = Incidencias::find($reporte->id_incidence);
+        }
+
+        $total = Reporte::totalWhere('id_status', $status);
+
+        $res = [
+            'reportes'=>$reportes,
+            'total'=>$total
+        ];
+
+        echo json_encode($res);
     }
 
     public static function notasAPI()
@@ -462,8 +479,16 @@ class ReportesController
 
             $reporte->id_status = $informacion[0];
 
+            if($reporte->employee_id === null) {
+                $reporte->employee_id = 0;
+            }
+
             if($informacion[0] == '3') {
                 $reporte->id_employee_sup = s($_SESSION['empleado_id']);
+            }
+
+            if($reporte->id_user == null) {
+                $reporte->id_user = 0;
             }
 
             $res = $reporte->guardar();
@@ -482,35 +507,40 @@ class ReportesController
         isAuth();
 
         if($_SERVER['REQUEST_METHOD'] === 'POST'){
-            $arrays = json_decode($_POST['args']);
-
-            $datos = [];
-            
-            foreach($arrays as $array) {
-                $datos[] = [
-                    'id_report' => $array->id_report, 
-                    'image' =>$array->image
-                ];
-            }
-
-            foreach($datos as $dato) {
-                $evidencia = new Evidencias($dato);
-                $res = $evidencia->guardar();
-
-                if(!$res) {
-                    echo json_encode([
-                        'tipo' => 'Error',
-                        'msg' => 'Hubo un error al guardar los datos'
-                    ]);
-                    return;
+            try {
+                $arrays = json_decode($_POST['args']);
+                $datos = [];
+                foreach($arrays as $array) {
+                    $datos[] = [
+                        'id_report' => $array->id_report, 
+                        'image' =>$array->image
+                    ];
                 }
+                foreach($datos as $dato) {
+                    $evidencia = new Evidencias($dato);
+                    $res = $evidencia->guardar();
+    
+                    if(!$res) {
+                        echo json_encode([
+                            'tipo' => 'Error',
+                            'msg' => 'Hubo un error al guardar los datos'
+                        ]);
+                        return;
+                    }
+                }
+                echo json_encode([
+                    'tipo' => 'Exito',
+                    'msg' => 'Evidencias guardadas correctamente',
+                    'datos' => $datos
+                ]);
+                
+            } catch (\Throwable $th) {
+                echo json_encode([
+                    'tipo' => 'Fail',
+                    'msg' => 'Recarge la pagina',
+                    'error' => $th
+                ]);
             }
-
-            echo json_encode([
-                'tipo' => 'Exito',
-                'msg' => 'Evidencias guardadas correctamente',
-                'datos' => $datos
-            ]);
         }
     }
 

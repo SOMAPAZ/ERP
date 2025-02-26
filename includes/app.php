@@ -1,8 +1,11 @@
 <?php
+//Deshabilitar las alertas de deprecated
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
+
 // Conectarnos a la base de datos
+require __DIR__ . '/../vendor/autoload.php';
 use Model\ActiveRecord;
 
-require __DIR__ . '/../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();
 

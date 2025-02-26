@@ -158,10 +158,34 @@ class ActiveRecord
         return array_shift($total);
     }
 
+    public static function totalWhere($columna, $valor)
+    {
+        $query = "SELECT COUNT(*) FROM " . static::$tabla . " WHERE {$columna} = '{$valor}'";
+        $resultado = self::$db->query($query);
+        $total = $resultado->fetch_array();
+        return array_shift($total);
+    }
+
     //Buscar tadas las coincidencias
     public static function belongsTo($columna, $valor)
     {
         $query = "SELECT * FROM " . static::$tabla  . " WHERE {$columna} = '{$valor}'";
+        $resultado = self::consultarSQL($query);
+
+        return $resultado;
+    }
+
+    public static function belongsToDesc($columna, $valor)
+    {
+        $query = "SELECT * FROM " . static::$tabla  . " WHERE {$columna} = '{$valor}' ORDER BY id DESC";
+        $resultado = self::consultarSQL($query);
+
+        return $resultado;
+    }
+
+    public static function belongsToPaginacion($columna, $valor, $offset, $limit)
+    {
+        $query = "SELECT * FROM " . static::$tabla  . " WHERE {$columna} = '{$valor}' ORDER BY id DESC LIMIT {$limit} OFFSET {$offset}";
         $resultado = self::consultarSQL($query);
 
         return $resultado;

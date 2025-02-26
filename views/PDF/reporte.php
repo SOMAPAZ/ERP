@@ -141,12 +141,13 @@
             </tr>
             <tr>
                 <?php foreach($evidencias as $evidencia):
-                    // $background64 = base64_encode(file_get_contents('./images/'. $evidencia->image));
-                    // dd(file_get_contents('./images/'. $evidencia->image));
-                    // $img_base64 = 'data:image/jpg;base64,' . $background64;
+                    $imageName = trim($evidencia->image);
+                    $urlName = "images/" . $imageName;
+                    $image = base64_encode(file_get_contents($urlName));
+                    $evi = 'data:image/jpg;base64,' . $image;
                 ?>
                     <td>
-                        <img src="https://cdn3.pixelcut.app/7/20/uncrop_hero_bdf08a8ca6.jpg" alt="Evidencia Inicial" class="evidencias">
+                        <img src="<?= $evi ?>" alt="Evidencia Inicial" class="evidencias">
                     </td>
                 <?php endforeach; ?>
             </tr>

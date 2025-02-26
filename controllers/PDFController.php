@@ -59,11 +59,17 @@ class PDFController
         $folio = s($_GET['folio']);
 
         $reporte = Reporte::where('id', $folio);
+
+        if($reporte->id_status != '3') {
+            header("Location: /reporte?folio=$folio");
+            return;
+        }
+
         $reporte->id_category = Categoria::find($reporte->id_category)->name;
         $reporte->id_incidence = Incidencias::find($reporte->id_incidence)->name;
         $empleado = Empleado::find($reporte->employee_id);
         $empleadoSup = Empleado::find($reporte->id_employee_sup);
-
+        
         $reporte->employee_id = $empleado->name . " " . $empleado->lastname;
         $reporte->id_employee_sup = $empleadoSup->name . " " . $empleadoSup->lastname;
 
