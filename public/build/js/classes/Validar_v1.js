@@ -1,0 +1,1 @@
+import Alerta from"./Alerta_v1.js";export default class Validar{static#t={};static crearObjeto(t){return t.forEach((t=>{this.#t[t.name]=t.value})),this.#t}static validarInputs(t){const a=this.crearObjeto(t);return Object.values(a).some((t=>""===t.trim()))?(new Alerta({msg:"Todos los campos son obligatorios",position:document.querySelector("#div-notif")}),!1):a}}
