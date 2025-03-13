@@ -1,0 +1,24 @@
+{
+  "name": "framework-ccc",
+  "version": "1.0.0",
+  "description": "Proyectos - Carlos Cabrera",
+  "author": "Carlos Cabrera Carreón",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "gulp"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "glob": "^10.3.12",
+    "gulp": "^5.0.0",
+    "gulp-terser": "^2.1.0",
+    "sharp": "^0.33.3",
+    "tailwind-scrollbar": "^3.1.0",
+    "tailwindcss": "^3.4.14"
+  },
+  "dependencies": {
+    "@sweetalert2/theme-borderless": "^5.0.18",
+    "sweetalert2": "^11.14.5"
+  }
+}

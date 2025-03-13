@@ -1,0 +1,33 @@
+{
+  "name": "egcar/framework_mvc",
+  "description": "Framework para proyectos",
+  "license": "ISR",
+  "autoload": {
+    "psr-4": {
+      "MVC\\": "./",
+      "Controllers\\": "./controllers",
+      "Model\\": "./models",
+      "Reportes\\": "./models/reportes",
+      "Facturacion\\": "./models/caja",
+      "Usuarios\\": "./models/usuarios",
+      "Empleados\\": "./models/empleados",
+      "Tanques\\": "./models/tanques",
+      "Notificaciones\\": "./models/notificaciones",
+      "APIs\\": "./models/apis",
+      "Classes\\": "./classes"
+    }
+  },
+  "authors": [
+    {
+      "name": "Carlos",
+      "email": "deming3c@outlook.com"
+    }
+  ],
+  "require": {
+    "dompdf/dompdf": "^3.0",
+    "phpmailer/phpmailer": "^6.9",
+    "intervention/image": "^3.10",
+    "vlucas/phpdotenv": "^5.6",
+    "cloudinary/cloudinary_php": "^2.14"
+  }
+}
