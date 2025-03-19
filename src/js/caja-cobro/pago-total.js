@@ -105,6 +105,8 @@ import Modal from "../classes/Modal_v1.js";
             +tipoPago
         );
 
+        return;
+
         const formData = new FormData();
         formData.append("id_user", resUser.id);
         formData.append("mes_incio", resDebt.periodo.inicio);
@@ -121,37 +123,34 @@ import Modal from "../classes/Modal_v1.js";
         formData.append("monto_descuento_recargo_drenaje", RecNaturalDrenaje ? Number(RecNaturalDrenaje) : 0);
         formData.append("total", deudaGral.total);
 
-    try {
-        const URL = `${location.origin}/api/pago-total`
-        const response = await fetch(URL, {
-        method: "POST",
-        body: formData,
-        });
-        const resultado = await response.json();
+        try {
+            const URL = `${location.origin}/api/pago-total`
+            const response = await fetch(URL, {
+                method: "POST",
+                body: formData,
+            });
+            const resultado = await response.json();
 
-        if(resultado.tipo === "Exito") {
-        Swal.fire({
-            title: `Pago guardado correctamente con folio ${resultado.folio}`,
-            text: "El pago se ha guardado correctamente",
-            icon: "success",
-            confirmButtonText: "Mostrar recibo",
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            allowEnterKey: false, 
-        }).then((result) => {
-            if (result.isConfirmed) {
-            window.open(`pdf/recibo?folio=${resultado.folio}&id=${usuario_informacion.id}`, '_blank');
-            }
-        });
+            if(resultado.tipo === "Exito") {
+                Swal.fire({
+                    title: `Pago guardado correctamente con folio ${resultado.folio}`,
+                    text: "El pago se ha guardado correctamente",
+                    icon: "success",
+                    confirmButtonText: "Mostrar recibo",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: false, 
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                    window.open(`pdf/recibo?folio=${resultado.folio}&id=${usuario_informacion.id}`, '_blank');
+                    }
+                });
 
-        limpiarHTML(document.querySelector("#radio_inputs"));
-        limpiarHTML(divBoton);
-        consultarInfoUsuario(usuario_informacion.id);
-        fechas = [];
+            limpiarHTML(divBoton);
         }
     } catch (error) {
         console.log(error);
-    }
+        }
     }
 
     const formDescRec = () => {

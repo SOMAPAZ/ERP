@@ -168,8 +168,6 @@ import GetDatos from "../classes/GetData_v1.js"
       });
       return
     }
-
-    
     
     if(resDebt.estado === 'debe') {
       const divPeriodo = document.createElement('DIV')
@@ -220,10 +218,17 @@ import GetDatos from "../classes/GetData_v1.js"
     const ul = document.createElement('UL')
     ul.className = "grid grid-cols-1 sm:grid-cols-2"
     
+    const liAguaIncial = document.createElement('LI')
+    liAguaIncial.innerHTML = `<span class="font-bold">Agua inicial:</span> $ ${formatNum(resDebt.agua_inicial)}`;
+    
+    const lidrenajeInicial = document.createElement('LI')
+    lidrenajeInicial.innerHTML = `<span class="font-bold">Drenaje incial:</span> $ ${formatNum(resDebt.drenaje_inicial)}`;
+    
     const liAgua = document.createElement('LI')
-    liAgua.innerHTML = `<span class="font-bold">Agua</span>: $ ${formatNum(resDebt.agua)}`;
+    liAgua.innerHTML = `<span class="font-bold">Agua a pagar:</span> $ ${formatNum(resDebt.agua)}`;
     const liDren = document.createElement('LI')
-    liDren.innerHTML = `<span class="font-bold">Drenaje:</span> $ ${formatNum(resDebt.drenaje)}`;
+    liDren.innerHTML = `<span class="font-bold">Drenaje a pagar:</span> $ ${formatNum(resDebt.drenaje)}`;
+    
     const liRec = document.createElement('LI')
     liRec.innerHTML = `
     <div>
@@ -243,10 +248,11 @@ import GetDatos from "../classes/GetData_v1.js"
     <p class="font-bold text-gray-600 dark:text-gray-400 ms-6">- Agua: <span class="font-normal">
     $ ${formatNum(resDebt.iva.agua)}
     </span></p>
-    ${ resDebt.m3_excedido_agua > 0 ?
-      `<p class="font-bold text-gray-600 dark:text-gray-400 ms-6">- Drenaje: <span class="font-normal">
+    <p class="font-bold text-gray-600 dark:text-gray-400 ms-6">- Drenaje: <span class="font-normal">
       $ ${formatNum(resDebt.iva.drenaje)}
-      </span></p>
+    </span></p>
+    ${ resDebt.m3_excedido_agua > 0 ?
+      `
       <p class="font-bold text-gray-600 dark:text-gray-400 ms-6">- Exc Agua: <span class="font-normal">
       $ ${formatNum(resDebt.iva.m3_excedido_agua)}
       </span></p>
@@ -264,15 +270,25 @@ import GetDatos from "../classes/GetData_v1.js"
     <p class="font-bold text-gray-600 dark:text-gray-400 ms-6">- Naturales: <span class="font-normal">${resDebt.meses.naturales}</span></p>
     </div>
     `;
+    const liDescuento = document.createElement('LI')
+    liDescuento.innerHTML = `
+    <div>
+      <span class="font-bold">Descuento total aplicable:</span> $ ${formatNum(resDebt.descuentos.total)}
+      <p class="font-bold text-gray-600 dark:text-gray-400 ms-6">- Agua: <span class="font-normal">$ ${formatNum(resDebt.descuentos.agua)}</span></p>
+      <p class="font-bold text-gray-600 dark:text-gray-400 ms-6">- Drenaje: <span class="font-normal">$ ${formatNum(resDebt.descuentos.drenaje)}</span></p>
+    </div>
+    `;
     
     const liTotal = document.createElement('LI')
     liTotal.className = "text-2xl text-gray-900 underline dark:text-yellow-200"
     liTotal.innerHTML = `<span class="font-black">Total:</span> $ ${formatNum(resDebt.total)}`;
     
+    ul.appendChild(liAguaIncial)
+    ul.appendChild(lidrenajeInicial)
     ul.appendChild(liAgua)
     ul.appendChild(liDren)
     ul.appendChild(liRec)
-    ul.appendChild(liIva)
+    
     
     if(resDebt.excedio > 0) {
       const liMedido = document.createElement('LI')
@@ -290,6 +306,8 @@ import GetDatos from "../classes/GetData_v1.js"
       ul.appendChild(liMedido)
     }
 
+    ul.appendChild(liDescuento)
+    ul.appendChild(liIva)
     ul.appendChild(liMeses)
     ul.appendChild(liTotal)
     

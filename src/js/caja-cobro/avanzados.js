@@ -78,6 +78,14 @@ import PostDatos from "../classes/PostData_v1.js";
           tdMes.className = "px-4 py-1";
           tdMes.textContent = adeudo.mes;
 
+          const tdMontoTarifa = document.createElement("TD");
+          tdMontoTarifa.className = "px-4 py-1";
+          tdMontoTarifa.textContent = adeudo.tarifa;
+
+          const tdMontoDesc = document.createElement("TD");
+          tdMontoDesc.className = "px-4 py-1";
+          tdMontoDesc.textContent = adeudo.tarifa -adeudo.agua;
+
           const tdMontoAgua = document.createElement("TD");
           tdMontoAgua.className = "px-4 py-1";
           tdMontoAgua.textContent = adeudo.agua;
@@ -109,6 +117,8 @@ import PostDatos from "../classes/PostData_v1.js";
           tr.appendChild(tdCheckbox);
           tr.appendChild(tdYear);
           tr.appendChild(tdMes);
+          tr.appendChild(tdMontoTarifa);
+          tr.appendChild(tdMontoDesc);
           tr.appendChild(tdMontoAgua);
           tr.appendChild(tdRecargoAgua);
           tr.appendChild(tdIvaAgua);
