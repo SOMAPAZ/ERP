@@ -91,14 +91,14 @@ $router->post('/api/pago-unico', [CajaController::class, 'setPagoUnico']);
 
 $router->post('/condonacion-parcial', [CajaController::class, 'setCondonaciones']);
 $router->post('/api/condonacion-unico', [CajaController::class, 'setCondonacionUnico']);
-$router->post('/api/condonacion-recargos', [CajaController::class, 'setCondonacionRecargos']);
-
 
 $router->get('/pagar-total', [CajaController::class, 'viewPagoTotal']);
 $router->get('/consultar-avanzados', [CajaController::class, 'getAvanzados']);
 $router->get('/consultar-condonaciones', [CajaController::class, 'getCondonaciones']);
 $router->get('/consultar-condonaciones-listado', [CajaController::class, 'getListadoCondonaciones']);
 $router->post('/deshacer-condonacion', [CajaController::class, 'deshacerCondonacion']);
+
+$router->get('/adicionales', [CajaController::class, 'getPagosAdicionales']);
 
 // // Actions Updates
 $router->get('/updates', [UpdatesController::class, 'index']);
@@ -125,5 +125,6 @@ $router->get('/api/materiales', [GenericasController::class, 'materialesRep']);
 $router->get('/api/unidades', [GenericasController::class, 'unidadesRep']);
 $router->get('/api/colonias', [GenericasController::class, 'colonias']);
 $router->get('/api/zonas', [GenericasController::class, 'zonas']);
+$router->get('/cuentas-adicionales', [GenericasController::class, 'cuentasAdicionales']);
 
 $router->comprobarRutas();
