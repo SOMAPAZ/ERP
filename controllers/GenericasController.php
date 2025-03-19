@@ -2,6 +2,7 @@
 
 namespace Controllers;
 
+use Facturacion\Cuentas;
 use Usuarios\Colonia;
 use Reportes\Unidades;
 use Reportes\Categoria;
@@ -89,5 +90,13 @@ class GenericasController
 
         $zonas = Zona::all();
         echo json_encode($zonas);
+    }
+    public static function cuentasAdicionales()
+    {
+        isAuth();
+
+        $cuentas = Cuentas::all();
+
+        echo json_encode($cuentas);
     }
 }

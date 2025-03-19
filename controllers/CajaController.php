@@ -265,27 +265,6 @@ class CajaController
         }
     }
 
-    public static function setCondonacionRecargos()
-    {
-
-        isAuth();
-        permisosCaja();
-
-        if ($_SERVER["REQUEST_METHOD"] === "POST") {
-
-            $id = s($_POST['id_user']);
-
-            $resultado = Facturacion::condonarRecargos($id);
-            if ($resultado) {
-                $respuesta = [
-                    'tipo' => 'Exito',
-                    'mensaje' => 'Se han condonado los recargos correctamente'
-                ];
-            }
-
-            echo json_encode($respuesta);
-        }
-    }
     public static function getAvanzados(Router $router)
     {
         isAuth();
@@ -360,5 +339,14 @@ class CajaController
         }
 
         echo json_encode($respuesta);
+    }
+
+    public static function getPagosAdicionales(Router $router) {
+        isAuth();
+        permisosCaja();
+
+        $router->render('caja/pagos-adicionales', [
+            'links' => self::$links,
+        ]);
     }
 }
