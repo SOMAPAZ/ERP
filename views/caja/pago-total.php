@@ -1,4 +1,7 @@
-<?php require_once __DIR__ . '/../templates/nav-bar.php'; ?>
+<?php
+// $links[] = 'adicionales';
+require_once __DIR__ . '/../templates/nav-bar.php';
+?>
 <section class="py-4 antialiased dark:bg-gray-900 md:py-8 h-auto">
 
     <article class="mx-auto max-w-screen-lg px-4 2xl:px-0">
@@ -6,13 +9,13 @@
             <h2 class="shrink-0 font-black text-xl text-gray-900 dark:text-white sm:text-4xl uppercase text-center">
                 Pagar Total
             </h2>
-            
-            <?php if(date('m') < 3): ?>
+
+            <?php if (date('m') < 3): ?>
                 <div class="w-full flex flex-row justify-end">
                     <button class="bg-orange-200 text-orange-800 px-4 py-2 rounded-lg font-black text-xs uppercase hover:bg-orange-300" id="descuento-inicio-year">Descuento por inicio de año</button>
                 </div>
             <?php endif; ?>
-                
+
             <form class="w-full bg-white mx-auto mt-5 space-y-5 font-semibold border border-dashed border-gray-400 rounded-lg p-6 shadow-lg text-lg dark:border-gray-700 dark:bg-gray-800 dark:text-white" id="formulario-pago" autocomplete="off">
                 <div class="grid lg:grid-cols-4 gap-4">
                     <div class="space-y-2 lg:col-span-1">
@@ -90,13 +93,22 @@
             </form>
             <div id="buttons-actions" class="flex flex-col mt-10 md:flex-row gap-4">
                 <button type="button" id="realizar-pago" class="text-white text-lg flex items-center justify-center sm:w-full md:w-auto uppercase bg-gray-500 dark:bg-gray-700 text-lg py-2 px-6 rounded-sm hover:bg-gray-300 hover:text-gray-800 dark:hover:bg-gray-600 gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" /></svg><p class="font-bold text-xs">Pagar</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
+                    </svg>
+                    <p class="font-bold text-xs">Pagar</p>
                 </button>
                 <button type="button" id="realizar-desc" class="text-gray-900 dark:text-white flex items-center justify-center sm:w-full md:w-auto uppercase text-xs py-2 px-6 rounded-sm gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg><p class="font-bold text-xs">Descuento</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                    <p class="font-bold text-xs">Descuento</p>
                 </button>
                 <button type="button" id="eliminar-desc" class="hidden text-red-800 dark:text-white flex items-center justify-center sm:w-full md:w-auto uppercase bg-red-200 dark:bg-red-800 text-xs py-2 px-6 rounded-sm hover:bg-red-300 dark:hover:bg-red-600 gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg><p class="font-bold text-xs">Eliminar descuento</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                    <p class="font-bold text-xs">Eliminar descuento</p>
                 </button>
             </div>
         </div>
