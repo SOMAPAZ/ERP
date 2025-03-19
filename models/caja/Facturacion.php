@@ -88,14 +88,6 @@ class Facturacion extends ActiveRecord
         return $resultado;
     }
 
-    public static function condonarRecargos($id_user)
-    {
-        $query = "UPDATE " . self::$tabla . " SET if_recargo = 2 WHERE id_user = {$id_user} AND if_recargo = 1;";
-        $resultado = self::$db->query($query);
-
-        return $resultado;
-    }
-
     public static function getIdBetween($start, $end, $limit, $offset)
     {
         $query = "SELECT id_user FROM " . self::$tabla . " GROUP BY id_user HAVING SUM(if_recargo) BETWEEN {$start} AND {$end} LIMIT {$limit} OFFSET {$offset}";

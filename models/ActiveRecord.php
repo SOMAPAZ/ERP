@@ -169,7 +169,7 @@ class ActiveRecord
     //Buscar tadas las coincidencias
     public static function belongsTo($columna, $valor)
     {
-        $query = "SELECT * FROM " . static::$tabla  . " WHERE {$columna} = '{$valor}'";
+        $query = "SELECT * FROM " . static::$tabla  . " WHERE {$columna} = '{$valor}' ORDER BY `year`, mes";
         $resultado = self::consultarSQL($query);
 
         return $resultado;
