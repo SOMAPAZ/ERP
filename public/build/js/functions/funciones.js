@@ -1,1 +1,0 @@
-const limpiarHTML=i=>{for(;i.firstChild;)i.removeChild(i.firstChild)};export{limpiarHTML};
