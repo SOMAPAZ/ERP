@@ -7,7 +7,7 @@ use Model\ActiveRecord;
 class Facturas extends ActiveRecord
 {
     protected static $tabla = 'facturas_historial';
-    protected static $columnasDB = ['id', 'id_user', 'folio', 'fecha', 'mes_inicio', 'mes_fin', 'numero_meses', 'cancelado', 'monto_agua', 'monto_drenaje', 'monto_recargo_agua', 'monto_recargo_drenaje', 'monto_descuento_agua', 'monto_descuento_drenaje', 'monto_descuento_recargo_agua', 'monto_descuento_recargo_drenaje', 'monto_iva_agua', 'monto_iva_drenaje', 'total', 'tipo_pago', 'empleado_id'];
+    protected static $columnasDB = ['id', 'id_user', 'folio', 'fecha', 'mes_inicio', 'mes_fin', 'numero_meses', 'cancelado', 'monto_agua', 'monto_drenaje', 'monto_recargo_agua', 'monto_recargo_drenaje', 'monto_descuento_agua', 'monto_descuento_drenaje', 'monto_descuento_recargo_agua', 'monto_descuento_recargo_drenaje', 'monto_iva_agua', 'monto_iva_drenaje', 'id_cuentas', 'total', 'tipo_pago', 'empleado_id'];
 
     public $id;
     public $id_user;
@@ -27,6 +27,7 @@ class Facturas extends ActiveRecord
     public $monto_descuento_recargo_drenaje;
     public $monto_iva_agua;
     public $monto_iva_drenaje;
+    public $id_cuentas;
     public $total;
     public $tipo_pago;
     public $empleado_id;
@@ -51,6 +52,7 @@ class Facturas extends ActiveRecord
         $this->monto_descuento_recargo_drenaje = $args['monto_descuento_recargo_drenaje'] ?? 0;
         $this->monto_iva_agua = $args['monto_iva_agua'] ?? 0;
         $this->monto_iva_drenaje = $args['monto_iva_drenaje'] ?? 0;
+        $this->id_cuentas = $args['id_cuentas'] ?? null;
         $this->total = $args['total'] ?? 0;
         $this->tipo_pago = $args['tipo_pago'] ?? null;
         $this->empleado_id = $args['empleado_id'] ?? null;

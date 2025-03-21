@@ -1,15 +1,21 @@
 import Modal from "../classes/Modal_v1.js";
 import GetDatos from "../classes/GetData_v1.js"
 import Alerta from "../classes/Alerta_v1.js";
-import { saveLocalStorage } from "../helpers/index_v1.js";
+import { saveLocalStorage, deleteLocalStorage, getLocalStorage, limpiarHTML } from "../helpers/index_v1.js";
 
 (() => {
     const btnpagoAdicional = document.querySelector("#btn-consto-adicional");
+    const listadoAdicionales = document.querySelector("#listado-adicionales ul");
     let costosAdicionales = [];
     let costoAdicional = {};
     let agregados = [];
 
+    window.addEventListener("unload", function () {
+        getLocalStorage('costosAdicionales') ? deleteLocalStorage('costosAdicionales') : null;
+    });
+
     document.addEventListener("DOMContentLoaded", () => {
+        getLocalStorage('costosAdicionales') ? deleteLocalStorage('costosAdicionales') : null;
         obtenerCostosAdicionales();
         btnpagoAdicional.addEventListener('click', mostrarFormulario);
     });
@@ -35,6 +41,7 @@ import { saveLocalStorage } from "../helpers/index_v1.js";
         inputCostoAdicional.type = 'number';
         inputCostoAdicional.name = 'costo';
         inputCostoAdicional.id = 'costo';
+        inputCostoAdicional.onchange = e => costoAdicional.cantidad = +e.target.value;
         
         divCostoAdicional.appendChild(labelCostoAdicional);
         divCostoAdicional.appendChild(inputCostoAdicional);
@@ -80,6 +87,9 @@ import { saveLocalStorage } from "../helpers/index_v1.js";
         btnEnviar.className = 'py-2 px-4 bg-green-700 text-white rounded font-semibold text-sm hover:bg-green-800 dark:bg-green-600 dark:hover:bg-green-700';
         btnEnviar.type = 'submit';
         btnEnviar.value = 'Agregar';
+
+        formulario.onsubmit = e => e.preventDefault();
+
         btnEnviar.onclick = () => {
             if(selectAdicional.value === '' || inputCostoAdicional.value === '' || inputCostoAdicional.value === '0') {
                 Alerta.Toast.fire({
@@ -97,6 +107,7 @@ import { saveLocalStorage } from "../helpers/index_v1.js";
     }
 
     const agregarAdicionalesDOM = () => {
+        console.log(costoAdicional)
 
         if(agregados.find(costo => costo.id === costoAdicional.id)) {
             Alerta.Toast.fire({
@@ -107,12 +118,35 @@ import { saveLocalStorage } from "../helpers/index_v1.js";
             return;
         }
 
+        console.log(costoAdicional.cantidad);
+
         agregados = [...agregados, costoAdicional];
         saveLocalStorage('costosAdicionales', agregados);
 
-        agregados.forEach(agregado => {
-            console.log(agregado);
+        Alerta.Toast.fire({
+            icon: 'success',
+            title: 'Agregado',
+            text: 'El costo ha sido agregado'
         })
+
+        renderizarAgregados();
+    }
+
+    const renderizarAgregados = () => {
+        limpiarHTML(listadoAdicionales);
+
+        agregados.forEach(agregado => {
+            const liAdd = document.createElement('LI');
+            liAdd.className = 'flex flex-row gap-2 items-center font-bold uppercase text-sm dark:text-white';
+            liAdd.innerHTML = `Cuenta: <span class="font-normal"> ${agregado.cuenta}</span> Monto:<span class="text-sm text-gray-700 dark:text-gray-200">$ ${agregado.cantidad}</span>`;
+            listadoAdicionales.appendChild(liAdd);
+        });
+
+        const total = agregados.reduce((acum, item) => acum + +item.cantidad, 0);
+        const liTotal = document.createElement('LI');
+        liTotal.className = 'flex flex-row gap-2 items-center text-center text-xl font-bold uppercase text-sm dark:text-white';
+        liTotal.innerHTML = `Total: <span class="font-normal"> $ ${total}</span>`;
+        listadoAdicionales.appendChild(liTotal);
     }
 
 })()
