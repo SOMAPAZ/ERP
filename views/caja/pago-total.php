@@ -91,12 +91,18 @@ require_once __DIR__ . '/../templates/nav-bar.php';
                     </div>
                 </div>
             </form>
+            <?php include_once __DIR__ . '/../templates/lista-costos-adicionales.php'; ?>
             <div id="buttons-actions" class="flex flex-col mt-10 md:flex-row gap-4">
-                <button type="button" id="realizar-pago" class="text-white text-lg flex items-center justify-center sm:w-full md:w-auto uppercase bg-gray-500 dark:bg-gray-700 text-lg py-2 px-6 rounded-sm hover:bg-gray-300 hover:text-gray-800 dark:hover:bg-gray-600 gap-2">
+                <button type="button" id="realizar-pago" class="text-white text-lg flex items-center justify-center sm:w-full md:w-auto uppercase bg-gray-500 dark:bg-gray-700 py-2 px-6 rounded-sm hover:bg-gray-300 hover:text-gray-800 dark:hover:bg-gray-600 gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
                     </svg>
                     <p class="font-bold text-xs">Pagar</p>
+                </button>
+                <button class="py-2 px-4 bg-transparent rounded text-sm text-green-800 dark:text-green-400 font-semibold flex flex-row gap-2 items-center" id="btn-consto-adicional">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                        <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clip-rule="evenodd" />
+                    </svg>Adicionales
                 </button>
                 <button type="button" id="realizar-desc" class="text-gray-900 dark:text-white flex items-center justify-center sm:w-full md:w-auto uppercase text-xs py-2 px-6 rounded-sm gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -116,5 +122,6 @@ require_once __DIR__ . '/../templates/nav-bar.php';
 </section>
 
 <?php $scripts = [
-    'caja-cobro/pago-total.js'
+    'caja-cobro/pago-total.js',
+    'caja-cobro/adicional.js'
 ]; ?>

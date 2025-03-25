@@ -1,7 +1,7 @@
 import Modal from "../classes/Modal_v1.js";
 import GetDatos from "../classes/GetData_v1.js"
 import Alerta from "../classes/Alerta_v1.js";
-import { saveLocalStorage, deleteLocalStorage, getLocalStorage, limpiarHTML } from "../helpers/index_v1.js";
+import { saveLocalStorage, deleteLocalStorage, getLocalStorage, limpiarHTML, formatNum } from "../helpers/index_v1.js";
 
 (() => {
     const btnpagoAdicional = document.querySelector("#btn-consto-adicional");
@@ -107,8 +107,6 @@ import { saveLocalStorage, deleteLocalStorage, getLocalStorage, limpiarHTML } fr
     }
 
     const agregarAdicionalesDOM = () => {
-        console.log(costoAdicional)
-
         if(agregados.find(costo => costo.id === costoAdicional.id)) {
             Alerta.Toast.fire({
                 icon: 'error',
@@ -118,8 +116,7 @@ import { saveLocalStorage, deleteLocalStorage, getLocalStorage, limpiarHTML } fr
             return;
         }
 
-        console.log(costoAdicional.cantidad);
-
+        costoAdicional.cantidad = costoAdicional.iva === '1' ? +costoAdicional.cantidad * 1.16 : +costoAdicional.cantidad;
         agregados = [...agregados, costoAdicional];
         saveLocalStorage('costosAdicionales', agregados);
 
@@ -138,14 +135,14 @@ import { saveLocalStorage, deleteLocalStorage, getLocalStorage, limpiarHTML } fr
         agregados.forEach(agregado => {
             const liAdd = document.createElement('LI');
             liAdd.className = 'flex flex-row gap-2 items-center font-bold uppercase text-sm dark:text-white';
-            liAdd.innerHTML = `Cuenta: <span class="font-normal"> ${agregado.cuenta}</span> Monto:<span class="text-sm text-gray-700 dark:text-gray-200">$ ${agregado.cantidad}</span>`;
+            liAdd.innerHTML = `Cuenta: <span class="font-normal"> ${agregado.cuenta}</span> Monto:<span class="text-sm text-gray-700 dark:text-gray-200">$ ${formatNum(+agregado.cantidad)} MN</span>`;
             listadoAdicionales.appendChild(liAdd);
         });
 
         const total = agregados.reduce((acum, item) => acum + +item.cantidad, 0);
         const liTotal = document.createElement('LI');
         liTotal.className = 'flex flex-row gap-2 items-center text-center text-xl font-bold uppercase text-sm dark:text-white';
-        liTotal.innerHTML = `Total: <span class="font-normal"> $ ${total}</span>`;
+        liTotal.innerHTML = `Total: <span class="font-normal"> $ ${formatNum(total)} MN</span>`;
         listadoAdicionales.appendChild(liTotal);
     }
 

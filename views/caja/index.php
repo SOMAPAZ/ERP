@@ -1,5 +1,5 @@
 <?php
-$links[] = 'adicionales'; 
+$links[] = 'adicionales';
 require_once __DIR__ . '/../templates/nav-bar.php'; ?>
 <section class=" py-4 antialiased dark:bg-gray-900 md:py-8 h-auto">
 
@@ -9,7 +9,7 @@ require_once __DIR__ . '/../templates/nav-bar.php'; ?>
                 Consultar Usuario
             </h2>
 
-            
+
             <form class="w-full mx-auto mt-5" id="formulario-busqueda" autocomplete="off">
                 <div id="error"></div>
                 <label for="busqueda" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -19,7 +19,7 @@ require_once __DIR__ . '/../templates/nav-bar.php'; ?>
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                         </svg>
                     </div>
-                    <input type="search" id="busqueda" class="block w-full  bg-white p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white uppercase" placeholder="Id o Nombre del usuario" />
+                    <input type="search" id="busqueda" class="block w-full  bg-white p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white uppercase" placeholder="Id o Nombre del usuario" />
                     <button type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-indigo-700 hover:bg-indigo-800 font-medium rounded text-sm px-4 py-2 dark:bg-indigo-600 dark:hover:bg-indigo-700">Buscar</button>
                 </div>
             </form>

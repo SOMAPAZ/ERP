@@ -90,7 +90,6 @@ $router->post('/api/pago-parcial', [CajaController::class, 'setPagoParciales']);
 $router->post('/api/pago-unico', [CajaController::class, 'setPagoUnico']);
 
 $router->post('/condonacion-parcial', [CajaController::class, 'setCondonaciones']);
-$router->post('/api/condonacion-unico', [CajaController::class, 'setCondonacionUnico']);
 
 $router->get('/pagar-total', [CajaController::class, 'viewPagoTotal']);
 $router->get('/consultar-avanzados', [CajaController::class, 'getAvanzados']);
@@ -114,7 +113,7 @@ $router->post('/guardar-registro', [TanquesController::class, 'guardarRegistro']
 
 
 // //PDF
-// $router->get('/pdf/recibo', [PDFController::class, 'recibo']);
+$router->get('/pdf/recibo', [PDFController::class, 'recibo']);
 
 //OTROS
 $router->get('/api/categorias', [GenericasController::class, 'categorias']);

@@ -1,4 +1,4 @@
-import { getSearch, formatNum, roundAndFloat, formatDateText } from "../helpers/index_v1.js"
+import { getSearch, formatNum, roundAndFloat, formatDateText, getLocalStorage } from "../helpers/index_v1.js"
 import GetDatos from "../classes/GetData_v1.js";
 import PostDatos from "../classes/PostData_v1.js";
 import Alerta from "../classes/Alerta_v1.js";
@@ -35,6 +35,7 @@ import Modal from "../classes/Modal_v1.js";
     let searchs;
     let resUser = [];
     let resDebt = [];
+    let adicionales = [];
 
     let copiaDebt = [];
 
@@ -85,9 +86,12 @@ import Modal from "../classes/Modal_v1.js";
             return
         }
 
+        adicionales = getLocalStorage('costosAdicionales') ? getLocalStorage('costosAdicionales') : [];
+        const totalAdicinales = adicionales.length > 0 ? adicionales.reduce((acum, item) => acum + +item.cantidad, 0) : 0;
+
         Swal.fire({
-          title: `¿Abonar $${formatNum(copiaDebt.total ? copiaDebt.total : resDebt.total)} MN?`,
-          text: "Esta acción no se puede deshacer",
+          title: `Pago de $${formatNum(copiaDebt.total ? copiaDebt.total + totalAdicinales : resDebt.total + totalAdicinales)} MN`,
+          text: `¿Abonar $${formatNum(copiaDebt.total ? copiaDebt.total : resDebt.total)} MN por servicio${totalAdicinales ? ` y $${formatNum(totalAdicinales)} MN adicionales` : ''}?`,
           icon: "warning",
           showCancelButton: true,
           confirmButtonText: "Confirmar pago",
@@ -96,32 +100,19 @@ import Modal from "../classes/Modal_v1.js";
     }
 
     async function guardarPago() {
-        console.log(
-            resDebt, 
-            descuentoAgua,
-            descuentoRecargoAgua,
-            descuentoDren,
-            descuentoRecargoDren,
-            +tipoPago
-        );
-
-        return;
+        const montosAgrupados = [
+            {id_user: searchs.usuario},
+            {resDebt},
+            {descuentoAgua},
+            {descuentoRecargoAgua},
+            {descuentoDren},
+            {descuentoRecargoDren},
+            {tipoPago}, 
+            {adicionales}
+        ]
 
         const formData = new FormData();
-        formData.append("id_user", resUser.id);
-        formData.append("mes_incio", resDebt.periodo.inicio);
-        formData.append("mes_fin", resDebt.periodo.final);
-        formData.append("monto_agua", resDebt.agua);
-        formData.append("monto_drenaje", resDebt.drenaje);
-        formData.append("monto_iva_agua", deudaGral.aguaIVA);
-        formData.append("monto_iva_drenaje", deudaGral.drenajeIVA);
-        formData.append("monto_recargo_agua", deudaGral.recargoAgua);
-        formData.append("monto_recargo_drenaje", deudaGral.recargoDrenaje);
-        formData.append("numero_meses", deudaGral.meses);
-        formData.append("tipo_pago", deudaGral.tipoPago);
-        formData.append("monto_descuento_recargo_agua", RecNaturalAgua ? Number(RecNaturalAgua) : 0);
-        formData.append("monto_descuento_recargo_drenaje", RecNaturalDrenaje ? Number(RecNaturalDrenaje) : 0);
-        formData.append("total", deudaGral.total);
+        formData.append("montos", JSON.stringify(montosAgrupados));
 
         try {
             const URL = `${location.origin}/api/pago-total`
@@ -131,6 +122,9 @@ import Modal from "../classes/Modal_v1.js";
             });
             const resultado = await response.json();
 
+            console.log(resultado);
+
+            return;
             if(resultado.tipo === "Exito") {
                 Swal.fire({
                     title: `Pago guardado correctamente con folio ${resultado.folio}`,
@@ -244,7 +238,6 @@ import Modal from "../classes/Modal_v1.js";
         copiaDebt.recargos.total = roundAndFloat(resDebt.recargos.total - (resDebt.recargos.total * (descuentoAplicado/100)))
         copiaDebt.total = roundAndFloat(copiaDebt.total - (resDebt.recargos.total * (descuentoAplicado/100)))
 
-        console.log(copiaDebt)
         rellenarInputs(copiaDebt)
         btnDesc.classList.add("hidden")
         btnCancelDesc.classList.remove("hidden")

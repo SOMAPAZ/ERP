@@ -52,7 +52,7 @@ class Facturas extends ActiveRecord
         $this->monto_descuento_recargo_drenaje = $args['monto_descuento_recargo_drenaje'] ?? 0;
         $this->monto_iva_agua = $args['monto_iva_agua'] ?? 0;
         $this->monto_iva_drenaje = $args['monto_iva_drenaje'] ?? 0;
-        $this->id_cuentas = $args['id_cuentas'] ?? null;
+        $this->id_cuentas = $args['id_cuentas'] ?? 0;
         $this->total = $args['total'] ?? 0;
         $this->tipo_pago = $args['tipo_pago'] ?? null;
         $this->empleado_id = $args['empleado_id'] ?? null;

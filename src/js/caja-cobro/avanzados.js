@@ -1,4 +1,4 @@
-import { formatDateText, getSearch, limpiarHTML, formatNum, formatDateMY } from "../helpers/index_v1.js";
+import { formatDateText, getSearch, limpiarHTML, formatNum, formatDateMY, getLocalStorage } from "../helpers/index_v1.js";
 import GetDatos from "../classes/GetData_v1.js";
 import Alerta from "../classes/Alerta_v1.js";
 import PostDatos from "../classes/PostData_v1.js";
@@ -15,19 +15,14 @@ import PostDatos from "../classes/PostData_v1.js";
     let resUser = [];
     let resDebtParcial = [];
     let resDebt = [];
-    let copiaDebt = [];
     let arraySeleccionados = [];
     let proximoPagar = [];
+    let costosAdicionales = [];
 
     document.addEventListener("DOMContentLoaded", () => {
         obtenerAdeudos();
-        btnPagoParcial.addEventListener("click", () => {
-          obtenerActivos();
-        });
-        btnCondonarParcial.addEventListener("click", () => {
-          obtenerActivos(true);
-        });
-
+        btnPagoParcial.addEventListener("click", () => obtenerActivos());
+        btnCondonarParcial.addEventListener("click", () => obtenerActivos(true));
         // btnDescRec.addEventListener("click", recargosDesc);
     });
 
@@ -191,50 +186,55 @@ import PostDatos from "../classes/PostData_v1.js";
     }
 
     async function pagar() {
-        formarData();
-        const data = new FormData();
-        data.append("id_user", idUsusuario());
-        data.append("mes_inicio", valoresParcial.fechaI);
-        data.append("mes_fin", valoresParcial.fechaF);
-        data.append("monto_agua", valoresParcial.totalAgua.toFixed(2));
-        data.append("monto_drenaje", valoresParcial.totalDrenaje.toFixed(2));
-        data.append("monto_iva_agua", valoresParcial.totalIvaAgua.toFixed(2));
-        data.append("monto_iva_drenaje", valoresParcial.totalIvaDrenaje.toFixed(2));
-        data.append("monto_recargo_agua", valoresParcial.totalRecAgua.toFixed(2));
-        data.append("monto_recargo_drenaje", valoresParcial.totalRecDrenaje.toFixed(2));
-        data.append("numero_meses", valoresParcial.meses);
-        data.append("tipo_pago", valoresParcial.tipoPago);
-        data.append("total", valoresParcial.total.toFixed(2));
+      console.log(proximoPagar)
+      console.log(costosAdicionales)
 
-        try {
-            const URL = `${location.origin}/api/pago-parcial`;
-            const response = await fetch(URL, {
-                method: "POST",
-                body: data
+      return;
+      
+      formarData();
+      const data = new FormData();
+      data.append("id_user", idUsusuario());
+      data.append("mes_inicio", valoresParcial.fechaI);
+      data.append("mes_fin", valoresParcial.fechaF);
+      data.append("monto_agua", valoresParcial.totalAgua.toFixed(2));
+      data.append("monto_drenaje", valoresParcial.totalDrenaje.toFixed(2));
+      data.append("monto_iva_agua", valoresParcial.totalIvaAgua.toFixed(2));
+      data.append("monto_iva_drenaje", valoresParcial.totalIvaDrenaje.toFixed(2));
+      data.append("monto_recargo_agua", valoresParcial.totalRecAgua.toFixed(2));
+      data.append("monto_recargo_drenaje", valoresParcial.totalRecDrenaje.toFixed(2));
+      data.append("numero_meses", valoresParcial.meses);
+      data.append("tipo_pago", valoresParcial.tipoPago);
+      data.append("total", valoresParcial.total.toFixed(2));
+
+      try {
+          const URL = `${location.origin}/api/pago-parcial`;
+          const response = await fetch(URL, {
+              method: "POST",
+              body: data
+          });
+
+          const resultado = await response.json();
+          console.log(resultado);
+
+          if(resultado.tipo === "Exito") {
+            Swal.fire({
+              title: `Pago guardado correctamente con folio ${resultado.folio}`,
+              text: "El pago se ha guardado correctamente",
+              icon: "success",
+              confirmButtonText: "Mostrar recibo",
+              allowOutsideClick: false,
+              allowEscapeKey: false,
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.open(`pdf/recibo?folio=${resultado.folio}&id=${datos_usuario.id}`, '_blank');
+              }
             });
 
-            const resultado = await response.json();
-            console.log(resultado);
-
-            if(resultado.tipo === "Exito") {
-              Swal.fire({
-                title: `Pago guardado correctamente con folio ${resultado.folio}`,
-                text: "El pago se ha guardado correctamente",
-                icon: "success",
-                confirmButtonText: "Mostrar recibo",
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  window.open(`pdf/recibo?folio=${resultado.folio}&id=${datos_usuario.id}`, '_blank');
-                }
-              });
-
-              resetAndReload();
-            }
-        } catch (error) {
-            console.log(error)
-        }
+            resetAndReload();
+          }
+      } catch (error) {
+          console.log(error)
+      }
     }
 
     const condonar = async () => {
@@ -265,6 +265,8 @@ import PostDatos from "../classes/PostData_v1.js";
       let selects = arraySeleccionados.map( arr => aPagar = [...aPagar, resDebtParcial.find(item => item.idxDB == arr)]);
       proximoPagar = selects[selects.length - 1];
 
+      costosAdicionales = getLocalStorage('costosAdicionales') ? getLocalStorage('costosAdicionales') : [];
+
       Swal.fire({
         title: `Desea realizar ${condonacion ? 'la siguiente condonación' : 'el siguiente pago'} `,
         html: `<p>¿Está seguro de ${condonacion ? "condonar" : "pagar"} los siguientes meses?</p>
@@ -273,7 +275,18 @@ import PostDatos from "../classes/PostData_v1.js";
                   <li style="text-transform: uppercase; text-align:left;">
                     ${formatDateMY(item.fecha)} - $ ${formatNum(item.total.general_excedido)} MXN
                   </li>`).join("")}
-            </ul>`,
+            </ul>
+            <hr/>
+                ${ costosAdicionales.length > 0 ? 
+                    costosAdicionales.map(costo => `
+                        <p style="text-transform: uppercase; text-align:left; margin-top:1rem;">Costos adicionales</p>
+                        <li style="text-transform: uppercase; text-align:left; margin-top:1rem;">
+                            ${costo.cuenta} - $ ${formatNum(costo.cantidad)} MXN
+                        </li>`).join("")
+                    :
+                    '<li style="text-transform: uppercase; text-align:left; margin-top:1rem;">No hay costos adicionales</li>'
+                }
+            `,
         showDenyButton: true,
         confirmButtonText: "Aplicar",
         denyButtonText: 'No aplicar'

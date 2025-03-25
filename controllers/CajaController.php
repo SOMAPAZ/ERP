@@ -26,7 +26,7 @@ class CajaController
         ]);
     }
 
-    public static function actualizarRezago ()
+    public static function actualizarRezago()
     {
         date_default_timezone_set('America/Mexico_City');
 
@@ -35,16 +35,17 @@ class CajaController
         $year = date('Y');
         $mes = date('m');
 
-        if($fecha === $fechaMensual) {
+        if ($fecha === $fechaMensual) {
             $totalNoRecargo = Facturacion::validarRezagados($mes, $year);
 
-            if($totalNoRecargo > 0) {
+            if ($totalNoRecargo > 0) {
                 $res = Facturacion::actualizarRezago($year, $mes);
             }
         };
     }
 
-    public static function viewPagoTotal(Router $router) {
+    public static function viewPagoTotal(Router $router)
+    {
         isAuth();
         permisosCaja();
 
@@ -62,6 +63,8 @@ class CajaController
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+            $montos = json_decode($_POST['montos']);
+
             $histFact = Facturas::obtenerUltimoFolio();
 
             if ($histFact === null) {
@@ -71,26 +74,38 @@ class CajaController
                 $ultimoFolio = $histFact->folio;
             }
 
-            $pago = new Facturas($_POST);
+            $pago = new Facturas();
 
+            $pago->id_user = $montos[0]->id_user;
             $pago->folio = ++$ultimoFolio;
             $pago->fecha = date('Y-m-d H:i:s');
-            $pago->mes_inicio = formatearFecha($_POST['mes_incio']);
-            $pago->mes_fin = formatearFecha($_POST['mes_fin']);
-            $pago->monto_agua = desformatearMonto($pago->monto_agua);
-            $pago->monto_drenaje = desformatearMonto($pago->monto_drenaje);
-            $pago->monto_recargo_agua = desformatearMonto($pago->monto_recargo_agua);
-            $pago->monto_recargo_drenaje = desformatearMonto($pago->monto_recargo_drenaje);
-            $pago->monto_descuento_agua = desformatearMonto($pago->monto_descuento_agua);
-            $pago->monto_descuento_drenaje = desformatearMonto($pago->monto_descuento_drenaje);
-            $pago->monto_iva_agua = desformatearMonto($pago->monto_iva_agua);
-            $pago->monto_iva_drenaje = desformatearMonto($pago->monto_iva_drenaje);
-            $pago->total = desformatearMonto($pago->total);
+            $pago->mes_inicio = $montos[1]->resDebt->periodo->inicio;
+            $pago->mes_fin = $montos[1]->resDebt->periodo->final;
+            $pago->monto_agua = $montos[1]->resDebt->agua_inicial + $montos[1]->resDebt->m3_excedido_agua;
+            $pago->monto_drenaje = $montos[1]->resDebt->drenaje_inicial + $montos[1]->resDebt->m3_excedido_drenaje;
+            $pago->monto_recargo_agua = $montos[1]->resDebt->recargos->agua;
+            $pago->monto_recargo_drenaje = $montos[1]->resDebt->recargos->drenaje;
+            $pago->monto_descuento_agua = $montos[1]->resDebt->descuentos->agua;
+            $pago->monto_descuento_drenaje = $montos[1]->resDebt->descuentos->drenaje;
+            $pago->monto_descuento_recargo_agua = round($montos[3]->descuentoRecargoAgua, 2);
+            $pago->monto_descuento_recargo_drenaje = round($montos[5]->descuentoRecargoDren, 2);
+            $pago->numero_meses = $montos[1]->resDebt->meses->totales;
+            $pago->monto_iva_agua = $montos[1]->resDebt->iva->agua + $montos[1]->resDebt->iva->m3_excedido_agua;
+            $pago->monto_iva_drenaje = $montos[1]->resDebt->iva->drenaje + $montos[1]->resDebt->iva->m3_excedido_drenaje;
 
+            $totalSuma = $pago->monto_agua + $pago->monto_drenaje + $pago->monto_recargo_agua + $pago->monto_recargo_drenaje +  $pago->monto_iva_agua
+                + $pago->monto_iva_drenaje;
+            $totalResta = $pago->monto_descuento_agua + $pago->monto_descuento_drenaje + $pago->monto_descuento_recargo_agua + $pago->monto_descuento_recargo_drenaje;
+
+            $pago->total = round($totalSuma - $totalResta, 2);
+
+            $pago->tipo_pago = $montos[6]->tipoPago;
             $responsable = Empleado::find($_SESSION['empleado_id']);
             $pago->empleado_id = intval($responsable->id);
 
             $resultado = $pago->guardar();
+            echo json_encode($resultado);
+            return;
 
             if ($resultado) {
                 $pagado = Facturacion::pagarTodo($pago->id_user, $pago->folio);
@@ -167,53 +182,6 @@ class CajaController
         }
     }
 
-    public static function setPagoUnico()
-    {
-        isAuth();
-        permisosCaja();
-
-        date_default_timezone_set('America/Mexico_City');
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-            $histFact = Facturas::obtenerUltimoFolio();
-
-            if ($histFact === null) {
-                $factPasada = FacturasPasadas::obtenerUltimoFolio();
-                $ultimoFolio = $factPasada->folio;
-            } else {
-                $ultimoFolio = $histFact->folio;
-            }
-
-            $pago = new Facturas($_POST);
-            $pago->folio = ++$ultimoFolio;
-            $pago->fecha = date('Y-m-d H:i:s');
-
-            $responsable = Empleado::find($_SESSION['empleado_id']);
-            $pago->empleado_id = $responsable->id;
-
-            $resultado = $pago->guardar();
-
-            if ($resultado) {
-                $mes = explode("-", $pago->mes_inicio)[1];
-                $year = explode("-", $pago->mes_inicio)[0];
-                $pagado = Facturacion::pagarUno($pago->id_user, $pago->folio, $mes, $year);
-            }
-
-            if ($pagado) {
-                $respuesta = [
-                    'tipo' => 'Exito',
-                    'mensaje' => 'Pago guardado correctamente',
-                    'folio' => $pago->folio,
-                    'mes' => $mes,
-                    'year' => $year,
-                ];
-            }
-
-            echo json_encode($respuesta);
-        }
-    }
-
     public static function setCondonaciones()
     {
         isAuth();
@@ -225,7 +193,7 @@ class CajaController
             $explode = explode(',', $_POST['args']);
             $insert = Facturacion::condoneTo($explode);
 
-            if($insert) {
+            if ($insert) {
                 $res = [
                     'tipo' => 'Exito',
                     'title' => 'Actualizado con exito',
@@ -240,28 +208,6 @@ class CajaController
             }
 
             echo json_encode($res);
-        }
-    }
-
-    public static function setCondonacionUnico()
-    {
-        isAuth();
-        permisosCaja();
-
-        date_default_timezone_set('America/Mexico_City');
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-            $resultado = Facturacion::condonarUno(s($_POST['id_user']), $_POST['mes'], $_POST['year']);
-
-            if ($resultado) {
-                $respuesta = [
-                    'tipo' => 'Exito',
-                    'mensaje' => 'Condonación guardada correctamente',
-                ];
-            }
-
-            echo json_encode($respuesta);
         }
     }
 
@@ -284,7 +230,8 @@ class CajaController
         ]);
     }
 
-    public static function getCondonaciones(Router $router) {
+    public static function getCondonaciones(Router $router)
+    {
 
         isAuth();
         permisosCaja();
@@ -300,7 +247,8 @@ class CajaController
         ]);
     }
 
-    public static function getListadoCondonaciones() {
+    public static function getListadoCondonaciones()
+    {
         isAuth();
         permisosCaja();
 
@@ -311,11 +259,12 @@ class CajaController
             echo json_encode([]);
             return;
         }
-        
+
         echo json_encode($condonaciones);
     }
 
-    public static function deshacerCondonacion($id) {
+    public static function deshacerCondonacion($id)
+    {
         isAuth();
         permisosCaja();
 
@@ -331,7 +280,7 @@ class CajaController
             ];
         }
 
-        if(!$condonacion) {
+        if (!$condonacion) {
             $respuesta = [
                 'tipo' => 'Error',
                 'mensaje' => 'No se pudo deshacer la condonación',
@@ -341,7 +290,8 @@ class CajaController
         echo json_encode($respuesta);
     }
 
-    public static function getPagosAdicionales(Router $router) {
+    public static function getPagosAdicionales(Router $router)
+    {
         isAuth();
         permisosCaja();
 
