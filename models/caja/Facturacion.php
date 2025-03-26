@@ -70,8 +70,8 @@ class Facturacion extends ActiveRecord
     public static function condoneTo($arguments)
     {
         $processSuccess = true;
-        foreach($arguments as &$arg) :
-            $query = "UPDATE " .self::$tabla. " SET estado = 4 WHERE id = {$arg};";
+        foreach ($arguments as &$arg) :
+            $query = "UPDATE " . self::$tabla . " SET estado = 4 WHERE id = {$arg};";
             $resultado = self::$db->query($query);
 
             !$resultado ? $processSuccess = false : $processSuccess = true;
@@ -128,23 +128,33 @@ class Facturacion extends ActiveRecord
         return [$res, $filas];
     }
 
-    public static function validarRezagados($mes, $year) {
+    public static function validarRezagados($mes, $year)
+    {
         $query = "SELECT COUNT(*) FROM " . self::$tabla . " WHERE `year` = $year AND mes = $mes AND if_recargo = 0";
         $resultado = self::$db->query($query);
         $total = $resultado->fetch_array();
         return array_shift($total);
     }
 
-    public static function obtenerCondonaciones($id) {
+    public static function obtenerCondonaciones($id)
+    {
         $query = "SELECT * FROM " . self::$tabla . " WHERE id_user = $id AND estado = 4 ORDER BY id DESC";
         $resultado = self::consultarSQL($query);
         return $resultado;
     }
 
-    public static function deshacerCondonaciones($id) {
+    public static function deshacerCondonaciones($id)
+    {
         $query = "UPDATE " . self::$tabla . " SET estado = 0 WHERE id = $id";
         $resultado = self::$db->query($query);
 
+        return $resultado;
+    }
+
+    public static function obtenerTodosAdeudos($user)
+    {
+        $query = "SELECT * FROM " . self::$tabla . " WHERE estado = 0 AND id_user = {$user} AND folio = 0";
+        $resultado = self::consultarSQL($query);
         return $resultado;
     }
 }

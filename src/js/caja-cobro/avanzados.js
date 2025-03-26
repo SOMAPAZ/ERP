@@ -7,7 +7,7 @@ import PostDatos from "../classes/PostData_v1.js";
     const table = document.querySelector("#adeudo-desglose tbody");
     const btnPagoParcial = document.querySelector("#btn-pago-parcial");
     const btnCondonarParcial = document.querySelector("#btn-condonar-parcial");
-    const btnDescRec = document.querySelector("#btn-condonar-recargos");
+    const btnDescRec = document.querySelector("#realizar-desc");
     const periodoLabel = document.querySelector("#periodo-label");
     let valoresParcial = {};
     let datos_usuario = [];
@@ -18,12 +18,14 @@ import PostDatos from "../classes/PostData_v1.js";
     let arraySeleccionados = [];
     let proximoPagar = [];
     let costosAdicionales = [];
+    let descuentoRecargoAgua = 0;
+    let descuentoRecargoDren = 0;
 
     document.addEventListener("DOMContentLoaded", () => {
         obtenerAdeudos();
         btnPagoParcial.addEventListener("click", () => obtenerActivos());
         btnCondonarParcial.addEventListener("click", () => obtenerActivos(true));
-        // btnDescRec.addEventListener("click", recargosDesc);
+        btnDescRec.addEventListener("click", recargosDesc);
     });
 
     const obtenerAdeudos = async () => {
@@ -183,6 +185,10 @@ import PostDatos from "../classes/PostData_v1.js";
         })
 
         confirmarActualizacion(condonacion);
+    }
+
+    const recargosDesc = () => {
+      console.log('descontando')
     }
 
     async function pagar() {

@@ -7,7 +7,7 @@ use Model\ActiveRecord;
 class Facturas extends ActiveRecord
 {
     protected static $tabla = 'facturas_historial';
-    protected static $columnasDB = ['id', 'id_user', 'folio', 'fecha', 'mes_inicio', 'mes_fin', 'numero_meses', 'cancelado', 'monto_agua', 'monto_drenaje', 'monto_recargo_agua', 'monto_recargo_drenaje', 'monto_descuento_agua', 'monto_descuento_drenaje', 'monto_descuento_recargo_agua', 'monto_descuento_recargo_drenaje', 'monto_iva_agua', 'monto_iva_drenaje', 'id_cuentas', 'total', 'tipo_pago', 'empleado_id'];
+    protected static $columnasDB = ['id', 'id_user', 'folio', 'fecha', 'mes_inicio', 'mes_fin', 'numero_meses', 'cancelado', 'monto_agua', 'monto_drenaje', 'monto_cuentas', 'monto_recargo_agua', 'monto_recargo_drenaje', 'monto_descuento_agua', 'monto_descuento_drenaje', 'monto_descuento_recargo_agua', 'monto_descuento_recargo_drenaje', 'monto_iva_agua', 'monto_iva_drenaje', 'monto_iva_cuentas', 'id_cuentas', 'total', 'tipo_pago', 'empleado_id', 'nota'];
 
     public $id;
     public $id_user;
@@ -19,6 +19,7 @@ class Facturas extends ActiveRecord
     public $cancelado;
     public $monto_agua;
     public $monto_drenaje;
+    public $monto_cuentas;
     public $monto_recargo_agua;
     public $monto_recargo_drenaje;
     public $monto_descuento_agua;
@@ -27,10 +28,12 @@ class Facturas extends ActiveRecord
     public $monto_descuento_recargo_drenaje;
     public $monto_iva_agua;
     public $monto_iva_drenaje;
+    public $monto_iva_cuentas;
     public $id_cuentas;
     public $total;
     public $tipo_pago;
     public $empleado_id;
+    public $nota;
 
     public function __construct($args = [])
     {
@@ -44,6 +47,7 @@ class Facturas extends ActiveRecord
         $this->cancelado = $args['cancelado'] ?? 0;
         $this->monto_agua = $args['monto_agua'] ?? 0;
         $this->monto_drenaje = $args['monto_drenaje'] ?? 0;
+        $this->monto_cuentas = $args['monto_cuentas'] ?? 0;
         $this->monto_recargo_agua = $args['monto_recargo_agua'] ?? 0;
         $this->monto_recargo_drenaje = $args['monto_recargo_drenaje'] ?? 0;
         $this->monto_descuento_agua = $args['monto_descuento_agua'] ?? 0;
@@ -52,10 +56,12 @@ class Facturas extends ActiveRecord
         $this->monto_descuento_recargo_drenaje = $args['monto_descuento_recargo_drenaje'] ?? 0;
         $this->monto_iva_agua = $args['monto_iva_agua'] ?? 0;
         $this->monto_iva_drenaje = $args['monto_iva_drenaje'] ?? 0;
+        $this->monto_iva_cuentas = $args['monto_iva_cuentas'] ?? 0;
         $this->id_cuentas = $args['id_cuentas'] ?? 0;
         $this->total = $args['total'] ?? 0;
         $this->tipo_pago = $args['tipo_pago'] ?? null;
         $this->empleado_id = $args['empleado_id'] ?? null;
+        $this->nota = $args['nota'] ?? '';
     }
 
     public static function obtenerUltimoFolio()
@@ -64,5 +70,13 @@ class Facturas extends ActiveRecord
         $resultado = self::consultaJoin($query);
 
         return array_shift($resultado);
+    }
+
+    public static function obtenerAdicionales($column1, $valor1, $column2, $valor2)
+    {
+        $query = "SELECT * FROM " . self::$tabla . " WHERE {$column1} = {$valor1} AND {$column2} != {$valor2}";
+        $res = self::consultarSQL($query);
+
+        return $res;
     }
 }

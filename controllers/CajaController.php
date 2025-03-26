@@ -49,6 +49,14 @@ class CajaController
         isAuth();
         permisosCaja();
 
+        $id_user = s($_GET['usuario']);
+        $debe = Facturacion::obtenerTodosAdeudos($id_user);
+
+        if (count($debe) === 0) {
+            header('Location: /consultar');
+            return;
+        }
+
         $router->render('caja/pago-total', [
             'links' => self::$links,
         ]);
@@ -64,7 +72,8 @@ class CajaController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $montos = json_decode($_POST['montos']);
-
+            // echo json_encode($montos);
+            // return;
             $histFact = Facturas::obtenerUltimoFolio();
 
             if ($histFact === null) {
@@ -102,14 +111,47 @@ class CajaController
             $pago->tipo_pago = $montos[6]->tipoPago;
             $responsable = Empleado::find($_SESSION['empleado_id']);
             $pago->empleado_id = intval($responsable->id);
+            $pago->nota = $montos[1]->resDebt->nota;
 
             $resultado = $pago->guardar();
-            echo json_encode($resultado);
-            return;
 
-            if ($resultado) {
-                $pagado = Facturacion::pagarTodo($pago->id_user, $pago->folio);
+            if (!$resultado) {
+                $res = [
+                    'tipo' => 'Error',
+                    'mensaje' => 'Hubo un error al guardar el pago',
+                ];
+                echo json_encode($res);
+                return;
             }
+
+            $adicionales = $montos[7]->adicionales;
+            foreach ($adicionales as $adicional) {
+                $adicionalPago = new Facturas();
+                $adicionalPago->id_user = $pago->id_user;
+                $adicionalPago->folio = $pago->folio;
+                $adicionalPago->fecha = date('Y-m-d H:i:s');
+                $adicionalPago->mes_inicio = date('Y-m-d H:i:s');
+                $adicionalPago->mes_fin = date('Y-m-d H:i:s');
+                $adicionalPago->numero_meses = 0;
+                $adicionalPago->id_cuentas = $adicional->id;
+                $adicionalPago->monto_cuentas = round($adicional->cantidad, 2);
+                $adicionalPago->monto_iva_cuentas = round($adicional->cantidad_iva, 2);
+                $adicionalPago->tipo_pago = $pago->tipo_pago;
+                $adicionalPago->total = $adicionalPago->monto_cuentas + $adicionalPago->monto_iva_cuentas;
+                $adicionalPago->empleado_id = $pago->empleado_id;
+                $resultado = $adicionalPago->guardar();
+            }
+
+            if (!$resultado) {
+                $res = [
+                    'tipo' => 'Error',
+                    'mensaje' => 'Hubo un error al guardar los pagos adicionales',
+                ];
+                echo json_encode($res);
+                return;
+            }
+
+            $pagado = Facturacion::pagarTodo($pago->id_user, $pago->folio);
 
             if ($pagado) {
                 $respuesta = [

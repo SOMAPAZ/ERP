@@ -397,95 +397,83 @@ $imagenBase64 = "data:image/png;base64," . base64_encode(file_get_contents($nomb
                 <tr class="table-header">
                     <th>Concepto</th>
                     <th>Real</th>
-                    <th>Cobrado</th>
                     <th>Descuento</th>
+                    <th>Cobrado</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Consumo de agua</td>
-                    <td>$ 249.30</td>
-                    <td>$ 00.00</td>
-                    <td>$ 249.30</td>
-                </tr>
-                <tr>
-                    <td>Consumo de drenaje</td>
-                    <td>$ 249.30</td>
-                    <td>$ 00.00</td>
-                    <td>$ 249.30</td>
-                </tr>
-                <tr>
-                    <td>Recargos</td>
-                    <td>$ 249.30</td>
-                    <td>$ 00.00</td>
-                    <td>$ 249.30</td>
-                </tr>
-                <tr>
-                    <td>Derechos de conexión de agua</td>
-                    <td>$ 997.20</td>
-                    <td>$ 00.00</td>
-                    <td>$ 997.20</td>
-                </tr>
-                <tr>
-                    <td>Derechos de conexión de drenaje</td>
-                    <td>$ 997.20</td>
-                    <td>$ 00.00</td>
-                    <td>$ 997.20</td>
-                </tr>
-                <tr>
-                    <td>Micromedidor y piezas especiales</td>
-                    <td>$ 997.20</td>
-                    <td>$ 00.00</td>
-                    <td>$ 997.20</td>
-                </tr>
-                <tr>
-                    <td>Trabajos extras para toma</td>
-                    <td>$ 997.20</td>
-                    <td>$ 00.00</td>
-                    <td>$ 997.20</td>
-                </tr>
-                <tr>
-                    <td>Constancias de no adeudo</td>
-                    <td>$ 997.20</td>
-                    <td>$ 00.00</td>
-                    <td>$ 997.20</td>
-                </tr>
-                <tr>
-                    <td>Constancias de no servicio</td>
-                    <td>$ 997.20</td>
-                    <td>$ 00.00</td>
-                    <td>$ 997.20</td>
-                </tr>
+                <?php if ($recibo->monto_agua > 0): ?>
+                    <tr>
+                        <td>Consumo de agua</td>
+                        <td>$ <?= formatoMiles($recibo->monto_agua) ?></td>
+                        <td>$ <?= formatoMiles($recibo->monto_descuento_agua) ?></td>
+                        <td>$ <?= formatoMiles($recibo->monto_agua - $recibo->monto_descuento_agua) ?></td>
+                    </tr>
+                    <tr>
+                        <td>Consumo de drenaje</td>
+                        <td>$ <?= formatoMiles($recibo->monto_drenaje) ?></td>
+                        <td>$ <?= formatoMiles($recibo->monto_descuento_drenaje) ?></td>
+                        <td>$ <?= formatoMiles($recibo->monto_drenaje - $recibo->monto_descuento_drenaje) ?></td>
+                    </tr>
+                    <tr>
+                        <td>Recargos</td>
+                        <td>$ <?= formatoMiles($recibo->monto_recargo_agua + $recibo->monto_recargo_drenaje) ?></td>
+                        <td>$ <?= formatoMiles($recibo->monto_descuento_recargo_agua + $recibo->monto_descuento_recargo_drenaje) ?></td>
+                        <td>$ <?= formatoMiles($recibo->monto_recargo_agua + $recibo->monto_recargo_drenaje - $recibo->monto_descuento_recargo_agua - $recibo->monto_descuento_recargo_drenaje) ?></td>
+                    </tr>
+                <?php endif; ?>
+                <?php
+                $total_iva_adelantos = 0;
+                $total_pago_adelantos = 0;
+                if (count($pagos_adicionales) > 0):
+                    foreach ($pagos_adicionales as $pago):
+                        $total_iva_adelantos += $pago->monto_iva_cuentas;
+                        $total_pago_adelantos += $pago->total;
+                ?>
+                        <tr>
+                            <td><?= $pago->id_cuentas->cuenta ?></td>
+                            <td>$ <?= formatoMiles($pago->monto_cuentas) ?></td>
+                            <td>$ 0.00</td>
+                            <td>$ <?= formatoMiles($pago->monto_cuentas) ?></td>
+                        </tr>
+                <?php
+                    endforeach;
+                endif;
+                ?>
                 <tr>
                     <td>I.V.A</td>
-                    <td>$ 997.20</td>
+                    <td>$ <?= formatoMiles($recibo->monto_iva_agua + $recibo->monto_iva_drenaje + $total_iva_adelantos) ?></td>
                     <td>$ 00.00</td>
-                    <td>$ 997.20</td>
+                    <td>$ <?= formatoMiles($recibo->monto_iva_agua + $recibo->monto_iva_drenaje + $total_iva_adelantos) ?></td>
                 </tr>
             </tbody>
         </table>
         <div class="note-total-container" style="margin-top: auto;">
             <span class="note-label">
-                notas: segu of zmz-ca-0003/24
+                notas: <?= $recibo->nota ?? '' ?>
             </span>
 
             <span class="total-label">
                 total:
             </span>
             <span class="total-amount">
-                $ 3,201.89
+                $ <?= formatoMiles($recibo->total + $total_pago_adelantos) ?>
             </span>
         </div>
+        <?php $totales = $recibo->total + $total_pago_adelantos;
+        $separados = explode('.', $totales);
+        $texto = numeroALetras($separados[0]);
+        $decimales = $separados[1] . '/100'; ?>
 
         <div class="amount-date-container" style="margin-top: 10px;">
-            <span class="amount-text">(tres mil doscientos uno pesos 89/100).</span>
-            <span class="date-text">13 enero 2025, 09:56:07</span>
+            <span class="amount-text">(<?= $texto ?> pesos <?= $decimales ?>).</span><br />
+            <span class="date-text"><?= $recibo->fecha ?></span>
         </div>
 
         <div class="footer-section" style=" margin-top: 65px; ">
             <span class="footer-line"></span>
             <span class="footer-text-right">original usuario copia somapaz</span>
-            <span class="footer-text-left ">beatriz elizabeth rodriguez.g.</span>
+            <span class="footer-text-left "><?= $empleado->name . " " . $empleado->lastname; ?></span>
         </div>
         <div class="text-uppercase">
             <p class="highlight">
@@ -578,95 +566,78 @@ $imagenBase64 = "data:image/png;base64," . base64_encode(file_get_contents($nomb
                 <tr class="table-header">
                     <th>Concepto</th>
                     <th>Real</th>
-                    <th>Cobrado</th>
                     <th>Descuento</th>
+                    <th>Cobrado</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Consumo de agua</td>
-                    <td>$ 249.30</td>
-                    <td>$ 00.00</td>
-                    <td>$ 249.30</td>
-                </tr>
-                <tr>
-                    <td>Consumo de drenaje</td>
-                    <td>$ 249.30</td>
-                    <td>$ 00.00</td>
-                    <td>$ 249.30</td>
-                </tr>
-                <tr>
-                    <td>Recargos</td>
-                    <td>$ 249.30</td>
-                    <td>$ 00.00</td>
-                    <td>$ 249.30</td>
-                </tr>
-                <tr>
-                    <td>Derechos de conexión de agua</td>
-                    <td>$ 997.20</td>
-                    <td>$ 00.00</td>
-                    <td>$ 997.20</td>
-                </tr>
-                <tr>
-                    <td>Derechos de conexión de drenaje</td>
-                    <td>$ 997.20</td>
-                    <td>$ 00.00</td>
-                    <td>$ 997.20</td>
-                </tr>
-                <tr>
-                    <td>Micromedidor y piezas especiales</td>
-                    <td>$ 997.20</td>
-                    <td>$ 00.00</td>
-                    <td>$ 997.20</td>
-                </tr>
-                <tr>
-                    <td>Trabajos extras para toma</td>
-                    <td>$ 997.20</td>
-                    <td>$ 00.00</td>
-                    <td>$ 997.20</td>
-                </tr>
-                <tr>
-                    <td>Constancias de no adeudo</td>
-                    <td>$ 997.20</td>
-                    <td>$ 00.00</td>
-                    <td>$ 997.20</td>
-                </tr>
-                <tr>
-                    <td>Constancias de no servicio</td>
-                    <td>$ 997.20</td>
-                    <td>$ 00.00</td>
-                    <td>$ 997.20</td>
-                </tr>
+                <?php if ($recibo->monto_agua > 0): ?>
+                    <tr>
+                        <td>Consumo de agua</td>
+                        <td>$ <?= formatoMiles($recibo->monto_agua) ?></td>
+                        <td>$ <?= formatoMiles($recibo->monto_descuento_agua) ?></td>
+                        <td>$ <?= formatoMiles($recibo->monto_agua - $recibo->monto_descuento_agua) ?></td>
+                    </tr>
+                    <tr>
+                        <td>Consumo de drenaje</td>
+                        <td>$ <?= formatoMiles($recibo->monto_drenaje) ?></td>
+                        <td>$ <?= formatoMiles($recibo->monto_descuento_drenaje) ?></td>
+                        <td>$ <?= formatoMiles($recibo->monto_drenaje - $recibo->monto_descuento_drenaje) ?></td>
+                    </tr>
+                    <tr>
+                        <td>Recargos</td>
+                        <td>$ <?= formatoMiles($recibo->monto_recargo_agua + $recibo->monto_recargo_drenaje) ?></td>
+                        <td>$ <?= formatoMiles($recibo->monto_descuento_recargo_agua + $recibo->monto_descuento_recargo_drenaje) ?></td>
+                        <td>$ <?= formatoMiles($recibo->monto_recargo_agua + $recibo->monto_recargo_drenaje - $recibo->monto_descuento_recargo_agua - $recibo->monto_descuento_recargo_drenaje) ?></td>
+                    </tr>
+                <?php endif; ?>
+                <?php
+                $total_iva_adelantos = 0;
+                $total_pago_adelantos = 0;
+                if (count($pagos_adicionales) > 0):
+                    foreach ($pagos_adicionales as $pago):
+                        $total_iva_adelantos += $pago->monto_iva_cuentas;
+                        $total_pago_adelantos += $pago->total;
+                ?>
+                        <tr>
+                            <td><?= $pago->id_cuentas->cuenta ?></td>
+                            <td>$ <?= formatoMiles($pago->monto_cuentas) ?></td>
+                            <td>$ 0.00</td>
+                            <td>$ <?= formatoMiles($pago->monto_cuentas) ?></td>
+                        </tr>
+                <?php
+                    endforeach;
+                endif;
+                ?>
                 <tr>
                     <td>I.V.A</td>
-                    <td>$ 997.20</td>
+                    <td>$ <?= formatoMiles($recibo->monto_iva_agua + $recibo->monto_iva_drenaje + $total_iva_adelantos) ?></td>
                     <td>$ 00.00</td>
-                    <td>$ 997.20</td>
+                    <td>$ <?= formatoMiles($recibo->monto_iva_agua + $recibo->monto_iva_drenaje + $total_iva_adelantos) ?></td>
                 </tr>
             </tbody>
         </table>
         <div class="note-total-container" style="margin-top: auto;">
             <span class="note-label">
-                notas: segu of zmz-ca-0003/24
+                notas: <?= $recibo->nota ?? '' ?>
             </span>
 
             <span class="total-label">
                 total:
             </span>
             <span class="total-amount">
-                $ 3,201.89
+                $ <?= formatoMiles($recibo->total + $total_pago_adelantos) ?>
             </span>
         </div>
-
         <div class="amount-date-container" style="margin-top: 10px;">
-            <span class="amount-text">(tres mil doscientos uno pesos 89/100).</span>
-            <span class="date-text">13 enero 2025, 09:56:07</span>
+            <span class="amount-text">(<?= $texto ?> pesos <?= $decimales ?>).</span><br />
+            <span class="date-text"><?= $recibo->fecha ?></span>
         </div>
 
         <div class="footer-section" style=" margin-top: 65px; ">
             <span class="footer-line"></span>
             <span class="footer-text-right">original usuario copia somapaz</span>
-            <span class="footer-text-left ">beatriz elizabeth rodriguez.g.</span>
+            <span class="footer-text-left "><?= $empleado->name . " " . $empleado->lastname; ?></span>
         </div>
         <div class="text-uppercase">
             <p class="highlight">

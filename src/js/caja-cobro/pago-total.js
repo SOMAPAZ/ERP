@@ -87,7 +87,8 @@ import Modal from "../classes/Modal_v1.js";
         }
 
         adicionales = getLocalStorage('costosAdicionales') ? getLocalStorage('costosAdicionales') : [];
-        const totalAdicinales = adicionales.length > 0 ? adicionales.reduce((acum, item) => acum + +item.cantidad, 0) : 0;
+        const totalAdicinales = adicionales.length > 0 ? adicionales.reduce((acum, item) => acum + (+item.cantidad + +item.cantidad_iva), 0) : 0;
+        resDebt.nota = document.querySelector('#notas').value;
 
         Swal.fire({
           title: `Pago de $${formatNum(copiaDebt.total ? copiaDebt.total + totalAdicinales : resDebt.total + totalAdicinales)} MN`,
@@ -99,7 +100,7 @@ import Modal from "../classes/Modal_v1.js";
         }).then(result => result.isConfirmed ? guardarPago() : Swal.fire("Pago no aplicado", "", "warning"));
     }
 
-    async function guardarPago() {
+    const guardarPago = async () => {
         const montosAgrupados = [
             {id_user: searchs.usuario},
             {resDebt},
@@ -110,7 +111,6 @@ import Modal from "../classes/Modal_v1.js";
             {tipoPago}, 
             {adicionales}
         ]
-
         const formData = new FormData();
         formData.append("montos", JSON.stringify(montosAgrupados));
 
@@ -122,9 +122,6 @@ import Modal from "../classes/Modal_v1.js";
             });
             const resultado = await response.json();
 
-            console.log(resultado);
-
-            return;
             if(resultado.tipo === "Exito") {
                 Swal.fire({
                     title: `Pago guardado correctamente con folio ${resultado.folio}`,
@@ -136,7 +133,8 @@ import Modal from "../classes/Modal_v1.js";
                     allowEnterKey: false, 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                    window.open(`pdf/recibo?folio=${resultado.folio}&id=${usuario_informacion.id}`, '_blank');
+                        window.open(`pdf/recibo?folio=${resultado.folio}&id=${searchs.usuario}`, '_blank');
+                        location.reload();
                     }
                 });
 

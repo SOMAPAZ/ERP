@@ -97,13 +97,48 @@ function formatearFechaPar(string $fecha): string
     return date("Y-m-d", $timestamp);
 }
 
-function formatearFechaES($fecha)
+function formatearFechaES($fecha): string
 {
     date_default_timezone_set("America/Mexico_City");
     setlocale(LC_TIME, 'es_VE.UTF-8', 'esp');
     $d = strtotime($fecha);
     $fecha_formateada = strftime('%B de %Y', $d);
     return $fecha_formateada;
+}
+
+function numeroALetras($numero): string
+{
+    $unidades = ['', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
+    $especiales = ['once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve'];
+    $decenas = ['', 'diez', 'veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
+    $centenas = ['', 'cien', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos', 'novecientos'];
+
+    if ($numero == 0) {
+        return 'cero';
+    }
+
+    if ($numero < 10) {
+        return $unidades[$numero];
+    } elseif ($numero < 20) {
+        return $especiales[$numero - 11];
+    } elseif ($numero < 100) {
+        return $decenas[intval($numero / 10)] . (($numero % 10 > 0) ? ' y ' . $unidades[$numero % 10] : '');
+    } elseif ($numero < 1000) {
+        return ($numero == 100 ? 'cien' : $centenas[intval($numero / 100)] . (($numero % 100 > 0) ? ' ' . numeroALetras($numero % 100) : ''));
+    } elseif ($numero < 1000000) {
+        return (intval($numero / 1000) == 1 ? 'mil' : numeroALetras(intval($numero / 1000)) . ' mil') . (($numero % 1000 > 0) ? ' ' . numeroALetras($numero % 1000) : '');
+    } elseif ($numero < 1000000000) {
+        return (intval($numero / 1000000) == 1 ? 'un millón' : numeroALetras(intval($numero / 1000000)) . ' millones') . (($numero % 1000000 > 0) ? ' ' . numeroALetras($numero % 1000000) : '');
+    } elseif ($numero < 1000000000000) {
+        return (intval($numero / 1000000000) == 1 ? 'mil millones' : numeroALetras(intval($numero / 1000000000)) . ' mil millones') . (($numero % 1000000000 > 0) ? ' ' . numeroALetras($numero % 1000000000) : '');
+    }
+
+    return 'Número fuera de rango';
+}
+
+function formatoMiles($numero): string
+{
+    return number_format($numero, 2, '.', ',');
 }
 
 

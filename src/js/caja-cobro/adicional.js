@@ -116,7 +116,7 @@ import { saveLocalStorage, deleteLocalStorage, getLocalStorage, limpiarHTML, for
             return;
         }
 
-        costoAdicional.cantidad = costoAdicional.iva === '1' ? +costoAdicional.cantidad * 1.16 : +costoAdicional.cantidad;
+        costoAdicional.cantidad_iva = costoAdicional.iva === '1' ? +costoAdicional.cantidad * 0.16 : 0;
         agregados = [...agregados, costoAdicional];
         saveLocalStorage('costosAdicionales', agregados);
 
@@ -135,11 +135,11 @@ import { saveLocalStorage, deleteLocalStorage, getLocalStorage, limpiarHTML, for
         agregados.forEach(agregado => {
             const liAdd = document.createElement('LI');
             liAdd.className = 'flex flex-row gap-2 items-center font-bold uppercase text-sm dark:text-white';
-            liAdd.innerHTML = `Cuenta: <span class="font-normal"> ${agregado.cuenta}</span> Monto:<span class="text-sm text-gray-700 dark:text-gray-200">$ ${formatNum(+agregado.cantidad)} MN</span>`;
+            liAdd.innerHTML = `Cuenta: <span class="font-normal"> ${agregado.cuenta}</span> Monto:<span class="text-sm text-gray-700 dark:text-gray-200">$ ${formatNum(+agregado.cantidad + +agregado.cantidad_iva)} MN</span>`;
             listadoAdicionales.appendChild(liAdd);
         });
 
-        const total = agregados.reduce((acum, item) => acum + +item.cantidad, 0);
+        const total = agregados.reduce((acum, item) => acum + (+item.cantidad + +item.cantidad_iva), 0);
         const liTotal = document.createElement('LI');
         liTotal.className = 'flex flex-row gap-2 items-center text-center text-xl font-bold uppercase text-sm dark:text-white';
         liTotal.innerHTML = `Total: <span class="font-normal"> $ ${formatNum(total)} MN</span>`;

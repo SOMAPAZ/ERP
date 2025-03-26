@@ -91,6 +91,10 @@ require_once __DIR__ . '/../templates/nav-bar.php';
                     </div>
                 </div>
             </form>
+            <form class="w-full p-4 bg-white dark:bg-gray-800 border border-dashed border-gray-400 rounded-lg space-y-5" id="notas-form">
+                <label for="notas" class="block w-full font-black text-gray-600 text-xs uppercase dark:text-gray-400">Notas</label>
+                <textarea name="notas" id="notas" class="w-full px-4 py-2 rounded-md border border-gray-200 dark:border-gray-600 dark:bg-gray-600 dark:text-white" placeholder="Ingrese aquí su nota"></textarea>
+            </form>
             <?php include_once __DIR__ . '/../templates/lista-costos-adicionales.php'; ?>
             <div id="buttons-actions" class="flex flex-col mt-10 md:flex-row gap-4">
                 <button type="button" id="realizar-pago" class="text-white text-lg flex items-center justify-center sm:w-full md:w-auto uppercase bg-gray-500 dark:bg-gray-700 py-2 px-6 rounded-sm hover:bg-gray-300 hover:text-gray-800 dark:hover:bg-gray-600 gap-2">

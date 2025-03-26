@@ -5,6 +5,7 @@ namespace Controllers;
 use APIs\UsuariosAPI;
 use Dompdf\Dompdf;
 use Empleados\Empleado;
+use Facturacion\Cuentas;
 use Facturacion\Facturas;
 use Reportes\Categoria;
 use Reportes\Evidencias;
@@ -25,6 +26,7 @@ class PDFController
         $idUsuario = s($_GET['id']);
         $folio = s($_GET['folio']);
 
+
         $recibo = Facturas::where('folio', $folio);
         $instanciaUsuario = new UsuariosAPI();
         $usuarioResultado = $instanciaUsuario->consultar($idUsuario);
@@ -35,9 +37,15 @@ class PDFController
             return;
         }
 
+        $pagos_adicionales = Facturas::obtenerAdicionales('folio', $folio, 'id_cuentas', '0');
+        foreach ($pagos_adicionales as $pago) {
+            $pago->id_cuentas = Cuentas::find($pago->id_cuentas);
+        }
+
         $usuario = Usuario::find($idUsuario);
         $tipo_toma = TipoToma::find($usuario->id_servicetype);
         $tipo_consumo = TipoConsumo::find($usuario->id_consumtype);
+        $empleado = Empleado::find($recibo->empleado_id);
 
         $domPDF = new Dompdf();
         ob_start();
