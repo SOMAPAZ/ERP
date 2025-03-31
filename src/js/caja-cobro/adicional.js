@@ -14,6 +14,20 @@ import { saveLocalStorage, deleteLocalStorage, getLocalStorage, limpiarHTML, for
         getLocalStorage('costosAdicionales') ? deleteLocalStorage('costosAdicionales') : null;
     });
 
+    const originalFetch = window.fetch;
+
+    window.fetch = async function (...args) {
+        const [url, options] = args;
+
+        if (url === `${location.origin}/api/pago-total` && options?.method === "POST") {
+            agregados = []
+            getLocalStorage('costosAdicionales') ? deleteLocalStorage('costosAdicionales') : null;
+        }
+
+        return originalFetch(...args);
+    };
+
+
     document.addEventListener("DOMContentLoaded", () => {
         getLocalStorage('costosAdicionales') ? deleteLocalStorage('costosAdicionales') : null;
         obtenerCostosAdicionales();

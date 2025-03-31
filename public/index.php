@@ -84,20 +84,15 @@ $router->get('/api/users', [UsersController::class, 'datosBusqueda']);
 $router->get('/consultar', [CajaController::class, 'index']);
 $router->get('/deuda-usuario', [DeudaController::class, 'totalDebt']);
 $router->get('/deuda-desglosada', [DeudaController::class, 'desgloseDebt']);
-$router->post('/api/deuda-mostrar', [CajaController::class, 'getDeuda']);
 $router->post('/api/pago-total', [CajaController::class, 'setPagoTotal']);
-$router->post('/api/pago-parcial', [CajaController::class, 'setPagoParciales']);
-$router->post('/api/pago-unico', [CajaController::class, 'setPagoUnico']);
-
 $router->post('/condonacion-parcial', [CajaController::class, 'setCondonaciones']);
-
 $router->get('/pagar-total', [CajaController::class, 'viewPagoTotal']);
 $router->get('/consultar-avanzados', [CajaController::class, 'getAvanzados']);
 $router->get('/consultar-condonaciones', [CajaController::class, 'getCondonaciones']);
 $router->get('/consultar-condonaciones-listado', [CajaController::class, 'getListadoCondonaciones']);
 $router->post('/deshacer-condonacion', [CajaController::class, 'deshacerCondonacion']);
-
 $router->get('/adicionales', [CajaController::class, 'getPagosAdicionales']);
+$router->post('/pago-parcial', [CajaController::class, 'pagoCostosAdicionales']);
 
 // // Actions Updates
 $router->get('/updates', [UpdatesController::class, 'index']);
@@ -114,6 +109,7 @@ $router->post('/guardar-registro', [TanquesController::class, 'guardarRegistro']
 
 // //PDF
 $router->get('/pdf/recibo', [PDFController::class, 'recibo']);
+$router->get('/pdf/recibo-adicionales', [PDFController::class, 'reciboAdicionales']);
 
 //OTROS
 $router->get('/api/categorias', [GenericasController::class, 'categorias']);

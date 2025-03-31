@@ -8,6 +8,7 @@ use Empleados\Empleado;
 use Facturacion\Facturacion;
 use Facturacion\FacturasPasadas;
 use Facturacion\Facturas;
+use Facturacion\PagosAdicionales;
 use Usuarios\Usuario;
 
 class CajaController
@@ -72,15 +73,22 @@ class CajaController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $montos = json_decode($_POST['montos']);
-            // echo json_encode($montos);
-            // return;
-            $histFact = Facturas::obtenerUltimoFolio();
+            $implode = implode(',', $montos[8]->seleccionado);
+            $explode = explode(',', $implode);
 
-            if ($histFact === null) {
-                $factPasada = FacturasPasadas::obtenerUltimoFolio();
-                $ultimoFolio = $factPasada->folio;
+
+            $histFact = Facturas::obtenerUltimoFolio()->folio ?? null;
+            $historialExtras = PagosAdicionales::obtenerUltimoFolio()->folio ?? null;
+
+            if ($historialExtras === null) {
+                if ($histFact === null) {
+                    $factPasada = FacturasPasadas::obtenerUltimoFolio()->folio;
+                    $ultimoFolio = $factPasada;
+                } else {
+                    $ultimoFolio = $histFact;
+                }
             } else {
-                $ultimoFolio = $histFact->folio;
+                $ultimoFolio = $historialExtras;
             }
 
             $pago = new Facturas();
@@ -151,7 +159,11 @@ class CajaController
                 return;
             }
 
-            $pagado = Facturacion::pagarTodo($pago->id_user, $pago->folio);
+            if (count($montos[8]->seleccionado)) {
+                $pagado = Facturacion::pagarTo($montos[8]->seleccionado, $pago->folio);
+            } else {
+                $pagado = Facturacion::pagarTodo($pago->id_user, $pago->folio);
+            }
 
             if ($pagado) {
                 $respuesta = [
@@ -167,60 +179,6 @@ class CajaController
             }
 
             echo json_encode($respuesta);
-        }
-    }
-
-    public static function setPagoParciales()
-    {
-        isAuth();
-        permisosCaja();
-
-        date_default_timezone_set('America/Mexico_City');
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-            $histFact = Facturas::obtenerUltimoFolio();
-
-            if ($histFact === null) {
-                $factPasada = FacturasPasadas::obtenerUltimoFolio();
-                $ultimoFolio = $factPasada->folio;
-            } else {
-                $ultimoFolio = $histFact->folio;
-            }
-
-            $pago = new Facturas($_POST);
-            $pago->folio = ++$ultimoFolio;
-            $pago->fecha = date('Y-m-d H:i:s');
-            $pago->mes_inicio = formatearFechaPar($_POST['mes_inicio']);
-            $pago->mes_fin = formatearFechaPar($_POST['mes_fin']);
-
-            $responsable = Empleado::find($_SESSION['empleado_id']);
-            $pago->empleado_id = $responsable->id;
-
-            $resultado = $pago->guardar();
-
-            if ($resultado) {
-                $mes1 = explode("-", $pago->mes_inicio)[1];
-                $mes2 = explode("-", $pago->mes_fin)[1];
-                $year1 = explode("-", $pago->mes_inicio)[0];
-                $year2 = explode("-", $pago->mes_fin)[0];
-
-                $pagado = Facturacion::pagarParcial(intval($pago->folio), intval($pago->id_user), intval($mes1), intval($mes2), intval($year1), intval($year2));
-            }
-
-            if ($pagado) {
-                $respuesta = [
-                    'tipo' => 'Exito',
-                    'mensaje' => 'Pago guardado correctamente',
-                    'folio' => $pago->folio,
-                    'mes1' => $mes1,
-                    'mes2' => $mes2,
-                    'year1' => $year1,
-                    'year2' => $year2,
-                ];
-
-                echo json_encode($respuesta);
-            }
         }
     }
 
@@ -340,5 +298,63 @@ class CajaController
         $router->render('caja/pagos-adicionales', [
             'links' => self::$links,
         ]);
+    }
+
+    public static function pagoCostosAdicionales()
+    {
+        isAuth();
+        permisosCaja();
+        date_default_timezone_set('America/Mexico_City');
+
+        $histFact = Facturas::obtenerUltimoFolio()->folio ?? null;
+        $historialExtras = PagosAdicionales::obtenerUltimoFolio()->folio ?? null;
+
+        if ($historialExtras === null) {
+            if ($histFact === null) {
+                $factPasada = FacturasPasadas::obtenerUltimoFolio()->folio;
+                $ultimoFolio = $factPasada;
+            } else {
+                $ultimoFolio = $histFact;
+            }
+        } else {
+            $ultimoFolio = $historialExtras;
+        }
+
+        $adicionales = json_decode($_POST['adicionales']);
+
+        $pago = new PagosAdicionales();
+        $pago->folio = ++$ultimoFolio;
+        $pago->id_user = intval($_POST['id']);
+        $pago->nombre = s($_POST['nombre']);
+        $pago->direccion = s($_POST['direccion']);
+        $pago->tipo_pago = s($_POST['tipo_pago']);
+
+        foreach ($adicionales as $adicional) {
+            $pago->id_cuenta = $adicional->id;
+            $pago->cantidad = $adicional->cantidad;
+            $pago->cantidad_iva = $adicional->cantidad_iva;
+            $pago->fecha = date('Y-m-d H:i:s');
+            $pago->id_empleado = $_SESSION['empleado_id'];
+            $resultado = $pago->guardar();
+        }
+
+
+        if (!$resultado) {
+            $res = [
+                'tipo' => 'Error',
+                'mensaje' => 'Hubo un error al guardar el pago',
+            ];
+        }
+
+        if ($resultado) {
+            $res = [
+                'tipo' => 'Exito',
+                'mensaje' => 'Pago guardado correctamente',
+                'folio' => $pago->folio,
+                'id_user' => $pago->id_user ?? 0,
+            ];
+        }
+
+        echo json_encode($res);
     }
 }

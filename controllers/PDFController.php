@@ -7,6 +7,7 @@ use Dompdf\Dompdf;
 use Empleados\Empleado;
 use Facturacion\Cuentas;
 use Facturacion\Facturas;
+use Facturacion\PagosAdicionales;
 use Reportes\Categoria;
 use Reportes\Evidencias;
 use Reportes\Incidencias;
@@ -50,7 +51,65 @@ class PDFController
         $domPDF = new Dompdf();
         ob_start();
 
-        include_once __DIR__ . '/../views/PDF/recibo-horizontal.php';
+        include_once __DIR__ . '/../views/PDF/recibo-general.php';
+
+        $content = ob_get_clean();
+
+        $options = $domPDF->getOptions();
+        $options->set(array('isRemoteEnabled' => true));
+        $domPDF->setOptions($options);
+
+        $domPDF->loadHtml($content);
+        $domPDF->setPaper('A4', 'landscape');
+
+        $domPDF->render();
+        $domPDF->stream("Factura", array("Attachment" => false));
+    }
+
+    public static function reciboAdicionales()
+    {
+        isAuth();
+
+        $idUsuario = s($_GET['id']);
+        $folio = s($_GET['folio']);
+
+        $recibo = PagosAdicionales::where('folio', $folio);
+
+        if ($idUsuario !== "0") {
+            $instanciaUsuario = new UsuariosAPI();
+
+            $usuarioResultado = $instanciaUsuario->consultar($idUsuario);
+            $usuario = array_shift($usuarioResultado);
+
+            if (!$usuario->id || !$recibo->folio) {
+                header('Location: /consultar');
+                return;
+            }
+
+            $usuario = Usuario::find($idUsuario);
+            $tipo_toma = TipoToma::find($usuario->id_servicetype);
+            $tipo_consumo = TipoConsumo::find($usuario->id_consumtype);
+        } else {
+            if (!$recibo->folio) {
+                header('Location: /consultar');
+                return;
+            }
+
+            $usuario = $recibo->nombre;
+            $tipo_toma = 'Sin tipo de toma';
+            $tipo_consumo = 'Sin tipo de consumo';
+        }
+
+        $empleado = Empleado::find($recibo->id_empleado);
+        $listado = PagosAdicionales::belongsTo('folio', $folio);
+        foreach ($listado as $li) {
+            $li->id_cuenta = Cuentas::find($li->id_cuenta);
+        }
+
+        $domPDF = new Dompdf();
+        ob_start();
+
+        include_once __DIR__ . '/../views/PDF/recibo-extras.php';
 
         $content = ob_get_clean();
 

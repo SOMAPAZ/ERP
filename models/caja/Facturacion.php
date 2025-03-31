@@ -38,33 +38,17 @@ class Facturacion extends ActiveRecord
         return $resultado;
     }
 
-    public static function pagarParcial($folio, $id_user, $mesI, $mesF, $year1, $year2)
+    public static function pagarTo($arguments, $folio)
     {
-        if ($year1 == $year2) {
-            $query = "UPDATE facturacion 
-                      SET estado = '1', folio = {$folio} 
-                      WHERE id_user = {$id_user} 
-                      AND `year` = {$year1} 
-                      AND `mes` BETWEEN {$mesI} AND {$mesF};";
-        } else {
-            $query = "UPDATE facturacion 
-                      SET estado = '1', folio = {$folio} 
-                      WHERE id_user = {$id_user} 
-                      AND ((`year` = {$year1} AND `mes` >= {$mesI}) 
-                      OR (`year` = {$year2} AND `mes` <= {$mesF}));";
-        }
+        $processSuccess = true;
+        foreach ($arguments as &$arg) :
+            $query = "UPDATE " . self::$tabla . " SET estado = '1', folio = '{$folio}' WHERE id = {$arg} AND estado = '0'";
+            $resultado = self::$db->query($query);
 
-        $resultado = self::$db->query($query);
+            !$resultado ? $processSuccess = false : $processSuccess = true;
+        endforeach;
 
-        return $resultado;
-    }
-
-    public static function pagarUno($id_user, $folio, $mes, $year)
-    {
-        $query = "UPDATE " . self::$tabla . " SET estado = '1', folio = '{$folio}' WHERE id_user = '{$id_user}' AND estado = '0' AND mes = '{$mes}' AND year = '{$year}'";
-        $resultado = self::$db->query($query);
-
-        return $resultado;
+        return $processSuccess;
     }
 
     public static function condoneTo($arguments)
@@ -78,14 +62,6 @@ class Facturacion extends ActiveRecord
         endforeach;
 
         return $processSuccess;
-    }
-
-    public static function condonarUno($id_user, $mes, $year)
-    {
-        $query = "UPDATE facturacion SET estado = '4' WHERE id_user = {$id_user} AND `mes` = {$mes} AND `year` = {$year};";
-        $resultado = self::$db->query($query);
-
-        return $resultado;
     }
 
     public static function getIdBetween($start, $end, $limit, $offset)

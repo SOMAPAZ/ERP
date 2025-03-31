@@ -114,10 +114,10 @@ import GetDatos from "../classes/GetData_v1.js"
     divGrid.className = "grid sm:grid-cols-1 md:grid-cols-2 gap-2";
 
     const divDireccion = document.createElement("DIV");
-    divDireccion.innerHTML = `<span class="text-sm font-bold dark:text-gray-400">Dirección: </span><span class="text-sm font-medium">${resUser.direccion || "Sin Dirección registrada"}</span>`;
+    divDireccion.innerHTML = `<span class="text-sm font-bold dark:text-gray-400">Dirección: </span><span class="text-sm font-medium">${resUser.address || "Sin Dirección registrada"}</span>`;
 
     const divEmail = document.createElement("DIV");
-    divEmail.innerHTML = `<span class="text-sm font-bold dark:text-gray-400">Correo: </span><span class="text-sm font-medium">${resUser.correo || "Sin Correo registrado"}</span>`;
+    divEmail.innerHTML = `<span class="text-sm font-bold dark:text-gray-400">Correo: </span><span class="text-sm font-medium">${resUser.mail || "Sin Correo registrado"}</span>`;
 
     const divRFC = document.createElement("DIV");
     divRFC.innerHTML = `<span class="text-sm font-bold dark:text-gray-400">RFC: </span><span class="text-sm font-medium">${resUser.rfc || "Sin RFC registrado"}</span>`;

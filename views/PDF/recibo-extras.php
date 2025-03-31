@@ -153,13 +153,14 @@ $imagenBase64 = "data:image/png;base64," . base64_encode(file_get_contents($nomb
         position: relative;
         margin-top: 15px;
         text-align: center;
+        margin-right: 25px;
     }
 
     .periodo-pagado span {
         font-size: 14px;
         background-color: blue;
         color: white;
-        padding: 5px 40px;
+        padding: 5px 10px;
     }
 
     .payment-table {
@@ -338,13 +339,17 @@ $imagenBase64 = "data:image/png;base64," . base64_encode(file_get_contents($nomb
                 </span>
             </div>
             <div style="margin-top: 15px; margin-left: -45px;">
-                <p style="margin-top: -5px; ">nombre: <?= $usuario->user . ' ' . $usuario->lastname ?></p>
-                <p style="margin-top: -5px;">dirección: <?= $usuario->address ?></p>
+                <p style="margin-top: -5px; ">nombre: <?= isset($usuario->user) ? $usuario->user . ' ' . $usuario->lastname : $usuario ?></p>
+                <p style="margin-top: -5px;">dirección: <?= $recibo->direccion ?></p>
                 <div style="margin-top: -5px;">
-                    <p style=" display: inline;">id usuario: <?= $usuario->id ?> </p>
-                    <p style=" display: inline;">rfc: <?= $usuario->rfc ? $usuario->rfc : 'Sin RFC registrado' ?> </p>
+                    <p style=" display: inline;">id usuario: <?= isset($usuario->id) ? $usuario->id : 'Sin id registrado' ?> </p>
+                    <p style=" display: inline;">rfc: <?= isset($usuario->rfc) ? ($usuario->rfc ? $usuario->rfc : 'Sin RFC registrado') : 'Sin RFC registrado' ?> </p>
                 </div>
-                <p style="margin-top: 5px;">tipo de servicio: comercial - clasificación: ii</p>
+                <?php if (isset($tipo_toma->name)) : ?>
+                    <p style="margin-top: 5px;">tipo de servicio: <?= $tipo_toma->name ?> - clasificación: <?= $tipo_consumo->name ?></p>
+                <?php else: ?>
+                    <p style="margin-top: 5px;">Tipo de servicio: No pertenece a ninguna clasificación</p>
+                <?php endif; ?>
             </div>
         </div>
         <!-- linea divisional -->
@@ -387,7 +392,7 @@ $imagenBase64 = "data:image/png;base64," . base64_encode(file_get_contents($nomb
             </div>
             <div class="periodo-pagado" style="margin-top: 10px;">
                 <span>
-                    periodo pagado: <?= formatearFechaES($recibo->mes_inicio) ?> a <?= formatearFechaES($recibo->mes_fin) ?>
+                    Periodo pagado: Este proceso no contiene periodo
                 </span>
             </div>
         </div>
@@ -402,49 +407,27 @@ $imagenBase64 = "data:image/png;base64," . base64_encode(file_get_contents($nomb
                 </tr>
             </thead>
             <tbody>
-                <?php if ($recibo->monto_agua > 0): ?>
-                    <tr>
-                        <td>Consumo de agua</td>
-                        <td>$ <?= formatoMiles($recibo->monto_agua) ?></td>
-                        <td>$ <?= formatoMiles($recibo->monto_descuento_agua) ?></td>
-                        <td>$ <?= formatoMiles($recibo->monto_agua - $recibo->monto_descuento_agua) ?></td>
-                    </tr>
-                    <tr>
-                        <td>Consumo de drenaje</td>
-                        <td>$ <?= formatoMiles($recibo->monto_drenaje) ?></td>
-                        <td>$ <?= formatoMiles($recibo->monto_descuento_drenaje) ?></td>
-                        <td>$ <?= formatoMiles($recibo->monto_drenaje - $recibo->monto_descuento_drenaje) ?></td>
-                    </tr>
-                    <tr>
-                        <td>Recargos</td>
-                        <td>$ <?= formatoMiles($recibo->monto_recargo_agua + $recibo->monto_recargo_drenaje) ?></td>
-                        <td>$ <?= formatoMiles($recibo->monto_descuento_recargo_agua + $recibo->monto_descuento_recargo_drenaje) ?></td>
-                        <td>$ <?= formatoMiles($recibo->monto_recargo_agua + $recibo->monto_recargo_drenaje - $recibo->monto_descuento_recargo_agua - $recibo->monto_descuento_recargo_drenaje) ?></td>
-                    </tr>
-                <?php endif; ?>
                 <?php
-                $total_iva_adelantos = 0;
-                $total_pago_adelantos = 0;
-                if (count($pagos_adicionales) > 0):
-                    foreach ($pagos_adicionales as $pago):
-                        $total_iva_adelantos += $pago->monto_iva_cuentas;
-                        $total_pago_adelantos += $pago->total;
+                $total_iva = 0;
+                $total_pago = 0;
+                foreach ($listado as $li):
+                    $total_iva += $li->cantidad_iva;
+                    $total_pago += ($li->cantidad + $li->cantidad_iva);
                 ?>
-                        <tr>
-                            <td><?= $pago->id_cuentas->cuenta ?></td>
-                            <td>$ <?= formatoMiles($pago->monto_cuentas) ?></td>
-                            <td>$ 0.00</td>
-                            <td>$ <?= formatoMiles($pago->monto_cuentas) ?></td>
-                        </tr>
+                    <tr>
+                        <td><?= $li->id_cuenta->cuenta ?></td>
+                        <td>$ <?= formatoMiles($li->cantidad) ?></td>
+                        <td>$ 0.00</td>
+                        <td>$ <?= formatoMiles($li->cantidad) ?></td>
+                    </tr>
                 <?php
-                    endforeach;
-                endif;
+                endforeach;
                 ?>
                 <tr>
                     <td>I.V.A</td>
-                    <td>$ <?= formatoMiles($recibo->monto_iva_agua + $recibo->monto_iva_drenaje + $total_iva_adelantos) ?></td>
+                    <td>$ <?= formatoMiles($total_iva) ?></td>
                     <td>$ 00.00</td>
-                    <td>$ <?= formatoMiles($recibo->monto_iva_agua + $recibo->monto_iva_drenaje + $total_iva_adelantos) ?></td>
+                    <td>$ <?= formatoMiles($total_iva) ?></td>
                 </tr>
             </tbody>
         </table>
@@ -457,16 +440,16 @@ $imagenBase64 = "data:image/png;base64," . base64_encode(file_get_contents($nomb
                 total:
             </span>
             <span class="total-amount">
-                $ <?= formatoMiles($recibo->total + $total_pago_adelantos) ?>
+                $ <?= formatoMiles($total_pago) ?>
             </span>
         </div>
-        <?php $totales = $recibo->total + $total_pago_adelantos;
-        $separados = explode('.', $totales);
+        <?php
+        $separados = explode('.', $total_pago);
         $texto = numeroALetras($separados[0]);
-        $decimales = $separados[1] . '/100'; ?>
+        $decimales = ($separados[1] ?? 0) . '/100'; ?>
 
         <div class="amount-date-container" style="margin-top: 10px;">
-            <span class="amount-text">(<?= $texto ?> pesos <?= $decimales ?>).</span><br />
+            <span class="amount-text">(<?= $texto ?> pesos <?= $decimales ?>) MN.</span><br />
             <span class="date-text"><?= $recibo->fecha ?></span>
         </div>
 
@@ -488,8 +471,7 @@ $imagenBase64 = "data:image/png;base64," . base64_encode(file_get_contents($nomb
     </div>
     <!-- segunda hoja -->
     <!-- segunda hoja -->
-    <div class="left" style="margin-left: 50px;
-">
+    <div class="left" style="margin-left: 50px;">
         <div>
             <h1 class="titulo">recibo oficial de cobro</h1>
             <span class="folio">N° <?= $recibo->folio ?></span>
@@ -507,13 +489,17 @@ $imagenBase64 = "data:image/png;base64," . base64_encode(file_get_contents($nomb
                 </span>
             </div>
             <div style="margin-top: 15px; margin-left: -45px;">
-                <p style="margin-top: -5px; ">nombre: <?= $usuario->user . ' ' . $usuario->lastname ?></p>
-                <p style="margin-top: -5px;">dirección: <?= $usuario->address ?></p>
+                <p style="margin-top: -5px; ">nombre: <?= isset($usuario->user) ? $usuario->user . ' ' . $usuario->lastname : $usuario ?></p>
+                <p style="margin-top: -5px;">dirección: <?= $recibo->direccion ?></p>
                 <div style="margin-top: -5px;">
-                    <p style=" display: inline;">id usuario: <?= $usuario->id ?> </p>
-                    <p style=" display: inline;">rfc: <?= $usuario->rfc ? $usuario->rfc : 'Sin RFC registrado' ?> </p>
+                    <p style=" display: inline;">id usuario: <?= isset($usuario->id) ? $usuario->id : 'Sin id registrado' ?> </p>
+                    <p style=" display: inline;">rfc: <?= isset($usuario->rfc) ? ($usuario->rfc ? $usuario->rfc : 'Sin RFC registrado') : 'Sin RFC registrado' ?> </p>
                 </div>
-                <p style="margin-top: 5px;">tipo de servicio: <?= $tipo_toma->name ?> - clasificación: <?= $tipo_consumo->name ?></p>
+                <?php if (isset($tipo_toma->name)) : ?>
+                    <p style="margin-top: 5px;">tipo de servicio: <?= $tipo_toma->name ?> - clasificación: <?= $tipo_consumo->name ?></p>
+                <?php else: ?>
+                    <p style="margin-top: 5px;">Tipo de servicio: No pertenece a ninguna clasificación</p>
+                <?php endif; ?>
             </div>
         </div>
         <!-- linea divisional -->
@@ -556,7 +542,7 @@ $imagenBase64 = "data:image/png;base64," . base64_encode(file_get_contents($nomb
             </div>
             <div class="periodo-pagado" style="margin-top: 10px;">
                 <span>
-                    periodo pagado: <?= formatearFechaES($recibo->mes_inicio) ?> a <?= formatearFechaES($recibo->mes_fin) ?>
+                    Periodo pagado: Este proceso no contiene periodo
                 </span>
             </div>
         </div>
@@ -571,49 +557,27 @@ $imagenBase64 = "data:image/png;base64," . base64_encode(file_get_contents($nomb
                 </tr>
             </thead>
             <tbody>
-                <?php if ($recibo->monto_agua > 0): ?>
-                    <tr>
-                        <td>Consumo de agua</td>
-                        <td>$ <?= formatoMiles($recibo->monto_agua) ?></td>
-                        <td>$ <?= formatoMiles($recibo->monto_descuento_agua) ?></td>
-                        <td>$ <?= formatoMiles($recibo->monto_agua - $recibo->monto_descuento_agua) ?></td>
-                    </tr>
-                    <tr>
-                        <td>Consumo de drenaje</td>
-                        <td>$ <?= formatoMiles($recibo->monto_drenaje) ?></td>
-                        <td>$ <?= formatoMiles($recibo->monto_descuento_drenaje) ?></td>
-                        <td>$ <?= formatoMiles($recibo->monto_drenaje - $recibo->monto_descuento_drenaje) ?></td>
-                    </tr>
-                    <tr>
-                        <td>Recargos</td>
-                        <td>$ <?= formatoMiles($recibo->monto_recargo_agua + $recibo->monto_recargo_drenaje) ?></td>
-                        <td>$ <?= formatoMiles($recibo->monto_descuento_recargo_agua + $recibo->monto_descuento_recargo_drenaje) ?></td>
-                        <td>$ <?= formatoMiles($recibo->monto_recargo_agua + $recibo->monto_recargo_drenaje - $recibo->monto_descuento_recargo_agua - $recibo->monto_descuento_recargo_drenaje) ?></td>
-                    </tr>
-                <?php endif; ?>
                 <?php
-                $total_iva_adelantos = 0;
-                $total_pago_adelantos = 0;
-                if (count($pagos_adicionales) > 0):
-                    foreach ($pagos_adicionales as $pago):
-                        $total_iva_adelantos += $pago->monto_iva_cuentas;
-                        $total_pago_adelantos += $pago->total;
+                $total_iva = 0;
+                $total_pago = 0;
+                foreach ($listado as $li):
+                    $total_iva += $li->cantidad_iva;
+                    $total_pago += ($li->cantidad + $li->cantidad_iva);
                 ?>
-                        <tr>
-                            <td><?= $pago->id_cuentas->cuenta ?></td>
-                            <td>$ <?= formatoMiles($pago->monto_cuentas) ?></td>
-                            <td>$ 0.00</td>
-                            <td>$ <?= formatoMiles($pago->monto_cuentas) ?></td>
-                        </tr>
+                    <tr>
+                        <td><?= $li->id_cuenta->cuenta ?></td>
+                        <td>$ <?= formatoMiles($li->cantidad) ?></td>
+                        <td>$ 0.00</td>
+                        <td>$ <?= formatoMiles($li->cantidad) ?></td>
+                    </tr>
                 <?php
-                    endforeach;
-                endif;
+                endforeach;
                 ?>
                 <tr>
                     <td>I.V.A</td>
-                    <td>$ <?= formatoMiles($recibo->monto_iva_agua + $recibo->monto_iva_drenaje + $total_iva_adelantos) ?></td>
+                    <td>$ <?= formatoMiles($total_iva) ?></td>
                     <td>$ 00.00</td>
-                    <td>$ <?= formatoMiles($recibo->monto_iva_agua + $recibo->monto_iva_drenaje + $total_iva_adelantos) ?></td>
+                    <td>$ <?= formatoMiles($total_iva) ?></td>
                 </tr>
             </tbody>
         </table>
@@ -626,11 +590,11 @@ $imagenBase64 = "data:image/png;base64," . base64_encode(file_get_contents($nomb
                 total:
             </span>
             <span class="total-amount">
-                $ <?= formatoMiles($recibo->total + $total_pago_adelantos) ?>
+                $ <?= formatoMiles($total_pago) ?>
             </span>
         </div>
         <div class="amount-date-container" style="margin-top: 10px;">
-            <span class="amount-text">(<?= $texto ?> pesos <?= $decimales ?>).</span><br />
+            <span class="amount-text">(<?= $texto ?> pesos <?= $decimales ?>) MN.</span><br />
             <span class="date-text"><?= $recibo->fecha ?></span>
         </div>
 

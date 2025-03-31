@@ -35,7 +35,7 @@ class DeudaController
                 ]);
                 return;
             }
-            $meses = Facturacion::belongsTo('id_user', $id);
+            $meses = Facturacion::belongsToDeuda('id_user', $id);
             $res = self::calcularTotal($meses, $usuario);
 
             echo json_encode($res);
@@ -61,7 +61,7 @@ class DeudaController
                 return;
             }
             $usuario = Usuario::find($id);
-            $meses = Facturacion::belongsTo('id_user', $id);
+            $meses = Facturacion::belongsToDeuda('id_user', $id);
 
             $res = self::calcularParciales($meses, $usuario);
 
@@ -151,10 +151,10 @@ class DeudaController
                     strlen($adeudo->mes) === 1 ? $mesFR = '0' . $adeudo->mes : $mesFR = $adeudo->mes;
                     array_push($fechas_rez, date("{$adeudo->year}-{$mesFR}-08"));
                 }
-            }
 
-            strlen($adeudo->mes) === 1 ? $mesF = '0' . $adeudo->mes : $mesF = $adeudo->mes;
-            array_push($fechas, date("{$adeudo->year}-{$mesF}-08"));
+                strlen($adeudo->mes) === 1 ? $mesF = '0' . $adeudo->mes : $mesF = $adeudo->mes;
+                array_push($fechas, date("{$adeudo->year}-{$mesF}-08"));
+            }
         }
 
         $montoAgua = calcular($agua);
@@ -185,7 +185,7 @@ class DeudaController
             $arg = [
                 'periodo' => [
                     'inicio' => $fechas[0],
-                    'final' => $fechas[count($arr) - 1],
+                    'final' => $fechas[count($fechas) - 1],
                     'inicio_rez' => count($fechas_rez) > 0 ? $fechas_rez[0] : '',
                     'final_rez' => count($fechas_rez) > 0 ? $fechas_rez[count($arr) - (count($arr) - $meses) - 1] : ''
                 ],
@@ -245,6 +245,7 @@ class DeudaController
 
             if (intval($d->estado) === 0) {
                 $inicial_a = $d->monto_agua;
+
                 $desc_a = 0;
                 $mesesRezagados--;
 
@@ -277,6 +278,7 @@ class DeudaController
 
                 //Montos
                 $agua = ($d->monto_agua);
+                $inicial_d = $user->drain == 1 ? ($inicial_a * 0.25) : 0;
                 $drain = $user->drain == 1 ? ($d->monto_agua * 0.25) : 0;
                 $desc_dren = $user->drain == 1 ? ($desc_a * 0.25) : 0;
                 $iva_agua = $user->id_intaketype !== '2' ? ($d->monto_agua * 0.16) : 0;
@@ -301,7 +303,7 @@ class DeudaController
                     'tarifa' => floatval($inicial_a),
                     'agua' => round($agua, 2),
                     'desc_agua' => round($desc_a, 2),
-                    'drenaje' => round($drain, 2),
+                    'drenaje' => round($inicial_d, 2),
                     'desc_drenaje' => round($desc_dren, 2),
                     'iva_agua' => round($iva_agua, 2),
                     'iva_drenaje' => round($iva_drain, 2),

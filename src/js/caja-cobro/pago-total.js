@@ -109,7 +109,8 @@ import Modal from "../classes/Modal_v1.js";
             {descuentoDren},
             {descuentoRecargoDren},
             {tipoPago}, 
-            {adicionales}
+            {adicionales},
+            {seleccionado: []}
         ]
         const formData = new FormData();
         formData.append("montos", JSON.stringify(montosAgrupados));
@@ -137,11 +138,9 @@ import Modal from "../classes/Modal_v1.js";
                         location.reload();
                     }
                 });
-
-            limpiarHTML(divBoton);
         }
     } catch (error) {
-        console.log(error);
+            console.log(error);
         }
     }
 
@@ -196,7 +195,8 @@ import Modal from "../classes/Modal_v1.js";
         e.preventDefault();
         const divModal = e.target.parentElement.parentElement;
         const inputs = divModal.querySelectorAll('input')
-        PostDatos.crearFormData(inputs);
+        const res = PostDatos.crearFormData(inputs);
+        if(!res) return;
 
         const number = divModal.querySelector('input').value;
         let descuentoAplicado = 0;
