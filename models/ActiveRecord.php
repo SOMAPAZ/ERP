@@ -260,4 +260,11 @@ class ActiveRecord
         $resultado = self::$db->query($query);
         return $resultado;
     }
+
+    public function obtenerPagosCorte($fecha, $indice, $empleado)
+    {
+        $query = "SELECT * FROM " . static::$tabla . " WHERE DATE(fecha) LIKE '{$fecha}' AND `{$indice}` = '{$empleado}' AND cancelado = 0";
+        $resultado = self::consultarSQL($query);
+        return $resultado;
+    }
 }

@@ -7,7 +7,7 @@ use Model\ActiveRecord;
 class PagosAdicionales extends ActiveRecord
 {
     protected static $tabla = 'pagos_adicionales';
-    protected static $columnasDB = ['id', 'id_user', 'nombre', 'direccion', 'id_cuenta', 'cantidad', 'cantidad_iva', 'tipo_pago', 'fecha', 'folio', 'id_empleado'];
+    protected static $columnasDB = ['id', 'id_user', 'nombre', 'direccion', 'id_cuenta', 'cantidad', 'cantidad_iva', 'tipo_pago', 'fecha', 'folio', 'id_empleado', 'cancelado', 'total'];
 
     public $id;
     public $id_user;
@@ -20,6 +20,8 @@ class PagosAdicionales extends ActiveRecord
     public $fecha;
     public $folio;
     public $id_empleado;
+    public $cancelado;
+    public $total;
 
     public function __construct($args = [])
     {
@@ -34,6 +36,8 @@ class PagosAdicionales extends ActiveRecord
         $this->fecha = $args['fecha'] ?? '';
         $this->folio = $args['folio'] ?? null;
         $this->id_empleado = $args['id_empleado'] ?? null;
+        $this->cancelado = $args['cancelado'] ?? 0;
+        $this->total = $args['total'] ?? 0;
     }
 
     public static function obtenerUltimoFolio()

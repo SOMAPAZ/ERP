@@ -67,7 +67,7 @@ require_once __DIR__ . '/../templates/nav-bar.php';
                 </div>
                 <div class="space-y-5 border-t border-gray-400">
                     <h3 class="uppercase ms-5 font-bold mt-5">Seleccione el tipo de pago</h3>
-                    <div class="w-full flex flex-col lg:flex-row justify-between px-5 space-y-2">
+                    <div class="w-full flex flex-col lg:flex-row justify-between px-5 space-y-2 lg:space-y-0">
                         <div class="flex flex-row gap-3 border border-dashed border-gray-400 px-4 py-1 rounded-lg items-center">
                             <input type="radio" name="tipo_pago" id="tipo_1" value="1">
                             <label for="tipo_1" class="cursor-pointer w-full">Efectivo</label>

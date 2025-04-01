@@ -412,7 +412,7 @@ $imagenBase64 = "data:image/png;base64," . base64_encode(file_get_contents($nomb
                 $total_pago = 0;
                 foreach ($listado as $li):
                     $total_iva += $li->cantidad_iva;
-                    $total_pago += ($li->cantidad + $li->cantidad_iva);
+                    $total_pago += ($li->total);
                 ?>
                     <tr>
                         <td><?= $li->id_cuenta->cuenta ?></td>

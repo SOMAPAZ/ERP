@@ -94,6 +94,8 @@ $router->post('/deshacer-condonacion', [CajaController::class, 'deshacerCondonac
 $router->get('/adicionales', [CajaController::class, 'getPagosAdicionales']);
 $router->post('/pago-parcial', [CajaController::class, 'pagoCostosAdicionales']);
 
+$router->get('/crear-corte', [CajaController::class, 'crearCorte']);
+
 // // Actions Updates
 $router->get('/updates', [UpdatesController::class, 'index']);
 

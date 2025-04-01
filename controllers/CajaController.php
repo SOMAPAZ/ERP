@@ -331,10 +331,11 @@ class CajaController
 
         foreach ($adicionales as $adicional) {
             $pago->id_cuenta = $adicional->id;
-            $pago->cantidad = $adicional->cantidad;
+            $pago->cantidad = floatval($adicional->cantidad);
             $pago->cantidad_iva = $adicional->cantidad_iva;
             $pago->fecha = date('Y-m-d H:i:s');
             $pago->id_empleado = $_SESSION['empleado_id'];
+            $pago->total = $adicional->cantidad + $adicional->cantidad_iva;
             $resultado = $pago->guardar();
         }
 
@@ -356,5 +357,38 @@ class CajaController
         }
 
         echo json_encode($res);
+    }
+
+    public static function crearCorte(Router $router)
+    {
+        isAuth();
+        permisosCaja();
+        date_default_timezone_set('America/Mexico_City');
+
+        if (!$_SESSION['empleado_id']) {
+            header('Location: /');
+            return;
+        }
+
+        $pagos_facturacion = new Facturas();
+        $pagos_adicionales = new PagosAdicionales();
+
+        $facturas = $pagos_facturacion->obtenerPagosCorte(date('Y-m-d'), 'empleado_id', $_SESSION['empleado_id']);
+        $adicionales = $pagos_adicionales->obtenerPagosCorte(date('Y-m-d'), 'id_empleado', $_SESSION['empleado_id']);
+
+        $total_facturas = array_reduce($facturas, function ($acc, $act) {
+            return $acc + $act->total;
+        });
+
+        $total_adicionales = array_reduce($adicionales, function ($acc, $act) {
+            return $acc + $act->total;
+        });
+
+        $total = $total_facturas + $total_adicionales;
+
+        $router->render('caja/corte', [
+            'links' => self::$links,
+            'total' => $total
+        ]);
     }
 }
