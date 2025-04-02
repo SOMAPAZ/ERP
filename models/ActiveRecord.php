@@ -224,7 +224,7 @@ class ActiveRecord
         $query .= join(', ', array_keys($atributos));
         $query .= " ) VALUES ('";
         $query .= join("', '", array_values($atributos));
-        $query .= " ') ";
+        $query .= "') ";
 
         $resultado = self::$db->query($query);
         return $resultado;
@@ -263,8 +263,23 @@ class ActiveRecord
 
     public function obtenerPagosCorte($fecha, $indice, $empleado)
     {
-        $query = "SELECT * FROM " . static::$tabla . " WHERE DATE(fecha) LIKE '{$fecha}' AND `{$indice}` = '{$empleado}' AND cancelado = 0";
+        $query = "SELECT * FROM " . static::$tabla . " WHERE DATE(fecha) LIKE '{$fecha}' AND `{$indice}` = '{$empleado}' AND cancelado = 0 AND folio_corte IS NULL OR folio_corte = ''";
         $resultado = self::consultarSQL($query);
+        return $resultado;
+    }
+
+    public function asignarFolioCorte($folio, $folio_corte)
+    {
+        $query = "UPDATE " . static::$tabla . " SET folio_corte = '{$folio_corte}' WHERE folio = '{$folio}'";
+        $resultado = self::$db->query($query);
+
+        return $resultado;
+    }
+    public function removerFolioCorte($folio)
+    {
+        $query = "UPDATE " . static::$tabla . " SET folio_corte = null WHERE folio = '{$folio}'";
+        $resultado = self::$db->query($query);
+
         return $resultado;
     }
 }

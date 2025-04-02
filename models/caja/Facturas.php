@@ -7,7 +7,7 @@ use Model\ActiveRecord;
 class Facturas extends ActiveRecord
 {
     protected static $tabla = 'facturas_historial';
-    protected static $columnasDB = ['id', 'id_user', 'folio', 'fecha', 'mes_inicio', 'mes_fin', 'numero_meses', 'cancelado', 'monto_agua', 'monto_drenaje', 'monto_cuentas', 'monto_recargo_agua', 'monto_recargo_drenaje', 'monto_descuento_agua', 'monto_descuento_drenaje', 'monto_descuento_recargo_agua', 'monto_descuento_recargo_drenaje', 'monto_iva_agua', 'monto_iva_drenaje', 'monto_iva_cuentas', 'id_cuentas', 'total', 'tipo_pago', 'empleado_id', 'nota'];
+    protected static $columnasDB = ['id', 'id_user', 'folio', 'fecha', 'mes_inicio', 'mes_fin', 'numero_meses', 'cancelado', 'monto_agua', 'monto_drenaje', 'monto_cuentas', 'monto_recargo_agua', 'monto_recargo_drenaje', 'monto_descuento_agua', 'monto_descuento_drenaje', 'monto_descuento_recargo_agua', 'monto_descuento_recargo_drenaje', 'monto_iva_agua', 'monto_iva_drenaje', 'monto_iva_cuentas', 'id_cuentas', 'total', 'tipo_pago', 'empleado_id', 'nota', 'folio_corte'];
 
     public $id;
     public $id_user;
@@ -34,6 +34,7 @@ class Facturas extends ActiveRecord
     public $tipo_pago;
     public $empleado_id;
     public $nota;
+    public $folio_corte;
 
     public function __construct($args = [])
     {
@@ -62,6 +63,7 @@ class Facturas extends ActiveRecord
         $this->tipo_pago = $args['tipo_pago'] ?? null;
         $this->empleado_id = $args['empleado_id'] ?? null;
         $this->nota = $args['nota'] ?? '';
+        $this->folio_corte = $args['folio_corte'] ?? null;
     }
 
     public static function obtenerUltimoFolio()

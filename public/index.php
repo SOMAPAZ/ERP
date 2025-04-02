@@ -93,8 +93,13 @@ $router->get('/consultar-condonaciones-listado', [CajaController::class, 'getLis
 $router->post('/deshacer-condonacion', [CajaController::class, 'deshacerCondonacion']);
 $router->get('/adicionales', [CajaController::class, 'getPagosAdicionales']);
 $router->post('/pago-parcial', [CajaController::class, 'pagoCostosAdicionales']);
+$router->get('/historial-recibos', [CajaController::class, 'getRecibos']);
 
 $router->get('/crear-corte', [CajaController::class, 'crearCorte']);
+$router->post('/crear-corte', [CajaController::class, 'crearCorte']);
+$router->get('/solicitar-arqueo', [CajaController::class, 'solicitarArqueo']);
+$router->get('/arqueos', [CajaController::class, 'arqueo']);
+$router->post('/eliminar-corte', [CajaController::class, 'eliminarCorte']);
 
 // // Actions Updates
 $router->get('/updates', [UpdatesController::class, 'index']);
@@ -112,6 +117,7 @@ $router->post('/guardar-registro', [TanquesController::class, 'guardarRegistro']
 // //PDF
 $router->get('/pdf/recibo', [PDFController::class, 'recibo']);
 $router->get('/pdf/recibo-adicionales', [PDFController::class, 'reciboAdicionales']);
+$router->get('/pdf/corte-caja', [PDFController::class, 'corteCaja']);
 
 //OTROS
 $router->get('/api/categorias', [GenericasController::class, 'categorias']);

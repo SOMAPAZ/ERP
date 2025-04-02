@@ -5,6 +5,7 @@ namespace Controllers;
 use MVC\Router;
 use APIs\UsuariosAPI;
 use Empleados\Empleado;
+use Facturacion\CorteCaja;
 use Facturacion\Facturacion;
 use Facturacion\FacturasPasadas;
 use Facturacion\Facturas;
@@ -386,9 +387,142 @@ class CajaController
 
         $total = $total_facturas + $total_adicionales;
 
+        $alertas = [];
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            $corte = new CorteCaja();
+            $_POST['denominaciones'] = json_encode($_POST['denominacion']);
+
+            $corte->sincronizar($_POST);
+            $alertas = $corte->validar();
+
+            if (empty($alertas)) {
+                $corte->fecha = date('Y-m-d');
+                $corte->hora = date('H:i:s');
+                $corte->folio = md5(uniqid(rand(), true));
+
+                $resultado = $corte->guardar();
+
+                if ($resultado) {
+                    if ($facturas) {
+                        foreach ($facturas as $factura) {
+                            $exito = $pagos_facturacion->asignarFolioCorte($factura->folio, $corte->folio);
+                        }
+                    }
+                    if ($adicionales) {
+                        foreach ($adicionales as $adicional) {
+                            $exito = $pagos_adicionales->asignarFolioCorte($adicional->folio, $corte->folio);
+                        }
+                    }
+
+                    if ($exito) {
+                        $_SESSION = [];
+                        header('Location: /solicitar-arqueo');
+                    } else {
+                        header('Location: /crear-corte');
+                    }
+                }
+            }
+        }
+
         $router->render('caja/corte', [
             'links' => self::$links,
-            'total' => $total
+            'total' => $total,
+            'alertas' => $alertas
+        ]);
+    }
+
+    public static function solicitarArqueo(Router $router)
+    {
+        $router->render('caja/solicitar-arqueo', [
+            'login' => true
+        ]);
+    }
+
+    public static function arqueo(Router $router)
+    {
+        isAuth();
+        permisosCaja();
+
+        if ($_SESSION['empleado_rol'] !== '1' && $_SESSION['empleado_rol'] !== '3' && $_SESSION['empleado_rol'] !== '2') {
+            header('Location: /welcome');
+            return;
+        }
+
+        $arqueos = CorteCaja::all();
+
+        foreach ($arqueos as $arqueo) {
+            $arqueo->entrega = Empleado::find($arqueo->entrega);
+            $arqueo->recibe = Empleado::find($arqueo->recibe);
+            $arqueo->testigo = Empleado::find($arqueo->testigo);
+        }
+
+        $router->render('caja/arqueo', [
+            'links' => self::$links,
+            'arqueos' => $arqueos
+        ]);
+    }
+
+    public static function eliminarCorte()
+    {
+        isAuth();
+
+        $folio = s($_POST['folio']);
+        $corte = CorteCaja::where('folio', $folio);
+
+        if (!$corte) {
+            header('Location: /consultar');
+            return;
+        }
+
+        // $eliminado = true;
+        $eliminado = $corte->eliminar();
+
+        if ($eliminado) {
+            $facturas = Facturas::belongsTo('folio_corte', $folio);
+            $adicionales = PagosAdicionales::belongsTo('folio_corte', $folio);
+
+            $exito = false;
+
+            if ($facturas) {
+                foreach ($facturas as $factura) {
+                    $exito = $factura->removerFolioCorte($factura->folio);
+                }
+            }
+            if ($adicionales) {
+                foreach ($adicionales as $adicional) {
+                    $exito = $adicional->removerFolioCorte($adicional->folio);
+                }
+            }
+        }
+
+        if ($exito) {
+            header('Location: /arqueos');
+        }
+    }
+
+    public static function getRecibos(Router $router)
+    {
+        isAuth();
+        permisosCaja();
+
+        $user = s($_GET['usuario']);
+        if (!$user) {
+            header('Location: /consultar');
+            return;
+        }
+
+        $recibos = Facturas::belongsTo('id_user', $user);
+        dd($recibos);
+        $recibos_pasados = FacturasPasadas::belongsTo('id_user', $user);
+        $pagos_adicionales = PagosAdicionales::belongsTo('id_user', $user);
+
+        $router->render('caja/recibos', [
+            'links' => self::$links,
+            'recibos' => $recibos,
+            'recibos_pasados' => $recibos_pasados,
+            'pagos_adicionales' => $pagos_adicionales,
         ]);
     }
 }

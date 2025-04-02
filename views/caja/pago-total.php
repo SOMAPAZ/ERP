@@ -106,13 +106,13 @@ require_once __DIR__ . '/../templates/nav-bar.php';
                 <button class="py-2 px-4 bg-transparent rounded text-sm text-green-800 dark:text-green-400 font-semibold flex flex-row gap-2 items-center" id="btn-consto-adicional">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
                         <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clip-rule="evenodd" />
-                    </svg>Adicionales
+                    </svg>Costo Adicional
                 </button>
                 <button type="button" id="realizar-desc" class="text-gray-900 dark:text-white flex items-center justify-center sm:w-full md:w-auto uppercase text-xs py-2 px-6 rounded-sm gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
-                    <p class="font-bold text-xs">Descuento</p>
+                    <p class="font-bold text-xs">Descuento Recargos</p>
                 </button>
                 <button type="button" id="eliminar-desc" class="hidden text-red-800 dark:text-white flex items-center justify-center sm:w-full md:w-auto uppercase bg-red-200 dark:bg-red-800 text-xs py-2 px-6 rounded-sm hover:bg-red-300 dark:hover:bg-red-600 gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">

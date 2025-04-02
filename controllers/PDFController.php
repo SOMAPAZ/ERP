@@ -2,21 +2,22 @@
 
 namespace Controllers;
 
-use APIs\UsuariosAPI;
 use Dompdf\Dompdf;
-use Empleados\Empleado;
-use Facturacion\Cuentas;
-use Facturacion\Facturas;
-use Facturacion\PagosAdicionales;
-use Reportes\Categoria;
-use Reportes\Evidencias;
-use Reportes\Incidencias;
-use Reportes\Material;
+use APIs\UsuariosAPI;
 use Reportes\Reporte;
-use Reportes\Unidades;
-use Usuarios\TipoConsumo;
-use Usuarios\TipoToma;
 use Usuarios\Usuario;
+use Reportes\Material;
+use Reportes\Unidades;
+use Usuarios\TipoToma;
+use Empleados\Empleado;
+use Reportes\Categoria;
+use Facturacion\Cuentas;
+use Reportes\Evidencias;
+use Facturacion\Facturas;
+use Reportes\Incidencias;
+use Usuarios\TipoConsumo;
+use Facturacion\CorteCaja;
+use Facturacion\PagosAdicionales;
 
 class PDFController
 {
@@ -180,5 +181,31 @@ class PDFController
 
         $domPDF->render();
         $domPDF->stream("Reporte $folio", array("Attachment" => false));
+    }
+
+    public static function corteCaja()
+    {
+        isAuth();
+        $folio = s($_GET['folio']);
+
+        $corte = CorteCaja::where('folio', $folio);
+        $empleado_entrega = Empleado::find($corte->entrega);
+        $empleado_recibe = Empleado::find($corte->recibe);
+        $testigo = Empleado::find($corte->testigo);
+
+        $domPDF = new Dompdf();
+        ob_start();
+        include_once __DIR__ . '/../views/PDF/corte-caja.php';
+        $content = ob_get_clean();
+
+        $options = $domPDF->getOptions();
+        $options->set(array('isRemoteEnabled' => true));
+        $domPDF->setOptions($options);
+
+        $domPDF->loadHtml($content);
+        $domPDF->setPaper('A4');
+
+        $domPDF->render();
+        $domPDF->stream("Corte-caja-$folio", array("Attachment" => false));
     }
 }

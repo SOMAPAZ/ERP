@@ -340,17 +340,6 @@ class AdminController
     {
         isAuth();
 
-        $auth = intval($_SESSION['empleado_rol']);
-
-        if ($auth !== 1 && $auth !== 3) {
-            $respuesta = [
-                'mensaje' => 'Usted no puede acceder a este contenido'
-            ];
-
-            echo json_encode($respuesta);
-            return;
-        }
-
         $employees = new EmployeesAPI();
         $resultado = $employees->consulta();
 
