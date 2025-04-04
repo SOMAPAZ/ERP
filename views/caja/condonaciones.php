@@ -37,5 +37,5 @@
 </section>
 
 <?php $scripts = [
-    'caja-cobro/condonaciones.js'
+    'caja-cobro/condonaciones_v1.js'
 ];

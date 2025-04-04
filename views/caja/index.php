@@ -33,6 +33,6 @@ require_once __DIR__ . '/../templates/nav-bar.php'; ?>
 </section>
 
 <?php $scripts = [
-    'caja-cobro/busqueda.js',
-    'caja-cobro/deuda.js'
+    'caja-cobro/busqueda_v1.js',
+    'caja-cobro/deuda_v1.js'
 ]; ?>
