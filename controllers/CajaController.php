@@ -77,19 +77,18 @@ class CajaController
             $implode = implode(',', $montos[8]->seleccionado);
             $explode = explode(',', $implode);
 
-
             $histFact = Facturas::obtenerUltimoFolio()->folio ?? null;
             $historialExtras = PagosAdicionales::obtenerUltimoFolio()->folio ?? null;
+            $factPasada = FacturasPasadas::obtenerUltimoFolio()->folio ?? null;
 
-            if ($historialExtras === null) {
-                if ($histFact === null) {
-                    $factPasada = FacturasPasadas::obtenerUltimoFolio()->folio;
+            if (is_null($histFact)) {
+                if (is_null($historialExtras)) {
                     $ultimoFolio = $factPasada;
                 } else {
-                    $ultimoFolio = $histFact;
+                    $ultimoFolio = is_null($factPasada) ? $historialExtras : ((int) $factPasada > (int) $historialExtras ? $factPasada : $historialExtras);
                 }
             } else {
-                $ultimoFolio = $historialExtras;
+                $ultimoFolio = is_null($historialExtras) ? $histFact : ((int) $histFact > (int) $historialExtras ? $histFact : $historialExtras);
             }
 
             $pago = new Facturas();
@@ -309,16 +308,16 @@ class CajaController
 
         $histFact = Facturas::obtenerUltimoFolio()->folio ?? null;
         $historialExtras = PagosAdicionales::obtenerUltimoFolio()->folio ?? null;
+        $factPasada = FacturasPasadas::obtenerUltimoFolio()->folio ?? null;
 
-        if ($historialExtras === null) {
-            if ($histFact === null) {
-                $factPasada = FacturasPasadas::obtenerUltimoFolio()->folio;
+        if (is_null($histFact)) {
+            if (is_null($historialExtras)) {
                 $ultimoFolio = $factPasada;
             } else {
-                $ultimoFolio = $histFact;
+                $ultimoFolio = is_null($factPasada) ? $historialExtras : ((int) $factPasada > (int) $historialExtras ? $factPasada : $historialExtras);
             }
         } else {
-            $ultimoFolio = $historialExtras;
+            $ultimoFolio = is_null($historialExtras) ? $histFact : ((int) $histFact > (int) $historialExtras ? $histFact : $historialExtras);
         }
 
         $adicionales = json_decode($_POST['adicionales']);
@@ -514,7 +513,6 @@ class CajaController
         }
 
         $recibos = Facturas::belongsTo('id_user', $user);
-        dd($recibos);
         $recibos_pasados = FacturasPasadas::belongsTo('id_user', $user);
         $pagos_adicionales = PagosAdicionales::belongsTo('id_user', $user);
 
@@ -524,5 +522,31 @@ class CajaController
             'recibos_pasados' => $recibos_pasados,
             'pagos_adicionales' => $pagos_adicionales,
         ]);
+    }
+
+    public static function cambiarEstadoRecibo()
+    {
+        isAuth();
+        permisosCaja();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $folio = s($_POST['folio']);
+            $recibo = Facturas::where('folio', $folio);
+
+            if ($recibo->cancelado) {
+                header('Location: /consultar');
+                return;
+            }
+
+            $resultado = false;
+            $facturas = Facturas::belongsTo('folio', $folio);
+            $adicionales = PagosAdicionales::belongsTo('folio', $folio);
+
+            if ($facturas) {
+                foreach ($facturas as $factura) {
+                    $resultado = $factura->removerFolioCorte($factura->folio);
+                }
+            }
+        }
     }
 }

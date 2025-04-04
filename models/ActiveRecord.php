@@ -263,7 +263,7 @@ class ActiveRecord
 
     public function obtenerPagosCorte($fecha, $indice, $empleado)
     {
-        $query = "SELECT * FROM " . static::$tabla . " WHERE DATE(fecha) LIKE '{$fecha}' AND `{$indice}` = '{$empleado}' AND cancelado = 0 AND folio_corte IS NULL OR folio_corte = ''";
+        $query = "SELECT * FROM " . static::$tabla . " WHERE DATE(fecha) LIKE '{$fecha}' AND `{$indice}` = '{$empleado}' AND cancelado = 0 AND (folio_corte IS NULL OR folio_corte = '')";
         $resultado = self::consultarSQL($query);
         return $resultado;
     }

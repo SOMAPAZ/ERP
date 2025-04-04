@@ -60,7 +60,3 @@ require_once __DIR__ . '/../templates/nav-bar.php'; ?>
     </article>
 
 </section>
-
-<?php $scripts = [
-    'caja-cobro/sumar-billetes.js'
-];

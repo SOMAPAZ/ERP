@@ -106,6 +106,15 @@ function formatearFechaES($fecha): string
     return $fecha_formateada;
 }
 
+function formatearFechaESLong($fecha): string
+{
+    date_default_timezone_set("America/Mexico_City");
+    setlocale(LC_TIME, 'es_VE.UTF-8', 'esp');
+    $d = strtotime($fecha);
+    $fecha_formateada = strftime('%d de %B de %Y', $d);
+    return $fecha_formateada;
+}
+
 function numeroALetras($numero): string
 {
     $unidades = ['', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
