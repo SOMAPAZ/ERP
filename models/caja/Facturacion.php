@@ -133,4 +133,11 @@ class Facturacion extends ActiveRecord
         $resultado = self::consultarSQL($query);
         return $resultado;
     }
+
+    public static function eliminarFolios($folio)
+    {
+        $query = "UPDATE " . self::$tabla . " SET estado = 0, folio = 0 WHERE folio = {$folio}";
+        $resultado = self::$db->query($query);
+        return $resultado;
+    }
 }

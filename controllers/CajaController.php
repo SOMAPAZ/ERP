@@ -530,23 +530,47 @@ class CajaController
         permisosCaja();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $folio = s($_POST['folio']);
+            $folio = s($_POST['id']);
+            $buscado = '';
             $recibo = Facturas::where('folio', $folio);
+            $adicional = PagosAdicionales::where('folio', $folio);
 
-            if ($recibo->cancelado) {
-                header('Location: /consultar');
+            $buscado = !$recibo ? $adicional : $recibo;
+
+            if (!$buscado) {
+                echo json_encode([
+                    'tipo' => 'Error',
+                    'msg' => 'No existe el recibo'
+                ]);
+
                 return;
             }
 
             $resultado = false;
-            $facturas = Facturas::belongsTo('folio', $folio);
-            $adicionales = PagosAdicionales::belongsTo('folio', $folio);
 
-            if ($facturas) {
-                foreach ($facturas as $factura) {
-                    $resultado = $factura->removerFolioCorte($factura->folio);
+            if (isset($buscado->numero_meses)) {
+                $resultado = Facturas::eliminarFolios($folio);
+
+                if ($resultado) {
+                    $resultado = Facturacion::eliminarFolios($folio);
                 }
+            } else {
+                $resultado = PagosAdicionales::eliminarFolios($folio);
             }
+
+            if ($resultado) {
+                echo json_encode([
+                    'tipo' => 'Exito',
+                    'msg' => 'Recibo cancelado correctamente'
+                ]);
+
+                return;
+            }
+
+            echo json_encode([
+                'tipo' => 'Error',
+                'msg' => 'No se pudo cancelar el recibo'
+            ]);
         }
     }
 }

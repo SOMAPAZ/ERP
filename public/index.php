@@ -101,7 +101,7 @@ $router->get('/solicitar-arqueo', [CajaController::class, 'solicitarArqueo']);
 $router->get('/arqueos', [CajaController::class, 'arqueo']);
 $router->post('/eliminar-corte', [CajaController::class, 'eliminarCorte']);
 
-$router->post('/cambiar-estado-recibo', [CajaController::class, 'cambiarEstadoRecibo']);
+$router->post('/cancelar-recibo', [CajaController::class, 'cambiarEstadoRecibo']);
 
 // // Actions Updates
 $router->get('/updates', [UpdatesController::class, 'index']);

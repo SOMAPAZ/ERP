@@ -282,4 +282,11 @@ class ActiveRecord
 
         return $resultado;
     }
+
+    public static function eliminarFolios($folio)
+    {
+        $query = "UPDATE " . static::$tabla . " SET cancelado = 1 WHERE folio = {$folio}";
+        $resultado = self::$db->query($query);
+        return $resultado;
+    }
 }

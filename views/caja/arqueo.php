@@ -26,7 +26,7 @@ require_once __DIR__ . '/../templates/nav-bar.php'; ?>
                     <tbody class="text-sm">
                         <?php
                         foreach ($arqueos as $arqueo) : ?>
-                            <tr class="whitespace-nowrap odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800">
+                            <tr class="whitespace-nowrap odd:bg-white odd:dark:bg-gray-700 even:bg-gray-200 even:dark:bg-gray-800 dark:text-white">
                                 <td class="py-2 px-2 font-bold"><?= $arqueo->folio ?></td>
                                 <td class="py-2 px-2"><?= $arqueo->entrega->name . " " . $arqueo->entrega->lastname ?></td>
                                 <td class="py-2 px-2"><?= $arqueo->recibe->name . " " . $arqueo->recibe->lastname ?></td>
@@ -34,7 +34,7 @@ require_once __DIR__ . '/../templates/nav-bar.php'; ?>
                                 <td class="py-2 px-2"><?= $arqueo->fecha ?></td>
                                 <td class="py-2 px-2"><?= $arqueo->hora ?></td>
                                 <td class="py-2 px-2 flex flex-row gap-4 justify-end">
-                                    <a href="/pdf/corte-caja?folio=<?= $arqueo->folio ?>" class="flex flex-row text-indigo-600 hover:text-indigo-800 font-semibold text-xs uppercase items-center">
+                                    <a href="/pdf/corte-caja?folio=<?= $arqueo->folio ?>" class="flex flex-row text-indigo-600 hover:text-indigo-800 dark:text-indigo-200 dark:hover:text-indigo-400 font-semibold text-xs uppercase items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
                                             <path fill-rule="evenodd" d="M4.5 2A1.5 1.5 0 0 0 3 3.5v13A1.5 1.5 0 0 0 4.5 18h11a1.5 1.5 0 0 0 1.5-1.5V7.621a1.5 1.5 0 0 0-.44-1.06l-4.12-4.122A1.5 1.5 0 0 0 11.378 2H4.5Zm4.75 6.75a.75.75 0 0 1 1.5 0v2.546l.943-1.048a.75.75 0 0 1 1.114 1.004l-2.25 2.5a.75.75 0 0 1-1.114 0l-2.25-2.5a.75.75 0 1 1 1.114-1.004l.943 1.048V8.75Z" clip-rule="evenodd" />
                                         </svg> PDF

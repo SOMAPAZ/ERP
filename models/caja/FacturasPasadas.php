@@ -7,7 +7,7 @@ use Model\ActiveRecord;
 class FacturasPasadas extends ActiveRecord
 {
     protected static $tabla = 'facturas_anterior';
-    protected static $columnasDB = ['id', 'id_user', 'folio', 'date_invoice', 'date_initial', 'date_final', 'amount'];
+    protected static $columnasDB = ['id', 'id_user', 'folio', 'date_invoice', 'date_initial', 'date_final', 'amount', 'cancelado'];
 
     public $id;
     public $id_user;
@@ -16,6 +16,7 @@ class FacturasPasadas extends ActiveRecord
     public $date_initial;
     public $date_final;
     public $amount;
+    public $cancelado;
 
     public function __construct($args = [])
     {
@@ -26,6 +27,7 @@ class FacturasPasadas extends ActiveRecord
         $this->date_initial = $args['date_initial'] ?? null;
         $this->date_final = $args['date_final'] ?? null;
         $this->amount = $args['amount'] ?? null;
+        $this->cancelado = $args['cancelado'] ?? 0;
     }
 
     public static function obtenerUltimoFolio()
