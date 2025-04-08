@@ -16,6 +16,7 @@ class Usuario extends ActiveRecord
         "lat",
         "lng",
         "reference",
+        "image",
         "id_colony",
         "id_locality",
         "id_zone",
@@ -47,6 +48,7 @@ class Usuario extends ActiveRecord
     public $lat;
     public $lng;
     public $reference;
+    public $image;
     public $id_colony;
     public $id_locality;
     public $id_zone;
@@ -79,6 +81,7 @@ class Usuario extends ActiveRecord
         $this->lat = $arg['lat'] ?? "";
         $this->lng = $arg['lng'] ?? "";
         $this->reference = $arg['reference'] ?? "";
+        $this->image = $arg['image'] ?? "";
         $this->id_colony = $arg['id_colony'] ?? "";
         $this->id_locality = $arg['id_locality'] ?? "";
         $this->id_zone = $arg['id_zone'] ?? "";

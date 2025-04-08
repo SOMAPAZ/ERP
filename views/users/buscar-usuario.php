@@ -16,7 +16,18 @@ require_once __DIR__ . '/../templates/nav-bar.php'; ?>
         <section class=" space-y-10">
             <div class=" flex flex-col lg:flex-row gap-4 md:gap-8 p-4 bg-white dark:bg-gray-800 rounded shadow-lg">
                 <div class="w-full lg:max-w-1/2 p-4">
-                    <img src="https://www.mexicoenfotos.com/MX12785339664635.jpg" alt="Foto de casa de <?= $usuario->user . " " . $usuario->lastname ?>" class=" w-full max-h-96 object-cover rounded">
+                    <?php if ($usuario->image) : ?>
+                        <picture>
+                            <source srcset="image_house_user/<?= $usuario->image ?>.webp" type="image/webp">
+                            <img src="image_house_user/<?= $usuario->image ?>.png" loading="lazy" alt="Foto de casa de <?= $usuario->user . " " . $usuario->lastname ?>" class=" w-full max-h-96 object-cover rounded">
+                        </picture>
+                    <?php else : ?>
+                        <picture>
+                            <source srcset="build/img/abac7125a1a4888453a6524df523454b.avif" type="image/avif">
+                            <source srcset="build/img/abac7125a1a4888453a6524df523454b.webp" type="image/webp">
+                            <img src="build/img/abac7125a1a4888453a6524df523454b.png" loading="lazy" alt="Imagen con textto de no encontrada" class=" w-full max-h-96 object-cover rounded">
+                        </picture>
+                    <?php endif; ?>
                 </div>
                 <div class="w-full lg:max-w-1/2 flex flex-col justify-center p-4">
                     <h4 class="font-bold text-2xl uppercase text-indigo-600 dark:text-indigo-400 py-4">Datos de Usuario</h4>
@@ -53,9 +64,15 @@ require_once __DIR__ . '/../templates/nav-bar.php'; ?>
             </div>
             <div class="flex flex-col gap-4 p-4 bg-white rounded shadow-lg dark:bg-gray-800">
                 <h4 class="font-bold text-2xl uppercase text-indigo-600 dark:text-indigo-400 ">Ubicación en mapa</h4>
-                <input type="hidden" name="lat" id="lat" value="<?= $usuario->lat ?>">
-                <input type="hidden" name="lng" id="lng" value="<?= $usuario->lng ?>">
-                <div id="mapa" class="h-96 border border-dashed border-gray-400 rounded-lg"></div>
+                <?php if ($usuario->lat && $usuario->lng) : ?>
+                    <input type="hidden" name="lat" id="lat" value="<?= $usuario->lat ?>">
+                    <input type="hidden" name="lng" id="lng" value="<?= $usuario->lng ?>">
+                    <div id="mapa" class="h-96 border border-dashed border-gray-400 rounded-lg"></div>
+                <?php else: ?>
+                    <div class="h-96 flex flex-col items-center justify-center border border-dashed border-gray-400 bg-gray-200 rounded-lg dark:bg-gray-700">
+                        <p class="font-bold text-xs uppercase text-gray-600 dark:text-gray-300">No hay coordenadas para el usuario.</p>
+                    </div>
+                <?php endif; ?>
             </div>
 
             </div>
@@ -144,6 +161,35 @@ require_once __DIR__ . '/../templates/nav-bar.php'; ?>
                     </table>
                 <?php else: ?>
                     <p class="text-center p-2 font-semibold text-gray-700 dark:text-gray-300">No hay notificaciones para este usuario.</p>
+                <?php endif; ?>
+            </div>
+            <div class="w-full overflow-auto flex flex-col gap-4">
+                <h4 class="font-bold text-2xl uppercase text-indigo-600 dark:text-indigo-400">Convenios</h4>
+                <?php if ($convenios): ?>
+                    <table class="w-full">
+                        <thead class="text-left bg-indigo-600 text-white text-sm uppercase">
+                            <tr>
+                                <th class="whitespace-nowrap px-4 py-2 font-medium" scope="col">Folio</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-medium" scope="col">Beneficiario</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-medium" scope="col">Fecha</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-medium" scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($convenios as $convenio): ?>
+                                <tr class=" whitespace-nowrap odd:bg-white odd:dark:bg-gray-700 even:bg-gray-200 even:dark:bg-gray-800 dark:text-white text-sm uppercase">
+                                    <td class="py-2 px-2 font-bold"><?= $convenio->folio ?></td>
+                                    <td class="py-2 px-2"><?= isset($convenio->beneficiario) ? $convenio->beneficiario->name : 'Sin beneficiario.' ?></td>
+                                    <td class="py-2 px-2"><?= $convenio->fecha_registrada ?></td>
+                                    <td class="py-2 px-2 flex flex-row gap-4 justify-end">
+                                        <a href="#" class="flex flex-row pe-2 text-indigo-600 hover:text-orange-800 dark:text-indigo-200 dark:hover:text-indigo-400 font-semibold text-xs uppercase items-center">Acceder &raquo;</a>
+                                    </td>
+                                </tr>
+                            <?php endforeach;  ?>
+                        </tbody>
+                    </table>
+                <?php else: ?>
+                    <p class="text-center p-2 font-semibold text-gray-700 dark:text-gray-300">No hay convenios para este usuario.</p>
                 <?php endif; ?>
             </div>
             <div class="w-full overflow-auto flex flex-col gap-4">

@@ -8,6 +8,7 @@
       "Controllers\\": "./controllers",
       "Model\\": "./models",
       "Reportes\\": "./models/reportes",
+      "Convenios\\": "./models/convenios",
       "Facturacion\\": "./models/caja",
       "Usuarios\\": "./models/usuarios",
       "Empleados\\": "./models/empleados",

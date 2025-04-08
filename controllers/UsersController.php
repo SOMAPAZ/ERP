@@ -10,6 +10,7 @@ use Usuarios\Colonia;
 use Usuarios\Usuario;
 use Usuarios\TipoToma;
 use Classes\Paginacion;
+use Convenios\Convenios;
 use Reportes\Categoria;
 use Usuarios\Localidad;
 use Facturacion\Facturas;
@@ -100,6 +101,13 @@ class UsersController
         $recibos_actuales = Facturas::belongsTo('id_user', $id);
         $recibos_pagos_adicionales = PagosAdicionales::belongsTo('id_user', $id);
 
+        $convenios = Convenios::belongsTo('id_user', $id);
+        foreach ($convenios as $convenio) {
+            if ($convenio->id_beneficiario) {
+                $convenio->beneficiario = Beneficiarios::find($convenio->id_beneficiario) ?? 'Sin beneficiario';
+            }
+        }
+
         $router->render('users/buscar-usuario', [
             'links' => self::$links,
             'apartado' => self::$apartado,
@@ -109,7 +117,8 @@ class UsersController
             'notificaciones' => $notificaciones,
             'recibos_anterior' => $recibos_anterior,
             'recibos_actuales' => $recibos_actuales,
-            'recibos_pagos_adicionales' => $recibos_pagos_adicionales
+            'recibos_pagos_adicionales' => $recibos_pagos_adicionales,
+            'convenios' => $convenios
         ]);
     }
 
