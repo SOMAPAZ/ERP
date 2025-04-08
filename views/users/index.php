@@ -1,14 +1,14 @@
 <?php require_once __DIR__ . '/../templates/nav-bar.php'; ?>
 
-<section class="container mx-auto px-10 mt-10">
+<section class="py-4 antialiased md:py-8 h-auto">
 
-    <article class="mx-auto max-w-screen-xl px-4 2xl:px-0">
+    <article class="mx-auto max-w-screen-lg px-4 2xl:px-0">
         <div class="lg:flex lg:flex-col lg:items-center lg:gap-4">
             <h2 class="shrink-0 font-black text-xl text-gray-900 dark:text-white sm:text-4xl uppercase text-center">
                 Información de Usuarios
             </h2>
         </div>
-        <div class="relative overflow-x-auto mx-auto mb-5 py-4 px-10 text-left uppercase">
+        <div class="relative overflow-x-auto mx-auto mb-5 py-4 lg:px-10 text-left uppercase">
             <button
                 id="btn-buscar-usuario"
                 class="w-full md:w-auto bg-indigo-600 text-white px-4 py-2 text-xs font-bold uppercase rounded hover:bg-indigo-500">
