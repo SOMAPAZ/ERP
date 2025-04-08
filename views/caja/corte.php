@@ -101,5 +101,5 @@ require_once __DIR__ . '/../templates/nav-bar.php'; ?>
 </section>
 
 <?php $scripts = [
-    'caja-cobro/sumar-billetes_v1.js'
+    'caja-cobro/sumar-billetes_v2.js'
 ];

@@ -34,7 +34,7 @@ class Usuario extends ActiveRecord
         "stored_water",
         "id_type_peson",
         "drain",
-        "adeudos"
+        "id_observaciones"
     ];
 
     public $id;
@@ -63,7 +63,7 @@ class Usuario extends ActiveRecord
     public $stored_water;
     public $id_type_peson;
     public $drain;
-    public $adeudos;
+    public $id_observaciones;
 
     public function __construct($arg = [])
     {
@@ -93,7 +93,7 @@ class Usuario extends ActiveRecord
         $this->stored_water = $arg['stored_water'] ?? "";
         $this->id_type_peson = $arg['id_type_peson'] ?? "";
         $this->drain = $arg['drain'] ?? null;
-        $this->adeudos = $arg['adeudo'] ?? 0;
+        $this->id_observaciones = $arg['id_observaciones'] ?? null;
     }
 
     public static function getAllUniques($id = '')

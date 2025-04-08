@@ -155,5 +155,5 @@
 
 <?php
 $scripts = [
-    'caja-cobro/invalidar-recibo_v1.js'
+    'caja-cobro/invalidar-recibo_v2.js'
 ]; ?>

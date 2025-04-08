@@ -289,4 +289,11 @@ class ActiveRecord
         $resultado = self::$db->query($query);
         return $resultado;
     }
+
+    public static function paginar($por_pagina, $offset, $order = 'DESC')
+    {
+        $query = "SELECT * FROM " . static::$tabla . " ORDER BY id {$order} LIMIT {$por_pagina} OFFSET {$offset} ";
+        $resultado = self::consultarSQL($query);
+        return $resultado;
+    }
 }

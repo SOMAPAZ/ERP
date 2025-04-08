@@ -155,4 +155,4 @@ require_once __DIR__ . '/../templates/nav-bar.php';
         </div>
     </article>
 </section>
-<?php $scripts = ['caja-cobro/avanzados_v1.js', 'caja-cobro/adicional_v1.js']; ?>
+<?php $scripts = ['caja-cobro/avanzados_v2.js', 'caja-cobro/adicional_v2.js']; ?>

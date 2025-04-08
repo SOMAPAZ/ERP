@@ -1,82 +1,61 @@
 <?php require_once __DIR__ . '/../templates/nav-bar.php'; ?>
 
-<main class="container mx-auto px-10 mt-10">
+<section class="container mx-auto px-10 mt-10">
 
-    <h1 class="text-center font-black text-4xl mb-5 uppercase dark:text-dark-font">Información de usuarios</h1>
-    <section class="relative overflow-x-auto mx-auto mt-10 mb-10 bg-background-light rounded-md shadow-md py-4 px-10 text-left font-extrabold uppercase dark:bg-dark-bg-container">
-
-        <form action="/facturas/filtrar-facturas-pendientes" method="post" class="mb-5 dark:text-dark-font">
-            <label for="filtrado" class="block w-full uppercase mb-3 font-bold">Busqueda con id o nombre:</label>
-            <div class="relative">
-                <input type="text" name="filtrado" id="filtrado" class="block w-full p-2.5 text-sm font-normal mb-3 border-2 border-primary-base rounded-md dark:bg-dark-bg-container dark:border-dark-bg" placeholder="Direccion, Trámite, Nombre, ID" />
-            </div>
-        </form>
-        <table class="w-full mx-auto divide-y-2 divide-gray-200 text-sm dark:divide-gray-700" id="listado-usuarios">
-            <thead class="ltr:text-left rtl:text-right">
-                <tr>
-                    <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-white" scope="col">
-                        <div class="flex flex-row justify-between gap-2 items-center cursor-pointer" id="id-table">
-                            Id
-                            <img src="build/img/filer_icon.svg" alt="icon filter" class="w-4 h-4">
-                        </div>
-                    </th>
-                    <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-white" scope="col">
-                        <div class="flex flex-row justify-between gap-2 items-center cursor-pointer" id="nombre-table">
-                            Nombre
-                            <img src="build/img/filer_icon.svg" alt="icon filter" class="w-4 h-4">
-                        </div>
-                    </th>
-                    <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-white" scope="col">
-                        <div class="flex flex-row justify-between gap-2 items-center cursor-pointer" id="direcc-table">
-                            Dirección
-                            <img src="build/img/filer_icon.svg" alt="icon filter" class="w-4 h-4">
-                        </div>
-                    </th>
-                    <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-white" scope="col">
-                        <div class="flex flex-row justify-between gap-2 items-center cursor-pointer" id="zona-table">
-                            Zona
-                            <img src="build/img/filer_icon.svg" alt="icon filter" class="w-4 h-4">
-                        </div>
-                    </th>
-                    <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-white" scope="col">
-                        <div class="flex flex-row justify-between gap-2 items-center cursor-pointer" id="tel-table">
-                            Teléfono
-                            <img src="build/img/filer_icon.svg" alt="icon filter" class="w-4 h-4">
-                        </div>
-                    </th>
-                    <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-white" scope="col">
-                        <div class="flex flex-row gap-2 items-center">
-                            Acceder
-                        </div>
-                    </th>
-                </tr>
-            </thead>
-            <tbody class="font-semibold text-xs divide-y divide-gray-200 dark:divide-gray-700">
-                <tr class="animate-bounce">
-                    <td colspan="7" class="text-center py-10 text-gray-500 dark:text-gray-400 text-lg">Cargando datos de usuarios...</td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="flex justify-center items-center mt-5 text-xs">
-            <button id="btn-anterior" class="flex items-center justify-center px-3 h-8  font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                <svg class="w-3.5 h-3.5 me-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4" />
-                </svg>
-                Anterior
-            </button>
-            <span id="info-pagina" class=" font-medium px-3 text-gray-500 dark:text-gray-400 uppercase"></span>
-            <button id="btn-siguiente" class="flex items-center justify-center px-3 h-8  font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                Siguiente
-                <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
-                </svg>
-            </button>
+    <article class="mx-auto max-w-screen-xl px-4 2xl:px-0">
+        <div class="lg:flex lg:flex-col lg:items-center lg:gap-4">
+            <h2 class="shrink-0 font-black text-xl text-gray-900 dark:text-white sm:text-4xl uppercase text-center">
+                Historial de Arqueos
+            </h2>
         </div>
-    </section>
-</main>
-
-
-<?php $scripts = [
-    'app.js',
-    'usuarios/users.js'
-]; ?>
+        <div class="relative overflow-x-auto mx-auto mb-5 py-4 px-10 text-left uppercase">
+            <button
+                id="btn-buscar-usuario"
+                class="w-full md:w-auto bg-indigo-600 text-white px-4 py-2 text-xs font-bold uppercase rounded hover:bg-indigo-500">
+                Buscar
+            </button>
+            <?= $paginacion; ?>
+            <table class="w-full">
+                <thead class="text-left bg-indigo-600 text-white text-sm uppercase">
+                    <tr>
+                        <th class="whitespace-nowrap px-4 py-2 font-medium" scope="col">
+                            ID
+                        </th>
+                        <th class="whitespace-nowrap px-4 py-2 font-medium" scope="col">
+                            Nombre
+                        </th>
+                        <th class="whitespace-nowrap px-4 py-2 font-medium" scope="col">
+                            Dirección
+                        </th>
+                        <th class="whitespace-nowrap px-4 py-2 font-medium" scope="col">
+                            Zona
+                        </th>
+                        <th class="whitespace-nowrap px-4 py-2 font-medium" scope="col">
+                            Télefono
+                        </th>
+                        <th class="whitespace-nowrap px-4 py-2 font-medium" scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm">
+                    <?php foreach ($usuarios as $usuario): ?>
+                        <tr class="whitespace-nowrap odd:bg-white odd:dark:bg-gray-700 even:bg-gray-200 even:dark:bg-gray-800 dark:text-white">
+                            <td class="py-2 px-2 font-bold"><?= $usuario->id ?></td>
+                            <td class="py-2 px-2"><?= $usuario->user . " " . $usuario->lastname ?></td>
+                            <td class="py-2 px-2"><?= strlen($usuario->address) >= 30 ? substr($usuario->address, 0, 30) . "..." : $usuario->address ?></td>
+                            <td class="py-2 px-2"><?= $usuario->zona->name ?></td>
+                            <td class="py-2 px-2"><?= !$usuario->phone || strlen($usuario->phone) === 0 ? 'Sin tel.' : $usuario->phone ?></td>
+                            <td class="flex flex-end items-center">
+                                <a href="/buscar-usuario?id=<?= $usuario->id ?>" class="flex flex-row gap-1 py-2 px-2 text-indigo-600 hover:text-indigo-800 dark:text-indigo-200 dark:hover:text-indigo-400 font-semibold text-xs uppercase items-center">Ver
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                                        <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm4.28 10.28a.75.75 0 0 0 0-1.06l-3-3a.75.75 0 1 0-1.06 1.06l1.72 1.72H8.25a.75.75 0 0 0 0 1.5h5.69l-1.72 1.72a.75.75 0 1 0 1.06 1.06l3-3Z" clip-rule="evenodd" />
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <?= $paginacion; ?>
+        </div>
+    </article>
+</section>

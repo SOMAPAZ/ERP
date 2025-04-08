@@ -1,7 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: "selector",
-  content: ["./views/**/*.{html,js,php}", "./public/build/js/**/*.js"],
+  content: [
+    "./views/**/*.{html,js,php}", 
+    "./public/build/js/**/*.js",
+    "./classes/**/*.php"
+  ],
   theme: {
     fontFamily: {
       rubik: ["Rubik", "serif"],

@@ -126,6 +126,6 @@ require_once __DIR__ . '/../templates/nav-bar.php';
 </section>
 
 <?php $scripts = [
-    'caja-cobro/pago-total_v1.js',
-    'caja-cobro/adicional_v1.js'
+    'caja-cobro/pago-total_v2.js',
+    'caja-cobro/adicional_v2.js'
 ]; ?>

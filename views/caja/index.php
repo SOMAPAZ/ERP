@@ -29,10 +29,14 @@ require_once __DIR__ . '/../templates/nav-bar.php'; ?>
         </div>
     </article>
 
-    <?php include_once __DIR__ . '../deuda/index.php'; ?>
+    <article class="mx-auto max-w-screen-lg px-4 2xl:px-0">
+        <div id="datos-usuario"></div>
+        <div id="deuda-usuario" class="mt-6"></div>
+        <div id="boton" class="mt-6 flex flex-col md:flex-row gap-4"></div>
+    </article>
 </section>
 
 <?php $scripts = [
-    'caja-cobro/busqueda_v1.js',
-    'caja-cobro/deuda_v1.js'
+    'caja-cobro/busqueda_v2.js',
+    'caja-cobro/deuda_v2.js'
 ]; ?>

@@ -17,6 +17,7 @@ class Lecturas extends ActiveRecord
         'lectura',
         'fecha_guardada',
         'fecha_reporte',
+        'id_employment'
     ];
 
     public $id;
@@ -28,6 +29,7 @@ class Lecturas extends ActiveRecord
     public $fecha_guardada;
     public $fecha_reporte;
     public $id_status;
+    public $id_employment;
 
 
     public function __construct($args = [])
@@ -41,6 +43,7 @@ class Lecturas extends ActiveRecord
         $this->fecha_guardada = $args['fecha_guardada'] ?? null;
         $this->fecha_reporte = $args['fecha_reporte'] ?? null;
         $this->id_status = $args['id_status'] ?? null;
+        $this->id_employment = $args['id_employment'] ?? null;
     }
 
     public static function getLecturaDate($id_user, $year, $mes)

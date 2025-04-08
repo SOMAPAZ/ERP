@@ -7,7 +7,7 @@ use Model\ActiveRecord;
 class Beneficiarios extends ActiveRecord
 {
     protected static $tabla = 'beneficiaries';
-    protected static $columnasDB = ['id', 'name', 'lastname', 'email', 'phone', 'relationship', 'id_user'];
+    protected static $columnasDB = ['id', 'name', 'lastname', 'email', 'phone', 'relationship', 'clave_elector', 'id_user'];
 
     public $id;
     public $name;
@@ -15,6 +15,7 @@ class Beneficiarios extends ActiveRecord
     public $email;
     public $phone;
     public $relationship;
+    public $clave_elector;
     public $id_user;
 
     public function __construct($args = [])
@@ -25,6 +26,7 @@ class Beneficiarios extends ActiveRecord
         $this->email = isset($args['email']) ?? '';
         $this->phone = isset($args['phone']) ?? '';
         $this->relationship = isset($args['relationship']) ?? '';
+        $this->clave_elector = isset($args['clave_elector']) ?? '';
         $this->id_user = isset($args['id_user']) ?? '';
     }
 }

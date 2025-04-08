@@ -57,6 +57,6 @@
 </section>
 
 <?php $scripts = [
-    'caja-cobro/adicional_v1.js',
-    'caja-cobro/formulario-adicionales_v1.js',
+    'caja-cobro/adicional_v2.js',
+    'caja-cobro/formulario-adicionales_v2.js',
 ]; ?>
