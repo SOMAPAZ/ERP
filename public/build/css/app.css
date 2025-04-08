@@ -917,6 +917,10 @@ video {
   height: 2rem;
 }
 
+.h-96 {
+  height: 24rem;
+}
+
 .h-\[calc\(100\%\)\] {
   height: calc(100%);
 }
@@ -2609,10 +2613,6 @@ video {
   .md\:border-y {
     border-top-width: 1px;
     border-bottom-width: 1px;
-  }
-
-  .md\:border-t {
-    border-top-width: 1px;
   }
 
   .md\:p-10 {

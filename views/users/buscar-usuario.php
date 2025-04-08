@@ -1,4 +1,6 @@
-<?php require_once __DIR__ . '/../templates/nav-bar.php'; ?>
+<?php
+$cdn = '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />';
+require_once __DIR__ . '/../templates/nav-bar.php'; ?>
 <section class="py-4 antialiased md:py-8 h-auto">
 
     <article class="mx-auto max-w-screen-lg px-4 2xl:px-0">
@@ -48,6 +50,14 @@
                         <li><strong class="text-gray-900 dark:text-white me-2">Cantidad Habitantes:</strong><?= $usuario->inhabitants ? $usuario->inhabitants : 'Sin cantidad registrada.' ?></li>
                     </ul>
                 </div>
+            </div>
+            <div class="flex flex-col gap-4 p-4 bg-white rounded shadow-lg dark:bg-gray-800">
+                <h4 class="font-bold text-2xl uppercase text-indigo-600 dark:text-indigo-400 ">Ubicación en mapa</h4>
+                <input type="hidden" name="lat" id="lat" value="<?= $usuario->lat ?>">
+                <input type="hidden" name="lng" id="lng" value="<?= $usuario->lng ?>">
+                <div id="mapa" class="h-96 border border-dashed border-gray-400 rounded-lg"></div>
+            </div>
+
             </div>
             <div class="w-full overflow-auto flex flex-col gap-4">
                 <h4 class="font-bold text-2xl uppercase text-indigo-600 dark:text-indigo-400">Beneficiarios</h4>
@@ -201,3 +211,11 @@
     </article>
 
 </section>
+
+
+<?php $src = '<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
+<script src="https://unpkg.com/esri-leaflet@3.0.8/dist/esri-leaflet.js"></script>
+<script src="https://unpkg.com/esri-leaflet-geocoder@2.2.13/dist/esri-leaflet-geocoder.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geosearch/2.7.0/bundle.min.js"></script>';
+$scripts = ['usuarios/mapa.js'];
+?>

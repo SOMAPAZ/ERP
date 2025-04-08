@@ -13,6 +13,8 @@ class Usuario extends ActiveRecord
         "lastname",
         "phone",
         "address",
+        "lat",
+        "lng",
         "reference",
         "id_colony",
         "id_locality",
@@ -42,6 +44,8 @@ class Usuario extends ActiveRecord
     public $lastname;
     public $phone;
     public $address;
+    public $lat;
+    public $lng;
     public $reference;
     public $id_colony;
     public $id_locality;
@@ -72,6 +76,8 @@ class Usuario extends ActiveRecord
         $this->lastname = $arg['lastname'] ?? "";
         $this->phone = $arg['phone'] ?? "";
         $this->address = $arg['address'] ?? "";
+        $this->lat = $arg['lat'] ?? "";
+        $this->lng = $arg['lng'] ?? "";
         $this->reference = $arg['reference'] ?? "";
         $this->id_colony = $arg['id_colony'] ?? "";
         $this->id_locality = $arg['id_locality'] ?? "";
