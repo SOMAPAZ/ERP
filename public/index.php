@@ -106,7 +106,11 @@ $router->post('/eliminar-corte', [CajaController::class, 'eliminarCorte']);
 $router->post('/cancelar-recibo', [CajaController::class, 'cambiarEstadoRecibo']);
 
 // // Actions Updates
-$router->get('/updates', [UpdatesController::class, 'index']);
+$router->get('/datos-usuarios', [UpdatesController::class, 'index']);
+$router->get('/datos-usuarios-crear', [UpdatesController::class, 'crearUsuario']);
+$router->post('/datos-usuarios-crear', [UpdatesController::class, 'crearUsuario']);
+$router->get('/datos-usuarios-editar', [UpdatesController::class, 'editarUsuario']);
+$router->post('/datos-usuarios-editar', [UpdatesController::class, 'editarUsuario']);
 
 // // Actions Tanques
 $router->get('/tanks', [TanquesController::class, 'index']);

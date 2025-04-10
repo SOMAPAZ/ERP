@@ -45,7 +45,11 @@ import { limpiarHTML } from '../helpers/index_v1.js';
 
     function mostrarInformacion() {
         if(!user.id) return;
-        location.href = `buscar-usuario?id=${user.id}`;
+        if(location.pathname === '/usuarios') {
+            location.href = `buscar-usuario?id=${user.id}`;
+        } else {
+            location.href = `/datos-usuarios-editar?id=${user.id}`;
+        }
     }
 
     function filtrarCoincidencias(e) {
