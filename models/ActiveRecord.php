@@ -225,6 +225,7 @@ class ActiveRecord
         $query .= " ) VALUES ('";
         $query .= join("', '", array_values($atributos));
         $query .= "') ";
+        return $query;
 
         $resultado = self::$db->query($query);
         return $resultado;

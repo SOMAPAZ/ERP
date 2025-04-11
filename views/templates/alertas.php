@@ -1,7 +1,7 @@
 <?php foreach ($alertas as $key => $alerta) :
     foreach ($alerta as $mensaje) :
         if ($key === 'error') : ?>
-            <div class="alert rounded p-4 mb-4 text-red-800 border-l-4 border-red-300 bg-red-100 dark:text-red-400 dark:bg-gray-800 dark:border-red-800">
+            <div class="alert rounded p-2 mb-4 text-red-800 border-l-4 border-red-300 bg-red-100 dark:text-red-400 dark:bg-gray-800 dark:border-red-800">
                 <p class="text-sm font-bold text-red-500 uppercase"><?= $mensaje ?></p>
             </div>
         <?php else : ?>

@@ -35,7 +35,7 @@ class Usuario extends ActiveRecord
         "storage_height",
         "inhabitants",
         "stored_water",
-        "id_type_peson",
+        "id_type_person",
         "drain",
         "id_observaciones"
     ];
@@ -67,42 +67,78 @@ class Usuario extends ActiveRecord
     public $storage_height;
     public $inhabitants;
     public $stored_water;
-    public $id_type_peson;
+    public $id_type_person;
     public $drain;
     public $id_observaciones;
 
-    public function __construct($arg = [])
+    public function __construct($args = [])
     {
-        $this->id = $arg['id'] ?? null;
-        $this->user = $arg['user'] ?? "";
-        $this->lastname = $arg['lastname'] ?? "";
-        $this->phone = $arg['phone'] ?? "";
-        $this->address = $arg['address'] ?? "";
-        $this->lat = $arg['lat'] ?? "";
-        $this->lng = $arg['lng'] ?? "";
-        $this->reference = $arg['reference'] ?? "";
-        $this->image = $arg['image'] ?? "";
-        $this->id_colony = $arg['id_colony'] ?? "";
-        $this->id_locality = $arg['id_locality'] ?? "";
-        $this->id_zone = $arg['id_zone'] ?? "";
-        $this->block = $arg['block'] ?? "";
-        $this->int_num = $arg['int_num'] ?? "";
-        $this->ext_num = $arg['ext_num'] ?? "";
-        $this->mail = $arg['mail'] ?? "";
-        $this->rfc = $arg['rfc'] ?? "";
-        $this->clave_elector = $arg['clave_elector'] ?? "";
-        $this->id_usertype = $arg['id_usertype'] ?? "";
-        $this->id_intaketype = $arg['id_intaketype'] ?? "";
-        $this->id_servicetype = $arg['id_servicetype'] ?? "";
-        $this->id_servicestatus = $arg['id_servicestatus'] ?? "";
-        $this->id_consumtype = $arg['id_consumtype'] ?? "";
-        $this->id_userStorage = $arg['id_userStorage'] ?? "";
-        $this->storage_height = $arg['storage_height'] ?? "";
-        $this->inhabitants = $arg['inhabitants'] ?? "";
-        $this->stored_water = $arg['stored_water'] ?? "";
-        $this->id_type_peson = $arg['id_type_peson'] ?? "";
-        $this->drain = $arg['drain'] ?? null;
-        $this->id_observaciones = $arg['id_observaciones'] ?? null;
+        $this->id = $args['id'] ?? null;
+        $this->user = $args['user'] ?? "";
+        $this->lastname = $args['lastname'] ?? "";
+        $this->phone = $args['phone'] ?? "";
+        $this->address = $args['address'] ?? "";
+        $this->lat = $args['lat'] ?? "";
+        $this->lng = $args['lng'] ?? "";
+        $this->reference = $args['reference'] ?? "";
+        $this->image = $args['image'] ?? "";
+        $this->id_colony = $args['id_colony'] ?? "";
+        $this->id_locality = $args['id_locality'] ?? "";
+        $this->id_zone = $args['id_zone'] ?? "";
+        $this->block = $args['block'] ?? "";
+        $this->int_num = $args['int_num'] ?? "";
+        $this->ext_num = $args['ext_num'] ?? "";
+        $this->mail = $args['mail'] ?? "";
+        $this->rfc = $args['rfc'] ?? "";
+        $this->clave_elector = $args['clave_elector'] ?? "";
+        $this->id_usertype = $args['id_usertype'] ?? "";
+        $this->id_intaketype = $args['id_intaketype'] ?? "";
+        $this->id_servicetype = $args['id_servicetype'] ?? "";
+        $this->id_servicestatus = $args['id_servicestatus'] ?? "";
+        $this->id_consumtype = $args['id_consumtype'] ?? "";
+        $this->id_userStorage = $args['id_userStorage'] ?? "";
+        $this->storage_height = $args['storage_height'] ?? "";
+        $this->inhabitants = $args['inhabitants'] ?? "";
+        $this->stored_water = $args['stored_water'] ?? "";
+        $this->id_type_person = $args['id_type_person'] ?? "";
+        $this->drain = $args['drain'] ?? null;
+        $this->id_observaciones = $args['id_observaciones'] ?? null;
+    }
+
+    public function validar()
+    {
+        if (!$this->user) {
+            self::$alertas['error']['name'] = 'El nombre es obligatorio';
+        }
+        if (!$this->lastname) {
+            self::$alertas['error']['lastname'] = 'El apellido es obligatorio';
+        }
+        if (!$this->address) {
+            self::$alertas['error']['address'] = 'La dirección es obligatoria';
+        }
+        if (!$this->id_colony) {
+            self::$alertas['error']['id_colony'] = 'Colonia requerida';
+        }
+        if (!$this->id_zone) {
+            self::$alertas['error']['id_zone'] = 'Zona requerida';
+        }
+        if (!$this->id_usertype) {
+            self::$alertas['error']['id_usertype'] = 'Tipo de usuario requerido';
+        }
+        if (!$this->id_intaketype) {
+            self::$alertas['error']['id_intaketype'] = 'Tipo de toma requerido';
+        }
+        if (!$this->id_servicetype) {
+            self::$alertas['error']['id_servicetype'] = 'Tipo de servicio requerido';
+        }
+        if (!$this->id_servicestatus) {
+            self::$alertas['error']['id_servicestatus'] = 'Tipo de servicio requerido';
+        }
+        if (!$this->id_consumtype) {
+            self::$alertas['error']['id_consumtype'] = 'Tipo de consumo requerido';
+        }
+
+        return self::$alertas;
     }
 
     public static function getAllUniques($id = '')

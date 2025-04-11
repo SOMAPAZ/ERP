@@ -4,9 +4,17 @@
 namespace Controllers;
 
 use MVC\Router;
-use Usuarios\Usuario;
-use Classes\Paginacion;
+use Usuarios\Zona;
 use Usuarios\Colonia;
+use Usuarios\Usuario;
+use Usuarios\TipoToma;
+use Classes\Paginacion;
+use Usuarios\Localidad;
+use Usuarios\TipoConsumo;
+use Usuarios\TipoUsuario;
+use Usuarios\TipoServicio;
+use Usuarios\EstadoServicio;
+use Usuarios\TipoAlmacenamiento;
 
 class UpdatesController
 {
@@ -50,11 +58,45 @@ class UpdatesController
     {
         isAuth();
 
+        $alertas = [];
+
         $colonias = Colonia::all();
+        $localidades = Localidad::all();
+        $zonas = Zona::all();
+        $tipo_usuario = TipoUsuario::all();
+        $tipo_toma = TipoToma::all();
+        $tipo_servicio = TipoServicio::all();
+        $estado_servicio = EstadoServicio::all();
+        $tipo_consumo = TipoConsumo::all();
+        $tipo_almacenamiento = TipoAlmacenamiento::all();
+
+        $usuario = new Usuario();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $usuario->sincronizar($_POST);
+            $alertas = $usuario->validar();
+            // dd($usuario);
+
+            if (empty($alertas)) {
+                $resultado = $usuario->guardar();
+                // dd($resultado);
+                header('Location: /datos-usuarios');
+            }
+        }
 
         $router->render('updates/crear-usuario', [
             'links' => self::$links,
-            'colonias' => $colonias
+            'colonias' => $colonias,
+            'localidades' => $localidades,
+            'zonas' => $zonas,
+            'tipo_usuario' => $tipo_usuario,
+            'tipo_toma' => $tipo_toma,
+            'tipo_servicio' => $tipo_servicio,
+            'estado_servicio' => $estado_servicio,
+            'tipo_consumo' => $tipo_consumo,
+            'tipo_almacenamiento' => $tipo_almacenamiento,
+            'usuario' => $usuario,
+            'alertas' => $alertas
         ]);
     }
 

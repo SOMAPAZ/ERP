@@ -54,7 +54,7 @@ class UsersController
             'links' => self::$links,
             'apartado' => self::$apartado,
             'usuarios' => $usuarios,
-            'paginacion' => $paginacion->paginacion()
+            'paginacion' => $paginacion->paginacion(),
         ]);
     }
 
