@@ -52,7 +52,7 @@
                                     </svg>
                                     Editar
                                 </a>
-                                <form action="" method="post">
+                                <form action="/datos-usuarios-eliminar" method="POST" autocomplete="off">
                                     <input type="hidden" name="id" value="<?= $usuario->id ?>">
                                     <button type="submit" class="flex flex-row gap-1 py-2 px-2 text-red-600 hover:text-red-800 dark:text-red-200 dark:hover:text-red-400 font-semibold text-xs uppercase items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">

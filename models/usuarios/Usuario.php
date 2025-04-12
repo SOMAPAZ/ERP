@@ -7,7 +7,7 @@ use Model\ActiveRecord;
 class Usuario extends ActiveRecord
 {
     protected static $tabla = 'users';
-    protected static $columnasBD = [
+    protected static $columnasDB = [
         "id",
         "user",
         "lastname",
@@ -96,13 +96,13 @@ class Usuario extends ActiveRecord
         $this->id_servicetype = $args['id_servicetype'] ?? "";
         $this->id_servicestatus = $args['id_servicestatus'] ?? "";
         $this->id_consumtype = $args['id_consumtype'] ?? "";
-        $this->id_userStorage = $args['id_userStorage'] ?? "";
-        $this->storage_height = $args['storage_height'] ?? "";
-        $this->inhabitants = $args['inhabitants'] ?? "";
-        $this->stored_water = $args['stored_water'] ?? "";
-        $this->id_type_person = $args['id_type_person'] ?? "";
-        $this->drain = $args['drain'] ?? null;
-        $this->id_observaciones = $args['id_observaciones'] ?? null;
+        $this->id_userStorage = $args['id_userStorage'] ?? 0;
+        $this->storage_height = $args['storage_height'] ?? 0;
+        $this->inhabitants = $args['inhabitants'] ?? 1;
+        $this->stored_water = $args['stored_water'] ?? 0;
+        $this->id_type_person = $args['id_type_person'] ?? null;
+        $this->drain = $args['drain'] ?? 0;
+        $this->id_observaciones = $args['id_observaciones'] ?? 0;
     }
 
     public function validar()
@@ -136,6 +136,9 @@ class Usuario extends ActiveRecord
         }
         if (!$this->id_consumtype) {
             self::$alertas['error']['id_consumtype'] = 'Tipo de consumo requerido';
+        }
+        if (!$this->id_type_person) {
+            self::$alertas['error']['id_type_person'] = 'Tipo de persona requerido';
         }
 
         return self::$alertas;

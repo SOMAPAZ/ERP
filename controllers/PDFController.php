@@ -208,4 +208,43 @@ class PDFController
         $domPDF->render();
         $domPDF->stream("Corte-caja-$folio", array("Attachment" => false));
     }
+
+    public static function contratoServicio()
+    {
+        isAuth();
+        $folio = s($_GET['folio']);
+        dd($folio);
+
+        // $contrato = ContratoServicio::where('folio', $folio);
+        // $instanciaUsuario = new UsuariosAPI();
+        // $usuarioResultado = $instanciaUsuario->consultar($idUsuario);
+        // $usuario = array_shift($usuarioResultado);
+
+        // if (!$usuario->id || !$contrato->folio) {
+        //     header('Location: /consultar');
+        //     return;
+        // }
+
+        // $usuario = Usuario::find($idUsuario);
+        // $tipo_toma = TipoToma::find($usuario->id_servicetype);
+        // $tipo_consumo = TipoConsumo::find($usuario->id_consumtype);
+        // $empleado = Empleado::find($contrato->empleado_id);
+
+        // $domPDF = new Dompdf();
+        // ob_start();
+
+        // include_once __DIR__ . '/../views/PDF/contrato-servicio.php';
+
+        // $content = ob_get_clean();
+
+        // $options = $domPDF->getOptions();
+        // $options->set(array('isRemoteEnabled' => true));
+        // $domPDF->setOptions($options);
+
+        // $domPDF->loadHtml($content);
+        // $domPDF->setPaper('A4', 'landscape');
+
+        // $domPDF->render();
+        // $domPDF->stream("Contrato Servicio", array("Attachment" => false));
+    }
 }

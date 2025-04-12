@@ -9,7 +9,12 @@
         </div>
 
         <div class="py-8 px-4 lg:px-8 mx-auto mt-10 bg-white dark:bg-gray-800 rounded shadow-lg">
-            <?php include_once __DIR__ . '/forms/formulario-usuario.php'; ?>
+            <form method="POST" autocomplete="off" enctype="multipart/form-data">
+                <?php include_once __DIR__ . '/forms/formulario-usuario.php'; ?>
+                <button type="submit" class="inline-flex bg-indigo-600 items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary-700 rounded hover:bg-indigo-800">
+                    Guardar Cambios
+                </button>
+            </form>
         </div>
 
     </article>

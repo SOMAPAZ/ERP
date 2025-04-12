@@ -225,8 +225,6 @@ class ActiveRecord
         $query .= " ) VALUES ('";
         $query .= join("', '", array_values($atributos));
         $query .= "') ";
-        return $query;
-
         $resultado = self::$db->query($query);
         return $resultado;
     }
@@ -294,6 +292,22 @@ class ActiveRecord
     public static function paginar($por_pagina, $offset, $order = 'DESC')
     {
         $query = "SELECT * FROM " . static::$tabla . " ORDER BY id {$order} LIMIT {$por_pagina} OFFSET {$offset} ";
+        $resultado = self::consultarSQL($query);
+        return $resultado;
+    }
+
+    // Busqueda Where con DOS Columnas
+    public static function whereArray($array = [])
+    {
+        $query = "SELECT * FROM " . static::$tabla . " WHERE ";
+        foreach ($array as $key => $value) {
+            if ($key === array_key_last($array)) {
+                $query .= "{$key} = '{$value}'";
+            } else {
+                $query .= "{$key} = '{$value}' AND ";
+            }
+        };
+
         $resultado = self::consultarSQL($query);
         return $resultado;
     }

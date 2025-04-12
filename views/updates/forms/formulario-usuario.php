@@ -43,6 +43,24 @@
             <label for="clave_elector" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Clave Elector</label>
             <input type="text" name="clave_elector" id="clave_elector" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Ej. LOMR920215MNLRXT03" value="<?= $usuario->clave_elector ?? ''; ?>">
         </div>
+        <div class="w-full">
+            <label for="id_type_person" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipo de Persona</label>
+            <select id="id_type_person"
+                name="id_type_person"
+                class="bg-gray-50 border text-gray-900 <?= isset($alertas['error']['id_type_person']) ? 'border-red-600' : 'border-gray-300 dark:border-gray-600' ?> text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white">
+                <option value="">--Selecciona una tipo --</option>
+                <?php foreach ($tipo_persona as $tipo): ?>
+                    <option
+                        value="<?= $tipo->id ?>" <?= $usuario->id_type_person == $tipo->id ? 'selected' : ''; ?>>
+                        <?= $tipo->type ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <?php if (isset($alertas['error']['id_type_person'])) : ?>
+                <p class="text-xs uppercase bg-red-600 p-2 text-white text-center font-bold rounded mt-2"><?= $alertas['error']['id_type_person'] ?></p>
+            <?php endif; ?>
+        </div>
+
     </div>
     <h3 class="text-xl font-bold my-4 text-gray-600 dark:text-gray-300">Información de ubicación</h3>
     <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 sm:gap-6 mt-2">
@@ -86,7 +104,7 @@
                 class="bg-gray-50 border text-gray-900 <?= isset($alertas['error']['id_colony']) ? 'border-red-600' : 'border-gray-300 dark:border-gray-600' ?> text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white">
                 <option value="">--Selecciona una colonia --</option>
                 <?php foreach ($colonias as $colonia): ?>
-                    <option value="<?= $colonia->id ?>"><?= $colonia->name ?></option>
+                    <option value="<?= $colonia->id ?>" <?= $usuario->id_colony == $colonia->id ? 'selected' : ''; ?>><?= $colonia->name ?></option>
                 <?php endforeach; ?>
             </select>
             <?php if (isset($alertas['error']['id_colony'])) : ?>
@@ -98,7 +116,7 @@
             <select id="id_locality" name="id_locality" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                 <option value="">--Selecciona una localidad --</option>
                 <?php foreach ($localidades as $localidad): ?>
-                    <option value="<?= $localidad->id ?>"><?= $localidad->name ?></option>
+                    <option value="<?= $localidad->id ?>" <?= $usuario->id_locality == $localidad->id ? 'selected' : ''; ?>><?= $localidad->name ?></option>
                 <?php endforeach; ?>
             </select>
         </div>
@@ -110,7 +128,7 @@
                 class="bg-gray-50 border text-gray-900 <?= isset($alertas['error']['id_zone']) ? 'border-red-600' : 'border-gray-300 dark:border-gray-600' ?> text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white">
                 <option value="">--Selecciona una zona --</option>
                 <?php foreach ($zonas as $zona): ?>
-                    <option value="<?= $zona->id ?>"><?= $zona->name ?></option>
+                    <option value="<?= $zona->id ?>" <?= $usuario->id_zone == $zona->id ? 'selected' : ''; ?>><?= $zona->name ?></option>
                 <?php endforeach; ?>
             </select>
             <?php if (isset($alertas['error']['id_zone'])) : ?>
@@ -119,7 +137,7 @@
         </div>
         <div class="sm:col-span-3">
             <label for="image" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imágen</label>
-            <input id="image" name="image" type="file" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" />
+            <input id="image" name="image" type="file" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" accept=".jpg, .jpeg, .png" />
         </div>
         <div class="sm:col-span-4">
             <label for="reference" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Referencia</label>
@@ -136,11 +154,11 @@
                 class="bg-gray-50 border text-gray-900 <?= isset($alertas['error']['id_usertype']) ? 'border-red-600' : 'border-gray-300 dark:border-gray-600' ?> text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white">
                 <option value="">--Selecciona un tipo--</option>
                 <?php foreach ($tipo_usuario as $tipo): ?>
-                    <option value="<?= $tipo->id ?>"><?= $tipo->name ?></option>
+                    <option value="<?= $tipo->id ?>" <?= $usuario->id_usertype == $tipo->id ? 'selected' : ''; ?>><?= $tipo->name ?></option>
                 <?php endforeach; ?>
             </select>
             <?php if (isset($alertas['error']['id_usertype'])) : ?>
-                <p class="text-xs uppercase bg-red-600 p-2 text-white text-center font-bold rounded mt-2"><?= $alertas['error']['id_zone'] ?></p>
+                <p class="text-xs uppercase bg-red-600 p-2 text-white text-center font-bold rounded mt-2"><?= $alertas['error']['id_usertype'] ?></p>
             <?php endif; ?>
         </div>
         <div>
@@ -150,11 +168,11 @@
                 class="bg-gray-50 border text-gray-900 <?= isset($alertas['error']['id_intaketype']) ? 'border-red-600' : 'border-gray-300 dark:border-gray-600' ?> text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white">
                 <option value="">--Selecciona un tipo--</option>
                 <?php foreach ($tipo_toma as $tipo): ?>
-                    <option value="<?= $tipo->id ?>"><?= $tipo->name ?></option>
+                    <option value="<?= $tipo->id ?>" <?= $usuario->id_intaketype == $tipo->id ? 'selected' : ''; ?>><?= $tipo->name ?></option>
                 <?php endforeach; ?>
             </select>
             <?php if (isset($alertas['error']['id_intaketype'])) : ?>
-                <p class="text-xs uppercase bg-red-600 p-2 text-white text-center font-bold rounded mt-2"><?= $alertas['error']['id_zone'] ?></p>
+                <p class="text-xs uppercase bg-red-600 p-2 text-white text-center font-bold rounded mt-2"><?= $alertas['error']['id_intaketype'] ?></p>
             <?php endif; ?>
         </div>
         <div>
@@ -164,11 +182,11 @@
                 class="bg-gray-50 border text-gray-900 <?= isset($alertas['error']['id_servicetype']) ? 'border-red-600' : 'border-gray-300 dark:border-gray-600' ?> text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white">
                 <option value="">--Selecciona un tipo--</option>
                 <?php foreach ($tipo_servicio as $tipo): ?>
-                    <option value="<?= $tipo->id ?>"><?= $tipo->name ?></option>
+                    <option value="<?= $tipo->id ?>" <?= $usuario->id_servicetype == $tipo->id ? 'selected' : ''; ?>><?= $tipo->name ?></option>
                 <?php endforeach; ?>
             </select>
             <?php if (isset($alertas['error']['id_servicetype'])) : ?>
-                <p class="text-xs uppercase bg-red-600 p-2 text-white text-center font-bold rounded mt-2"><?= $alertas['error']['id_zone'] ?></p>
+                <p class="text-xs uppercase bg-red-600 p-2 text-white text-center font-bold rounded mt-2"><?= $alertas['error']['id_servicetype'] ?></p>
             <?php endif; ?>
         </div>
         <div>
@@ -178,11 +196,11 @@
                 class="bg-gray-50 border text-gray-900 <?= isset($alertas['error']['id_servicestatus']) ? 'border-red-600' : 'border-gray-300 dark:border-gray-600' ?> text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white">
                 <option value="">--Selecciona un estado--</option>
                 <?php foreach ($estado_servicio as $estado): ?>
-                    <option value="<?= $estado->id ?>"><?= $estado->name ?></option>
+                    <option value="<?= $estado->id ?>" <?= $usuario->id_servicestatus == $estado->id ? 'selected' : ''; ?>><?= $estado->name ?></option>
                 <?php endforeach; ?>
             </select>
             <?php if (isset($alertas['error']['id_servicestatus'])) : ?>
-                <p class="text-xs uppercase bg-red-600 p-2 text-white text-center font-bold rounded mt-2"><?= $alertas['error']['id_zone'] ?></p>
+                <p class="text-xs uppercase bg-red-600 p-2 text-white text-center font-bold rounded mt-2"><?= $alertas['error']['id_servicestatus'] ?></p>
             <?php endif; ?>
         </div>
         <div>
@@ -192,11 +210,11 @@
                 class="bg-gray-50 border text-gray-900 <?= isset($alertas['error']['id_consumtype']) ? 'border-red-600' : 'border-gray-300 dark:border-gray-600' ?> text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white">
                 <option value="">--Selecciona un tipo--</option>
                 <?php foreach ($tipo_consumo as $tipo): ?>
-                    <option value="<?= $tipo->id ?>"><?= $tipo->name ?></option>
+                    <option value="<?= $tipo->id ?>" <?= $usuario->id_consumtype == $tipo->id ? 'selected' : ''; ?>><?= $tipo->name ?></option>
                 <?php endforeach; ?>
             </select>
             <?php if (isset($alertas['error']['id_consumtype'])) : ?>
-                <p class="text-xs uppercase bg-red-600 p-2 text-white text-center font-bold rounded mt-2"><?= $alertas['error']['id_zone'] ?></p>
+                <p class="text-xs uppercase bg-red-600 p-2 text-white text-center font-bold rounded mt-2"><?= $alertas['error']['id_consumtype'] ?></p>
             <?php endif; ?>
         </div>
         <div class="flex items-center mb-4">
@@ -205,13 +223,13 @@
         </div>
     </div>
     <h3 class="text-xl font-bold my-4 text-gray-600 dark:text-gray-300">Información extra</h3>
-    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5 sm:gap-6 mt-2">
+    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 sm:gap-6 mt-2">
         <div class="w-full">
             <label for="id_userStorage" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipo de almacenamiento</label>
             <select id="id_userStorage" name="id_userStorage" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                 <option value="">--Selecciona un tipo--</option>
                 <?php foreach ($tipo_almacenamiento as $tipo): ?>
-                    <option value="<?= $tipo->id ?>"><?= $tipo->name ?></option>
+                    <option value="<?= $tipo->id ?>" <?= $usuario->id_userStorage == $tipo->id ? 'selected' : ''; ?>><?= $tipo->name ?></option>
                 <?php endforeach; ?>
             </select>
         </div>
@@ -224,7 +242,3 @@
             <input type="number" name="inhabitants" id="inhabitants" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Habitantes del lugar" min="0" value="<?= $usuario->inhabitants ?? ''; ?>">
         </div>
     </div>
-    <button type="submit" class="inline-flex bg-indigo-600 items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary-700 rounded hover:bg-indigo-800">
-        Agregar Usuario
-    </button>
-</form>

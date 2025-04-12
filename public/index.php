@@ -111,6 +111,7 @@ $router->get('/datos-usuarios-crear', [UpdatesController::class, 'crearUsuario']
 $router->post('/datos-usuarios-crear', [UpdatesController::class, 'crearUsuario']);
 $router->get('/datos-usuarios-editar', [UpdatesController::class, 'editarUsuario']);
 $router->post('/datos-usuarios-editar', [UpdatesController::class, 'editarUsuario']);
+$router->post('/datos-usuarios-eliminar', [UpdatesController::class, 'eliminarUsuario']);
 
 // // Actions Tanques
 $router->get('/tanks', [TanquesController::class, 'index']);
@@ -125,6 +126,7 @@ $router->post('/guardar-registro', [TanquesController::class, 'guardarRegistro']
 $router->get('/pdf/recibo', [PDFController::class, 'recibo']);
 $router->get('/pdf/recibo-adicionales', [PDFController::class, 'reciboAdicionales']);
 $router->get('/pdf/corte-caja', [PDFController::class, 'corteCaja']);
+$router->get('/pdf/contrato-servicio', [PDFController::class, 'contratoServicio']);
 
 //OTROS
 $router->get('/api/categorias', [GenericasController::class, 'categorias']);
