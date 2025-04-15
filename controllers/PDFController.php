@@ -220,7 +220,7 @@ class PDFController
         $contrato = AltaUsuario::where('id_user', $id);
 
         if (!$contrato->folio) {
-            header('Location: /datos-usuarios');
+            header('Location: /usuarios?page=1');
             return;
         }
 

@@ -76,11 +76,18 @@ $router->get('/filtrar-reportes', [ReportesController::class, 'filtrar']);
 $router->post('/filtrar-reportes-coincidencias', [ReportesController::class, 'filtrarReportes']);
 
 //Actions Usuarios
+$router->get('/datos-usuarios-crear', [UsersController::class, 'crearUsuario']);
+$router->post('/datos-usuarios-crear', [UsersController::class, 'crearUsuario']);
+$router->get('/datos-usuarios-editar', [UsersController::class, 'editarUsuario']);
+$router->post('/datos-usuarios-editar', [UsersController::class, 'editarUsuario']);
+$router->post('/datos-usuarios-eliminar', [UsersController::class, 'eliminarUsuario']);
+
 $router->get('/usuarios', [UsersController::class, 'index']);
 $router->get('/buscar-usuario', [UsersController::class, 'buscarUsuario']);
 $router->get('/api/usuarios', [UsersController::class, 'usersAPI']);
 $router->get('/api/usuario', [UsersController::class, 'usuario']);
 $router->get('/api/users', [UsersController::class, 'datosBusqueda']);
+
 
 // // Actions CAJA
 $router->get('/consultar', [CajaController::class, 'index']);
@@ -107,11 +114,6 @@ $router->post('/cancelar-recibo', [CajaController::class, 'cambiarEstadoRecibo']
 
 // // Actions Updates
 $router->get('/datos-usuarios', [UpdatesController::class, 'index']);
-$router->get('/datos-usuarios-crear', [UpdatesController::class, 'crearUsuario']);
-$router->post('/datos-usuarios-crear', [UpdatesController::class, 'crearUsuario']);
-$router->get('/datos-usuarios-editar', [UpdatesController::class, 'editarUsuario']);
-$router->post('/datos-usuarios-editar', [UpdatesController::class, 'editarUsuario']);
-$router->post('/datos-usuarios-eliminar', [UpdatesController::class, 'eliminarUsuario']);
 
 // // Actions Tanques
 $router->get('/tanks', [TanquesController::class, 'index']);

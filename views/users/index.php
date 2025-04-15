@@ -9,11 +9,22 @@
             </h2>
         </div>
         <div class="relative overflow-x-auto mx-auto mb-5 py-4 lg:px-10 text-left uppercase">
-            <button
-                id="btn-buscar-usuario"
-                class="w-full md:w-auto bg-indigo-600 text-white px-4 py-2 text-xs font-bold uppercase rounded hover:bg-indigo-500">
-                Buscar
-            </button>
+            <div class="space-y-2 sm:space-y-0 flex flex-col sm:flex-row gap-2">
+                <button
+                    id="btn-buscar-usuario"
+                    class="w-full md:w-auto inline-flex justify-center items-center gap-2 bg-indigo-600 text-white px-4 py-2 text-xs font-bold uppercase rounded hover:bg-indigo-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
+                        <path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z" clip-rule="evenodd" />
+                    </svg>
+                    Buscar
+                </button>
+                <a href="/datos-usuarios-crear" class="inline-flex w-full sm:w-auto justify-center items-center gap-2 bg-indigo-600 text-white px-4 py-2 text-xs text-center font-bold uppercase rounded hover:bg-indigo-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
+                        <path d="M5.25 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM2.25 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM18.75 7.5a.75.75 0 0 0-1.5 0v2.25H15a.75.75 0 0 0 0 1.5h2.25v2.25a.75.75 0 0 0 1.5 0v-2.25H21a.75.75 0 0 0 0-1.5h-2.25V7.5Z" />
+                    </svg>
+                    Agregar usuario
+                </a>
+            </div>
 
             <?= $paginacion; ?>
             <table class="w-full">

@@ -60,7 +60,6 @@
                 <p class="text-xs uppercase bg-red-600 p-2 text-white text-center font-bold rounded mt-2"><?= $alertas['error']['id_type_person'] ?></p>
             <?php endif; ?>
         </div>
-
     </div>
     <h3 class="text-xl font-bold my-4 text-gray-600 dark:text-gray-300">Información de ubicación</h3>
     <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 sm:gap-6 mt-2">
@@ -139,6 +138,16 @@
             <label for="image" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imágen</label>
             <input id="image" name="image" type="file" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" accept=".jpg, .jpeg, .png" />
         </div>
+        <?php if (isset($usuario->image)): ?>
+            <div class="sm:col-span-4 flex flex-col gap-4 justify-center items-center">
+                <p class="font-bold text-sm uppercase dark:text-white">Imagen Actual:</p>
+                <div class="formulario__imagen">
+                    <picture>
+                        <img src="image_house_user/<?= $usuario->image ?>" loading="lazy" alt="Foto de casa de <?= $usuario->user . " " . $usuario->lastname ?>" class=" w-full max-h-96 object-cover rounded">
+                    </picture>
+                </div>
+            </div>
+        <?php endif; ?>
         <div class="sm:col-span-4">
             <label for="reference" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Referencia</label>
             <textarea id="reference" name="reference" rows="3" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Agregue una referencia"><?= $usuario->reference ?? ''; ?></textarea>

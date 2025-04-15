@@ -14,13 +14,26 @@ require_once __DIR__ . '/../templates/nav-bar.php'; ?>
         </div>
 
         <section class=" space-y-10">
-            <a href="/pdf/contrato-servicio?id=<?= s($_GET['id']) ?>" target="_blanck" class="bg-indigo-600 font-bold text-xs px-4 py-2 text-white uppercase rounded hover:bg-indigo-800">Descargar Contrato</a>
+            <div class="space-y-2 sm:space-y-0 flex flex-col sm:flex-row gap-2">
+                <a href="/pdf/contrato-servicio?id=<?= s($_GET['id']) ?>" target="_blank" class="inline-flex w-full sm:w-auto justify-center items-center gap-2 bg-indigo-600 text-white px-4 py-2 text-xs text-center font-bold uppercase rounded hover:bg-indigo-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
+                        <path fill-rule="evenodd" d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625ZM7.5 15a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 7.5 15Zm.75 2.25a.75.75 0 0 0 0 1.5H12a.75.75 0 0 0 0-1.5H8.25Z" clip-rule="evenodd" />
+                        <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
+                    </svg>
+                    Contrato
+                </a>
+                <a href="/datos-usuarios-editar?id=<?= s($_GET['id']) ?>" class="inline-flex w-full sm:w-auto justify-center items-center gap-2 bg-indigo-600 text-white px-4 py-2 text-xs text-center font-bold uppercase rounded hover:bg-indigo-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
+                        <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
+                    </svg>
+                    Editar
+                </a>
+            </div>
             <div class=" flex flex-col lg:flex-row gap-4 md:gap-8 p-4 bg-white dark:bg-gray-800 rounded shadow-lg">
                 <div class="w-full lg:max-w-1/2 p-4">
                     <?php if ($usuario->image) : ?>
                         <picture>
-                            <source srcset="image_house_user/<?= $usuario->image ?>.webp" type="image/webp">
-                            <img src="image_house_user/<?= $usuario->image ?>.png" loading="lazy" alt="Foto de casa de <?= $usuario->user . " " . $usuario->lastname ?>" class=" w-full max-h-96 object-cover rounded">
+                            <img src="image_house_user/<?= $usuario->image ?>" loading="lazy" alt="Foto de casa de <?= $usuario->user . " " . $usuario->lastname ?>" class=" w-full max-h-96 object-cover rounded">
                         </picture>
                     <?php else : ?>
                         <picture>
