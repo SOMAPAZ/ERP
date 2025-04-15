@@ -14,6 +14,7 @@ require_once __DIR__ . '/../templates/nav-bar.php'; ?>
         </div>
 
         <section class=" space-y-10">
+            <a href="/pdf/contrato-servicio?id=<?= s($_GET['id']) ?>" target="_blanck" class="bg-indigo-600 font-bold text-xs px-4 py-2 text-white uppercase rounded hover:bg-indigo-800">Descargar Contrato</a>
             <div class=" flex flex-col lg:flex-row gap-4 md:gap-8 p-4 bg-white dark:bg-gray-800 rounded shadow-lg">
                 <div class="w-full lg:max-w-1/2 p-4">
                     <?php if ($usuario->image) : ?>

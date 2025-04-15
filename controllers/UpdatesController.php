@@ -106,7 +106,8 @@ class UpdatesController
 
                     $resultado = $alta_pdf->guardar();
 
-                    header("Location: /pdf/contrato-servicio?folio=$nuevo_folio");
+                    header("Location: buscar-usuario?id=" . $nuevo_usuario->id);
+                    // header("Location: /pdf/contrato-servicio?folio=$nuevo_folio");
                 }
             }
         }

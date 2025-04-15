@@ -15,8 +15,10 @@ use Facturacion\Cuentas;
 use Reportes\Evidencias;
 use Facturacion\Facturas;
 use Reportes\Incidencias;
+use Usuarios\AltaUsuario;
 use Usuarios\TipoConsumo;
 use Facturacion\CorteCaja;
+use Usuarios\TipoServicio;
 use Facturacion\PagosAdicionales;
 
 class PDFController
@@ -212,39 +214,38 @@ class PDFController
     public static function contratoServicio()
     {
         isAuth();
-        $folio = s($_GET['folio']);
-        dd($folio);
+        $id = s($_GET['id']);
 
-        // $contrato = ContratoServicio::where('folio', $folio);
-        // $instanciaUsuario = new UsuariosAPI();
-        // $usuarioResultado = $instanciaUsuario->consultar($idUsuario);
-        // $usuario = array_shift($usuarioResultado);
 
-        // if (!$usuario->id || !$contrato->folio) {
-        //     header('Location: /consultar');
-        //     return;
-        // }
+        $contrato = AltaUsuario::where('id_user', $id);
 
-        // $usuario = Usuario::find($idUsuario);
-        // $tipo_toma = TipoToma::find($usuario->id_servicetype);
-        // $tipo_consumo = TipoConsumo::find($usuario->id_consumtype);
-        // $empleado = Empleado::find($contrato->empleado_id);
+        if (!$contrato->folio) {
+            header('Location: /datos-usuarios');
+            return;
+        }
 
-        // $domPDF = new Dompdf();
-        // ob_start();
+        $contrato->usuario = Usuario::find($contrato->id_user);
+        $contrato->usuario->id_servicetype = TipoServicio::find($contrato->usuario->id_servicetype);
+        $contrato->usuario->id_consumtype = TipoConsumo::find($contrato->usuario->id_consumtype);
+        $contrato->usuario->id_intaketype = TipoToma::find($contrato->usuario->id_intaketype);
+        $imagen = 'data:image/webp;base64,' . base64_encode(file_get_contents('build/img/marca-agua.webp'));
 
-        // include_once __DIR__ . '/../views/PDF/contrato-servicio.php';
 
-        // $content = ob_get_clean();
+        $domPDF = new Dompdf();
+        ob_start();
 
-        // $options = $domPDF->getOptions();
-        // $options->set(array('isRemoteEnabled' => true));
-        // $domPDF->setOptions($options);
+        include_once __DIR__ . '/../views/PDF/contrato-servicio.php';
 
-        // $domPDF->loadHtml($content);
-        // $domPDF->setPaper('A4', 'landscape');
+        $content = ob_get_clean();
 
-        // $domPDF->render();
-        // $domPDF->stream("Contrato Servicio", array("Attachment" => false));
+        $options = $domPDF->getOptions();
+        $options->set(array('isRemoteEnabled' => true));
+        $domPDF->setOptions($options);
+
+        $domPDF->loadHtml($content);
+        $domPDF->setPaper('A4',);
+
+        $domPDF->render();
+        $domPDF->stream("Contrato Servicio de Agua de : " . $contrato->usuario->user, array("Attachment" => false));
     }
 }
