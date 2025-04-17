@@ -123,6 +123,7 @@
         }
 
         .carta-compromiso__fecha {
+            margin-bottom: 1rem;
             margin-left: 20rem;
             font-size: 0.8rem;
         }

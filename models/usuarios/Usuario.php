@@ -37,7 +37,8 @@ class Usuario extends ActiveRecord
         "stored_water",
         "id_type_person",
         "drain",
-        "id_observaciones"
+        "id_observaciones",
+        "token_registro"
     ];
 
     public $id;
@@ -70,6 +71,7 @@ class Usuario extends ActiveRecord
     public $id_type_person;
     public $drain;
     public $id_observaciones;
+    public $token_registro;
 
     public function __construct($args = [])
     {
@@ -103,6 +105,7 @@ class Usuario extends ActiveRecord
         $this->id_type_person = $args['id_type_person'] ?? null;
         $this->drain = $args['drain'] ?? 0;
         $this->id_observaciones = $args['id_observaciones'] ?? 0;
+        $this->token_registro = $args['token_registro'] ?? 0;
     }
 
     public function validar()
@@ -156,5 +159,12 @@ class Usuario extends ActiveRecord
         }
 
         return $res;
+    }
+
+    public function cancelar()
+    {
+        $query = "UPDATE "  . static::$tabla . " SET id_servicestatus = 3 WHERE id = " . self::$db->escape_string($this->id);
+        $resultado = self::$db->query($query);
+        return $resultado;
     }
 }

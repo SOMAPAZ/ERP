@@ -1,4 +1,3 @@
-<form action="/datos-usuarios-crear" method="POST" autocomplete="off" enctype="multipart/form-data">
     <h3 class="text-xl font-bold my-4 text-gray-600 dark:text-gray-300">Información del usuario</h3>
     <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
         <div>
@@ -78,23 +77,23 @@
         </div>
         <div class="w-full">
             <label for="int_num" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Número Interior</label>
-            <input type="number" name="int_num" id="int_num" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Ej. 123" min="1" value="<?= $usuario->int_num ?? ''; ?>">
+            <input type="text" name="int_num" id="int_num" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Ej. 123" min="1" value="<?= $usuario->int_num ?? ''; ?>">
         </div>
         <div class="w-full">
             <label for="ext_num" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Número Exterior</label>
-            <input type="number" name="ext_num" id="ext_num" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Ej. 123" min="1" value="<?= $usuario->ext_num ?? ''; ?>">
+            <input type="text" name="ext_num" id="ext_num" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Ej. 123" min="1" value="<?= $usuario->ext_num ?? ''; ?>">
         </div>
         <div class="w-full">
             <label for="block" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Manzana</label>
-            <input type="number" name="block" id="block" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Ej. 123" min="1" value="<?= $usuario->block ?? ''; ?>">
+            <input type="text" name="block" id="block" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Ej. 123" min="1" value="<?= $usuario->block ?? ''; ?>">
         </div>
         <div class="w-full">
             <label for="lat" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Latitud</label>
-            <input type="number" name="lat" id="lat" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Ej. 19.873096164251823" value="<?= $usuario->lat ?? ''; ?>">
+            <input type="text" name="lat" id="lat" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Ej. 19.873096164251823" value="<?= $usuario->lat ?? ''; ?>">
         </div>
         <div class="w-full">
             <label for="lng" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Longitud</label>
-            <input type="number" name="lng" id="lng" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Ej. -97.58909488698745" value="<?= $usuario->lng ?? ''; ?>">
+            <input type="text" name="lng" id="lng" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Ej. -97.58909488698745" value="<?= $usuario->lng ?? ''; ?>">
         </div>
         <div>
             <label for="id_colony" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Colonia</label>
@@ -138,7 +137,7 @@
             <label for="image" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imágen</label>
             <input id="image" name="image" type="file" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" accept=".jpg, .jpeg, .png" />
         </div>
-        <?php if (isset($usuario->image)): ?>
+        <?php if (isset($usuario->image) &&  $usuario->image !== "") : ?>
             <div class="sm:col-span-4 flex flex-col gap-4 justify-center items-center">
                 <p class="font-bold text-sm uppercase dark:text-white">Imagen Actual:</p>
                 <div class="formulario__imagen">

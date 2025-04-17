@@ -47,7 +47,7 @@ require_once __DIR__ . '/../templates/nav-bar.php'; ?>
                     <h4 class="font-bold text-2xl uppercase text-indigo-600 dark:text-indigo-400 py-4">Datos de Usuario</h4>
                     <ul class="space-y-2 text-left uppercase text-gray-600 dark:text-gray-400">
                         <li><strong class="text-gray-900 dark:text-white me-2">Teléfono:</strong><?= !$usuario->phone || $usuario->phone === 0 ? 'Sin teléfono.' : $usuario->phone ?></li>
-                        <li><strong class="text-gray-900 dark:text-white me-2">Direccion:</strong><?= $usuario->address ?></li>
+                        <li><strong class="text-gray-900 dark:text-white me-2">Direccion:</strong><?= $usuario->address ?> <?= $usuario->int_num ? $usuario->int_num : '' ?></li>
                         <li><strong class="text-gray-900 dark:text-white me-2">Colonia:</strong><?= $usuario->colonia->name ?></li>
                         <li><strong class="text-gray-900 dark:text-white me-2">Zona:</strong><?= $usuario->zona->name ?></li>
                         <li><strong class="text-gray-900 dark:text-white me-2">Referencia:</strong><?= $usuario->reference ? $usuario->reference : 'Sin referencia.' ?></li>
@@ -116,7 +116,7 @@ require_once __DIR__ . '/../templates/nav-bar.php'; ?>
                         </tbody>
                     </table>
                 <?php else: ?>
-                    <p class="text-center p-2 font-semibold text-gray-700 dark:text-gray-300">No hay beneficiarios registrados.</p>
+                    <p class="text-center p-2 font-semibold text-gray-700 dark:text-gray-300">No hay beneficiarios registrados. <a href="/crear-beneficiario?id_user=<?= $usuario->id ?>" class="text-indigo-600">Tal Vez quieras agregar uno</a></p>
                 <?php endif; ?>
             </div>
             <div class="w-full overflow-auto flex flex-col gap-4">
@@ -264,11 +264,19 @@ require_once __DIR__ . '/../templates/nav-bar.php'; ?>
                 <?php endif; ?>
             </div>
         </section>
-
-        <div class="mt-10 overflow-x-auto">
-
+        <div class="flex justify-end items-center mt-10">
+            <form action="/datos-usuarios-eliminar" method="POST" autocomplete="off">
+                <input type="hidden" name="id" value="<?= $usuario->id ?>">
+                <button type="submit" class="flex flex-row gap-1 py-2 px-2 text-white bg-red-600 hover:bg-red-800 font-semibold text-xs uppercase items-center rounded">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
+                        <path d="M10.375 2.25a4.125 4.125 0 1 0 0 8.25 4.125 4.125 0 0 0 0-8.25ZM10.375 12a7.125 7.125 0 0 0-7.124 7.247.75.75 0 0 0 .363.63 13.067 13.067 0 0 0 6.761 1.873c2.472 0 4.786-.684 6.76-1.873a.75.75 0 0 0 .364-.63l.001-.12v-.002A7.125 7.125 0 0 0 10.375 12ZM16 9.75a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5h-6Z" />
+                    </svg>
+                    Cancelar Usuario
+                </button>
+            </form>
         </div>
     </article>
+
 
 </section>
 

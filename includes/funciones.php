@@ -150,6 +150,18 @@ function formatoMiles($numero): string
     return number_format($numero, 2, '.', ',');
 }
 
+function obtenerMesesRestantes(): array
+{
+    $mesActual = date('n');
+    $meses = [];
+
+    for ($i = $mesActual; $i <= 12; $i++) {
+        $meses[] = $i;
+    }
+
+    return $meses;
+}
+
 
 // Funciones caja
 
