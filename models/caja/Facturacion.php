@@ -140,4 +140,11 @@ class Facturacion extends ActiveRecord
         $resultado = self::$db->query($query);
         return $resultado;
     }
+
+    public function insertNew($id_user, $year, $mes, $monto_agua)
+    {
+        $query = "INSERT INTO " . self::$tabla . " (id_user, year, mes, monto_agua, estado, folio, if_recargo) VALUES ({$id_user}, {$year}, {$mes}, {$monto_agua}, 0, 0, 0)";
+        $resultado = self::$db->query($query);
+        return $resultado;
+    }
 }

@@ -142,10 +142,10 @@ class DeudaController
                     $mesesContador = $meses;
 
                     if ($user->drain == 1) {
-                        if ($mesesContador > 0) array_push($recargoDrenaje, (($adeudo->monto_agua + $costo_excedido) * 0.25) * 0.0113 * $mesesContador);
+                        if ($mesesContador > 0) array_push($recargoDrenaje, (($inicial_agua + $costo_excedido) * 0.25) * 0.0113 * $mesesContador);
                     }
 
-                    if ($mesesContador > 0) array_push($recargoAgua, ($adeudo->monto_agua + $costo_excedido) * 0.0113 * $mesesContador);
+                    if ($mesesContador > 0) array_push($recargoAgua, ($inicial_agua + $costo_excedido) * 0.0113 * $mesesContador);
 
                     $mesesContador--;
                     strlen($adeudo->mes) === 1 ? $mesFR = '0' . $adeudo->mes : $mesFR = $adeudo->mes;
@@ -273,7 +273,7 @@ class DeudaController
                     $costo_excedido = $excedido * $measured->excm3;
                     $costo_excedido_drenaje = $costo_excedido * 0.25;
                     $iva_lim_exc = $user->id_intaketype !== '2' ? ($costo_excedido * 0.16) : 0;
-                    $iva_lim_exc_drenaje = $user->drain == 1 && $user->id_intaketype !== '2' ? ($costo_excedido_drenaje * 0.16) : 0;
+                    $iva_lim_exc_drenaje = $costo_excedido_drenaje * 0.16;
                 }
 
                 //Montos
@@ -314,7 +314,7 @@ class DeudaController
                         'diferencia_lectura_anterior' => !isset($diferencia_lecturas) ? 0 : $diferencia_lecturas,
                         'excedido' => !isset($excedido) ? 0 : round($excedido, 2),
                         'costo_excedido' => !isset($costo_excedido) || !isset($costo_excedido_drenaje) ? 0 : round($costo_excedido + $costo_excedido_drenaje, 2),
-                        'iva_lim_exc' => !isset($iva_lim_exc) || !isset($iva_lim_exc_drenaje) ? 0 : round($iva_lim_exc + $iva_lim_exc_drenaje, 2)
+                        'iva_lim_exc' => (!isset($iva_lim_exc) || !isset($iva_lim_exc_drenaje)) ? 0 : round($iva_lim_exc + $iva_lim_exc_drenaje, 2)
                     ],
                     'total' => [
                         'natural' => round($total_natural, 2),

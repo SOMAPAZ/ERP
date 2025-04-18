@@ -23,6 +23,7 @@ use Usuarios\TipoPersona;
 use Usuarios\TipoUsuario;
 use Usuarios\TipoServicio;
 use Usuarios\Beneficiarios;
+use Facturacion\Facturacion;
 use Facturacion\TomaConsumo;
 use Usuarios\EstadoServicio;
 use Facturacion\FacturasPasadas;
@@ -280,11 +281,16 @@ class UsersController
                         }
 
                         $meses_restantes = obtenerMesesRestantes();
+                        $agregado = false;
                         foreach ($meses_restantes as $mes) {
+                            $facturacion = new Facturacion();
+                            $agregado = $facturacion->insertNew($nuevo_usuario->id, date('Y'), $mes, $tarifa);
+                        }
+
+                        if ($agregado) {
+                            header("Location: buscar-usuario?id=" . $nuevo_usuario->id);
                         }
                     }
-
-                    header("Location: buscar-usuario?id=" . $nuevo_usuario->id);
                 }
             }
         }
