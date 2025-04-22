@@ -271,7 +271,8 @@ class DeudaController
                     $measured = Measured::obtenerLimites($user->id_intaketype, $user->id_consumtype, $d->year);
                     $excedido = $diferencia_lecturas - $measured->limsup > 0 ? $diferencia_lecturas - $measured->limsup : 0;
                     $costo_excedido = $excedido * $measured->excm3;
-                    $costo_excedido_drenaje = $costo_excedido * 0.25;
+
+                    $costo_excedido_drenaje = $user->drain === "1" ? ($costo_excedido * 0.25) : 0;
                     $iva_lim_exc = $user->id_intaketype !== '2' ? ($costo_excedido * 0.16) : 0;
                     $iva_lim_exc_drenaje = $costo_excedido_drenaje * 0.16;
                 }
@@ -313,7 +314,7 @@ class DeudaController
                         'lectura_actual' => !isset($lectura) ? 0 : floatval($lectura),
                         'diferencia_lectura_anterior' => !isset($diferencia_lecturas) ? 0 : $diferencia_lecturas,
                         'excedido' => !isset($excedido) ? 0 : round($excedido, 2),
-                        'costo_excedido' => !isset($costo_excedido) || !isset($costo_excedido_drenaje) ? 0 : round($costo_excedido + $costo_excedido_drenaje, 2),
+                        'costo_excedido' => (!isset($costo_excedido) || !isset($costo_excedido_drenaje)) ? 0 : round($costo_excedido + $costo_excedido_drenaje, 2),
                         'iva_lim_exc' => (!isset($iva_lim_exc) || !isset($iva_lim_exc_drenaje)) ? 0 : round($iva_lim_exc + $iva_lim_exc_drenaje, 2)
                     ],
                     'total' => [
