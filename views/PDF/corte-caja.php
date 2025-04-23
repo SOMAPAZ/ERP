@@ -44,7 +44,7 @@
             max-width: 95%;
             width: 100%;
             border-collapse: collapse;
-            font-size: 1rem;
+            font-size: 0.8rem;
             text-align: center;
         }
 
@@ -88,12 +88,28 @@
                     <td>$ <?= formatoMiles($corte->total_sistema); ?></td>
                 </tr>
                 <tr>
-                    <td>Total usuario</td>
-                    <td>$ <?= formatoMiles($corte->total_usuario); ?></td>
+                    <td>Total efectivo entregado por usuario</td>
+                    <td>$ <?= formatoMiles($corte->total_efectivo_usuario); ?></td>
+                </tr>
+                <tr>
+                    <td>Total depositos</td>
+                    <td>$ <?= formatoMiles($corte->total_depositos_usuario); ?></td>
+                </tr>
+                <tr>
+                    <td>Total cheques</td>
+                    <td>$ <?= formatoMiles($corte->total_cheques_usuario); ?></td>
+                </tr>
+                <tr>
+                    <td>Total transferencias</td>
+                    <td>$ <?= formatoMiles($corte->total_transferencias_usuario); ?></td>
+                </tr>
+                <tr>
+                    <td>Total T.P.V.</td>
+                    <td>$ <?= formatoMiles($corte->total_tpvs_usuario); ?></td>
                 </tr>
                 <tr>
                     <td>Diferencias</td>
-                    <td>$ <?= round($corte->total_sistema - $corte->total_usuario, 2); ?></td>
+                    <td>$ <?= round($corte->total_sistema - $corte->total_efectivo_usuario - $corte->total_depositos_usuario - $corte->total_cheques_usuario - $corte->total_transferencias_usuario - $corte->total_tpvs_usuario, 2); ?></td>
                 </tr>
             </tbody>
         </table>

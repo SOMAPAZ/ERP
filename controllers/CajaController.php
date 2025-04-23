@@ -374,7 +374,21 @@ class CajaController
         $pagos_adicionales = new PagosAdicionales();
 
         $facturas = $pagos_facturacion->obtenerPagosCorte(date('Y-m-d'), 'empleado_id', $_SESSION['empleado_id']);
+        $pagos_efectivos_fac = $pagos_facturacion->obtenerPagosCorte(date('Y-m-d'), 'empleado_id', $_SESSION['empleado_id'], '1');
+        $pagos_cheques_fac = $pagos_facturacion->obtenerPagosCorte(date('Y-m-d'), 'empleado_id', $_SESSION['empleado_id'], '2');
+        $pagos_depositos_fac = $pagos_facturacion->obtenerPagosCorte(date('Y-m-d'), 'empleado_id', $_SESSION['empleado_id'], '3');
+        $pagos_transferencias_fac = $pagos_facturacion->obtenerPagosCorte(date('Y-m-d'), 'empleado_id', $_SESSION['empleado_id'], '4');
+        $pagos_tpv_fac = $pagos_facturacion->obtenerPagosCorte(date('Y-m-d'), 'empleado_id', $_SESSION['empleado_id'], '5');
+
+
         $adicionales = $pagos_adicionales->obtenerPagosCorte(date('Y-m-d'), 'id_empleado', $_SESSION['empleado_id']);
+        $pagos_efectivos_adi = $pagos_adicionales->obtenerPagosCorte(date('Y-m-d'), 'id_empleado', $_SESSION['empleado_id'], '1');
+        $pagos_cheques_adi = $pagos_adicionales->obtenerPagosCorte(date('Y-m-d'), 'id_empleado', $_SESSION['empleado_id'], '2');
+        $pagos_depositos_adi = $pagos_adicionales->obtenerPagosCorte(date('Y-m-d'), 'id_empleado', $_SESSION['empleado_id'], '3');
+        $pagos_transferencias_adi = $pagos_adicionales->obtenerPagosCorte(date('Y-m-d'), 'id_empleado', $_SESSION['empleado_id'], '4');
+        $pagos_tpv_adi = $pagos_adicionales->obtenerPagosCorte(date('Y-m-d'), 'id_empleado', $_SESSION['empleado_id'], '5');
+
+
 
         $total_facturas = array_reduce($facturas, function ($acc, $act) {
             return $acc + $act->total;
@@ -384,7 +398,11 @@ class CajaController
             return $acc + $act->total;
         });
 
-        $total = $total_facturas + $total_adicionales;
+        $total_efectivo = calcularTotales($pagos_efectivos_fac) + calcularTotales($pagos_efectivos_adi);
+        $total_cheques = calcularTotales($pagos_cheques_fac) + calcularTotales($pagos_cheques_adi);
+        $total_depositos = calcularTotales($pagos_depositos_fac) + calcularTotales($pagos_depositos_adi);
+        $total_transferencias = calcularTotales($pagos_transferencias_fac) + calcularTotales($pagos_transferencias_adi);
+        $total_tpv = calcularTotales($pagos_tpv_fac) + calcularTotales($pagos_tpv_adi);
 
         $alertas = [];
 
@@ -394,6 +412,11 @@ class CajaController
             $_POST['denominaciones'] = json_encode($_POST['denominacion']);
 
             $corte->sincronizar($_POST);
+            $corte->total_cheques_usuario = $total_cheques;
+            $corte->total_depositos_usuario = $total_depositos;
+            $corte->total_transferencias_usuario = $total_transferencias;
+            $corte->total_tpvs_usuario = $total_tpv;
+
             $alertas = $corte->validar();
 
             if (empty($alertas)) {
@@ -427,7 +450,12 @@ class CajaController
 
         $router->render('caja/corte', [
             'links' => self::$links,
-            'total' => $total,
+            'total_efectivo' => $total_efectivo,
+            'total_cheques' => $total_cheques,
+            'total_depositos' => $total_depositos,
+            'total_transferencias' => $total_transferencias,
+            'total_tpv' => $total_tpv,
+            'total' => $total_facturas + $total_adicionales,
             'alertas' => $alertas
         ]);
     }

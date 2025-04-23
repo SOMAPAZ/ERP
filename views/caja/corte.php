@@ -83,10 +83,20 @@ require_once __DIR__ . '/../templates/nav-bar.php'; ?>
                 </div>
 
                 <div class="mt-5">
-                    <p class=" text-gray-800 dark:text-white font-bold text-xl flex justify-between border-b border-dashed border-gray-400 pb-5">Total entregado por cajera: <span class="font-normal total-cajera">$ 00.00 M.N.</span></p>
-                    <input type="hidden" name="total_usuario" id="total_usuario">
-                    <p class=" text-gray-800 dark:text-white font-bold text-xl flex justify-between pt-5">Total hasta este corte por sistema: <span class="font-normal total-sistema">$ <?= formatoMiles(round($total, 2)) ?> M.N.</span></p>
+                    <p class=" text-gray-800 dark:text-white font-bold text-xl flex justify-between border-b border-dashed border-gray-400 pb-5 flex-col md:flex-row">Total entregado por cajera: <span class="font-normal total-cajera">$ 00.00 M.N.</span></p>
+                    <input type="hidden" name="total_efectivo_usuario" id="total_usuario">
+                    <p class=" text-gray-800 dark:text-white font-bold text-xl flex justify-between pt-5 flex-col md:flex-row">Total efectivo hasta este corte por sistema: <span class="font-normal total-sistema">$ <?= formatoMiles(round($total_efectivo, 2)) ?> M.N.</span></p>
+                    <input type="hidden" name="total_sistema_efectivo" id="total" value="<?= $total_efectivo ?>">
                     <input type="hidden" name="total_sistema" id="total" value="<?= $total ?>">
+                </div>
+                <div class="w-full flex justify-end border-t-2 border-dashed border-gray-400">
+                    <ul class="text-xs flex flex-col items-end text-right">
+                        <li>Cheques: <span class="font-normal">$ <?= formatoMiles(round($total_cheques, 2)) ?> M.N.</span></li>
+                        <li>Depositos: <span class="font-normal">$ <?= formatoMiles(round($total_depositos, 2)) ?> M.N.</span></li>
+                        <li>Transferencias: <span class="font-normal">$ <?= formatoMiles(round($total_transferencias, 2)) ?> M.N.</span></li>
+                        <li>TPV: <span class="font-normal">$ <?= formatoMiles(round($total_tpv, 2)) ?> M.N.</span></li>
+                        <li class="text-lg font-black">Total: <span class="font-semibold">$ <?= formatoMiles(round($total, 2)) ?> M.N.</span></li>
+                    </ul>
                 </div>
 
                 <input type="submit" value="Generar Arqueo" class="mt-5 text-center bg-blue-700 w-full py-2 rounded text-white text-sm font-bold hover:bg-indigo-800 cursor-pointer uppercase disabled:opacity-10 disabled:cursor-not-allowed" disabled>

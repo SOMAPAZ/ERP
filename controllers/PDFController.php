@@ -66,7 +66,7 @@ class PDFController
         $domPDF->setPaper('A4', 'landscape');
 
         $domPDF->render();
-        $domPDF->stream("Factura", array("Attachment" => false));
+        $domPDF->stream("Recibo-$recibo->folio-id-$usuario->id", array("Attachment" => false));
     }
 
     public static function reciboAdicionales()
@@ -124,7 +124,7 @@ class PDFController
         $domPDF->setPaper('A4', 'landscape');
 
         $domPDF->render();
-        $domPDF->stream("Factura", array("Attachment" => false));
+        $domPDF->stream("Recibo-$recibo->folio-id-$usuario->id", array("Attachment" => false));
     }
 
     public static function reportePDF()

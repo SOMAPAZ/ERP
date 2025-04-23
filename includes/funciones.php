@@ -173,3 +173,12 @@ function calcular($array): float
 
     return $monto;
 }
+
+function calcularTotales($array): float
+{
+    $monto = array_reduce($array, function ($acc, $act) {
+        return $acc + $act->total;
+    }, 0);
+
+    return $monto;
+}
