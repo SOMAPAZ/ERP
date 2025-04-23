@@ -126,6 +126,10 @@ class DeudaController
                     $excedido = $diferencia_lecturas - $measured->limsup > 0 ? $diferencia_lecturas - $measured->limsup : 0;
                     $costo_excedido = $excedido * $measured->excm3;
 
+                    if ($adeudo->if_recargo !== "1" && $user->id_usertype === "2") {
+                        $costo_excedido = $costo_excedido * 0.5;
+                    }
+
                     array_push($excedidosM3, $costo_excedido);
                 }
 
@@ -273,6 +277,12 @@ class DeudaController
                     $costo_excedido = $excedido * $measured->excm3;
 
                     $costo_excedido_drenaje = $user->drain === "1" ? ($costo_excedido * 0.25) : 0;
+
+                    if ($d->if_recargo !== "1" && $user->id_usertype === "2") {
+                        $costo_excedido += $costo_excedido * 0.5;
+                        $costo_excedido_drenaje += $costo_excedido_drenaje * 0.5;
+                    }
+
                     $iva_lim_exc = $user->id_intaketype !== '2' ? ($costo_excedido * 0.16) : 0;
                     $iva_lim_exc_drenaje = $costo_excedido_drenaje * 0.16;
                 }
