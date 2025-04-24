@@ -19,6 +19,21 @@
         <div class="py-8 px-4 lg:px-8 mx-auto mt-10 bg-white dark:bg-gray-800 rounded shadow-lg">
             <form method="POST" autocomplete="off" enctype="multipart/form-data">
                 <?php include_once __DIR__ . '/forms/formulario-usuario.php'; ?>
+                <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 sm:gap-6 mt-2">
+                    <div class="w-full">
+                        <label for="id_observaciones" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Observaciones</label>
+                        <select name="id_observaciones" id="id_observaciones" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            <option value="">--Selecciona una opción--</option>
+                            <?php foreach ($observaciones as $observacion): ?>
+                                <option value="<?= $observacion->id ?>" <?= $usuario->id_observaciones == $observacion->id ? 'selected' : ''; ?>><?= $observacion->name ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="w-full">
+                        <label for="stored_water" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Agua Almacenada</label>
+                        <input type="text" id="stored_water" name="stored_water" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Agua en m3" value="<?= $usuario->stored_water ?? ''; ?>">
+                    </div>
+                </div>
                 <button type="submit" class="inline-flex bg-indigo-600 items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary-700 rounded hover:bg-indigo-800">
                     Guardar Cambios
                 </button>

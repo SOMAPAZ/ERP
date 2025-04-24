@@ -16,6 +16,7 @@ use Usuarios\Localidad;
 use Convenios\Convenios;
 use Facturacion\Facturas;
 use Facturacion\Measured;
+use Usuarios\Observaciones;
 use Reportes\Incidencias;
 use Usuarios\AltaUsuario;
 use Usuarios\TipoConsumo;
@@ -96,6 +97,7 @@ class UsersController
         $beneficiarios = Beneficiarios::belongsTo('id_user', $id);
 
         $reportes = Reporte::belongsTo('id_user', $id);
+
         foreach ($reportes as $reporte) {
             $reporte->categoria = Categoria::find($reporte->id_category);
             $reporte->incidencia = Incidencias::find($reporte->id_incidence);
@@ -106,9 +108,9 @@ class UsersController
             $notificacion->tipo = TipoNotificacion::find($notificacion->id_tiponotificacion);
         }
 
-        $recibos_anterior = FacturasPasadas::belongsTo('id_user', $id);
-        $recibos_actuales = Facturas::belongsTo('id_user', $id);
-        $recibos_pagos_adicionales = PagosAdicionales::belongsTo('id_user', $id);
+        $recibos_anterior = FacturasPasadas::belongsTo('id_user', $id, 'ASC');
+        $recibos_actuales = Facturas::belongsTo('id_user', $id, 'ASC');
+        $recibos_pagos_adicionales = PagosAdicionales::belongsTo('id_user', $id, 'ASC');
 
         $convenios = Convenios::belongsTo('id_user', $id);
         foreach ($convenios as $convenio) {
@@ -331,6 +333,7 @@ class UsersController
         $tipo_consumo = TipoConsumo::all();
         $tipo_almacenamiento = TipoAlmacenamiento::all();
         $tipo_persona = TipoPersona::all();
+        $observaciones = Observaciones::all();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($_FILES['image']['tmp_name']) {
@@ -353,6 +356,9 @@ class UsersController
             $usuario->sincronizar($_POST);
 
             if ($usuario->id_locality === '') $usuario->id_locality = 1;
+            if ($usuario->storage_height === "") $usuario->storage_height = 0;
+            if ($usuario->inhabitants === "") $usuario->inhabitants = 1;
+
             $alertas = $usuario->validar();
 
             if (empty($alertas)) {
@@ -376,6 +382,7 @@ class UsersController
             'tipo_consumo' => $tipo_consumo,
             'tipo_almacenamiento' => $tipo_almacenamiento,
             'tipo_persona' => $tipo_persona,
+            'observaciones' => $observaciones,
             'usuario' => $usuario,
             'alertas' => $alertas
         ]);

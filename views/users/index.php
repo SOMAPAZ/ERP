@@ -73,12 +73,3 @@
 </section>
 
 <?php $scripts = ['usuarios/busqueda.js']; ?>
-
-<script>
-    const btnMostrarSelector = document.querySelector('#dropdownSearchButton');
-    const dropdownSelector = document.querySelector('#dropdownSearch');
-
-    btnMostrarSelector.addEventListener('click', () => {
-        dropdownSelector.classList.toggle('hidden');
-    });
-</script>

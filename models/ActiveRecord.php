@@ -167,9 +167,10 @@ class ActiveRecord
     }
 
     //Buscar tadas las coincidencias
-    public static function belongsTo($columna, $valor)
+    public static function belongsTo($columna, $valor, $orderBy = '')
     {
-        $query = "SELECT * FROM " . static::$tabla  . " WHERE {$columna} = '{$valor}'";
+        $query = "SELECT * FROM " . static::$tabla  . " WHERE {$columna} = '{$valor}' ";
+        if ($orderBy !== '') $query .= " ORDER BY id {$orderBy} ";
         $resultado = self::consultarSQL($query);
 
         return $resultado;
