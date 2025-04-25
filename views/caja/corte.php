@@ -89,8 +89,8 @@ require_once __DIR__ . '/../templates/nav-bar.php'; ?>
                     <input type="hidden" name="total_sistema_efectivo" id="total" value="<?= $total_efectivo ?>">
                     <input type="hidden" name="total_sistema" id="total" value="<?= $total ?>">
                 </div>
-                <div class="w-full flex justify-end border-t-2 border-dashed border-gray-400">
-                    <ul class="text-xs flex flex-col items-end text-right">
+                <div class="w-full flex justify-end border-t border-dashed border-gray-400">
+                    <ul class="text-xs flex flex-col items-end text-right dark:text-white">
                         <li>Cheques: <span class="font-normal">$ <?= formatoMiles(round($total_cheques, 2)) ?> M.N.</span></li>
                         <li>Depositos: <span class="font-normal">$ <?= formatoMiles(round($total_depositos, 2)) ?> M.N.</span></li>
                         <li>Transferencias: <span class="font-normal">$ <?= formatoMiles(round($total_transferencias, 2)) ?> M.N.</span></li>

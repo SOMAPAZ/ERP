@@ -261,9 +261,9 @@ class ActiveRecord
         return $resultado;
     }
 
-    public function obtenerPagosCorte($fecha, $indice, $empleado, $tipo = "")
+    public function obtenerPagosCorte($indice, $empleado, $tipo = "")
     {
-        $query = "SELECT * FROM " . static::$tabla . " WHERE DATE(fecha) LIKE '{$fecha}' AND `{$indice}` = '{$empleado}' AND cancelado = 0 AND (folio_corte IS NULL OR folio_corte = '')";
+        $query = "SELECT * FROM " . static::$tabla . " WHERE `{$indice}` = '{$empleado}' AND cancelado = 0 AND (folio_corte IS NULL OR folio_corte = '')";
         if ($tipo) {
             $query .= " AND tipo_pago = '{$tipo}'";
         }

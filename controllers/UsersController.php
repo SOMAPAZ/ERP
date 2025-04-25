@@ -411,6 +411,10 @@ class UsersController
             }
 
             $resultado = $usuario->cancelar();
+            $adeudos = Facturacion::belongsTo('id_user', $id);
+            foreach ($adeudos as $adeudo) {
+                $adeudo->eliminar();
+            }
 
             if ($resultado) {
                 header("Location: /buscar-usuario?id=$id");

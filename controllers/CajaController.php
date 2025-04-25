@@ -373,20 +373,20 @@ class CajaController
         $pagos_facturacion = new Facturas();
         $pagos_adicionales = new PagosAdicionales();
 
-        $facturas = $pagos_facturacion->obtenerPagosCorte(date('Y-m-d'), 'empleado_id', $_SESSION['empleado_id']);
-        $pagos_efectivos_fac = $pagos_facturacion->obtenerPagosCorte(date('Y-m-d'), 'empleado_id', $_SESSION['empleado_id'], '1');
-        $pagos_cheques_fac = $pagos_facturacion->obtenerPagosCorte(date('Y-m-d'), 'empleado_id', $_SESSION['empleado_id'], '2');
-        $pagos_depositos_fac = $pagos_facturacion->obtenerPagosCorte(date('Y-m-d'), 'empleado_id', $_SESSION['empleado_id'], '3');
-        $pagos_transferencias_fac = $pagos_facturacion->obtenerPagosCorte(date('Y-m-d'), 'empleado_id', $_SESSION['empleado_id'], '4');
-        $pagos_tpv_fac = $pagos_facturacion->obtenerPagosCorte(date('Y-m-d'), 'empleado_id', $_SESSION['empleado_id'], '5');
+        $facturas = $pagos_facturacion->obtenerPagosCorte('empleado_id', $_SESSION['empleado_id']);
+        $pagos_efectivos_fac = $pagos_facturacion->obtenerPagosCorte('empleado_id', $_SESSION['empleado_id'], '1');
+        $pagos_cheques_fac = $pagos_facturacion->obtenerPagosCorte('empleado_id', $_SESSION['empleado_id'], '2');
+        $pagos_depositos_fac = $pagos_facturacion->obtenerPagosCorte('empleado_id', $_SESSION['empleado_id'], '3');
+        $pagos_transferencias_fac = $pagos_facturacion->obtenerPagosCorte('empleado_id', $_SESSION['empleado_id'], '4');
+        $pagos_tpv_fac = $pagos_facturacion->obtenerPagosCorte('empleado_id', $_SESSION['empleado_id'], '5');
 
 
-        $adicionales = $pagos_adicionales->obtenerPagosCorte(date('Y-m-d'), 'id_empleado', $_SESSION['empleado_id']);
-        $pagos_efectivos_adi = $pagos_adicionales->obtenerPagosCorte(date('Y-m-d'), 'id_empleado', $_SESSION['empleado_id'], '1');
-        $pagos_cheques_adi = $pagos_adicionales->obtenerPagosCorte(date('Y-m-d'), 'id_empleado', $_SESSION['empleado_id'], '2');
-        $pagos_depositos_adi = $pagos_adicionales->obtenerPagosCorte(date('Y-m-d'), 'id_empleado', $_SESSION['empleado_id'], '3');
-        $pagos_transferencias_adi = $pagos_adicionales->obtenerPagosCorte(date('Y-m-d'), 'id_empleado', $_SESSION['empleado_id'], '4');
-        $pagos_tpv_adi = $pagos_adicionales->obtenerPagosCorte(date('Y-m-d'), 'id_empleado', $_SESSION['empleado_id'], '5');
+        $adicionales = $pagos_adicionales->obtenerPagosCorte('id_empleado', $_SESSION['empleado_id']);
+        $pagos_efectivos_adi = $pagos_adicionales->obtenerPagosCorte('id_empleado', $_SESSION['empleado_id'], '1');
+        $pagos_cheques_adi = $pagos_adicionales->obtenerPagosCorte('id_empleado', $_SESSION['empleado_id'], '2');
+        $pagos_depositos_adi = $pagos_adicionales->obtenerPagosCorte('id_empleado', $_SESSION['empleado_id'], '3');
+        $pagos_transferencias_adi = $pagos_adicionales->obtenerPagosCorte('id_empleado', $_SESSION['empleado_id'], '4');
+        $pagos_tpv_adi = $pagos_adicionales->obtenerPagosCorte('id_empleado', $_SESSION['empleado_id'], '5');
 
 
 
