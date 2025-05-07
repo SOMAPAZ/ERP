@@ -11,6 +11,7 @@ use Controllers\LoginController;
 use Controllers\UsersController;
 use Controllers\ReportesController;
 use Controllers\GenericasController;
+use Controllers\ImagenesController;
 use Controllers\TanquesController;
 use Controllers\UpdatesController;
 
@@ -50,30 +51,23 @@ $router->post('/api/rol-actualizar', [AdminController::class, 'actualizarRol']);
 $router->post('/api/rol-eliminar', [AdminController::class, 'eliminarRol']);
 
 //Actions REPORTES
-$router->get('/reportes', [ReportesController::class, 'index']);
+$router->get('/reportes-abiertos', [ReportesController::class, 'reportesAbiertos']);
+$router->get('/reportes-cerrados', [ReportesController::class, 'reportesCerrados']);
+$router->get('/reportes-proceso', [ReportesController::class, 'reportesProceso']);
+$router->get('/reportes-terminados', [ReportesController::class, 'reportesTerminados']);
 $router->get('/reporte', [ReportesController::class, 'reporte']);
-$router->get('/generar-reporte', [ReportesController::class, 'formReporte']);
-$router->get('/editar-reporte', [ReportesController::class, 'editFormReporte']);
-$router->get('/api/reporteID', [ReportesController::class, 'JSONreporte']);
-$router->post('/api/reporte', [ReportesController::class, 'generarReporte']);
-$router->post('/api/reporte/editar', [ReportesController::class, 'actualizarReporte']);
-$router->post('/api/reporte/eliminar', [ReportesController::class, 'eliminarReporte']);
-$router->get('/reporte/estado', [ReportesController::class, 'statusReporte']);
-$router->post('/reporte/estado/actualizar', [ReportesController::class, 'actualizarStatusReporte']);
-$router->get('/api-reportes', [ReportesController::class, 'reportesAPI']);
-
-$router->get('/notas-reportes', [ReportesController::class, 'notasAPI']);
-$router->post('/api/nota-reporte', [ReportesController::class, 'generarNotaReporte']);
-$router->post('/api/nota-reporte/eliminar', [ReportesController::class, 'eliminarNota']);
-$router->post('/api/material', [ReportesController::class, 'guardarMateriales']);
-$router->post('/api/material/eliminar', [ReportesController::class, 'eliminarMateriales']);
-$router->get('/reporte/evidencias', [ReportesController::class, 'obtenerEvidencias']);
-$router->post('/reporte/evidencias-guardar', [ReportesController::class, 'guardarEvidencias']);
-$router->get('/api/materiales-reportes', [ReportesController::class, 'materialesAPI']);
+$router->get('/generar-reporte', [ReportesController::class, 'generarReporte']);
+$router->post('/generar-reporte', [ReportesController::class, 'generarReporte']);
+$router->get('/editar-reporte', [ReportesController::class, 'editarReporte']);
+$router->post('/editar-reporte', [ReportesController::class, 'editarReporte']);
+$router->post('/crear-comentario', [ReportesController::class, 'crearComentario']);
+$router->get('/api/reporte', [ReportesController::class, 'reporteAPI']);
+$router->get('/crear-nota_reporte', [ReportesController::class, 'formNotaReporte']);
+$router->post('/crear-nota_reporte', [ReportesController::class, 'generarNotaReporte']);
+$router->get('/crear-material_reporte', [ReportesController::class, 'generarMaterialReporte']);
+$router->post('/crear-material_reporte', [ReportesController::class, 'generarMaterialReporte']);
+$router->post('/api/cambiar-estado_reporte', [ReportesController::class, 'cambiarEstado']);
 $router->get('/reporte/pdf', [PDFController::class, 'reportePDF']);
-
-$router->get('/filtrar-reportes', [ReportesController::class, 'filtrar']);
-$router->post('/filtrar-reportes-coincidencias', [ReportesController::class, 'filtrarReportes']);
 
 //Actions Usuarios
 $router->get('/datos-usuarios-crear', [UsersController::class, 'crearUsuario']);
@@ -133,12 +127,12 @@ $router->get('/pdf/contrato-servicio', [PDFController::class, 'contratoServicio'
 //OTROS
 $router->get('/api/categorias', [GenericasController::class, 'categorias']);
 $router->get('/api/incidencias', [GenericasController::class, 'incidenciasCat']);
-$router->post('/api/incidencias', [GenericasController::class, 'incidenciasCat']);
 $router->get('/api/prioridades', [GenericasController::class, 'prioridadesRep']);
 $router->get('/api/materiales', [GenericasController::class, 'materialesRep']);
 $router->get('/api/unidades', [GenericasController::class, 'unidadesRep']);
 $router->get('/api/colonias', [GenericasController::class, 'colonias']);
 $router->get('/api/zonas', [GenericasController::class, 'zonas']);
 $router->get('/cuentas-adicionales', [GenericasController::class, 'cuentasAdicionales']);
+$router->get('/api/estados-reportes', [GenericasController::class, 'estadosReportes']);
 
 $router->comprobarRutas();

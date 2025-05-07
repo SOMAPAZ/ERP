@@ -6,6 +6,7 @@ use Facturacion\Cuentas;
 use Usuarios\Colonia;
 use Reportes\Unidades;
 use Reportes\Categoria;
+use Reportes\Estado;
 use Reportes\Prioridad;
 use Reportes\Materiales;
 use Reportes\Incidencias;
@@ -25,32 +26,21 @@ class GenericasController
     {
         isAuth();
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id_category = s($_POST['args']);
-            $existe = Categoria::where('id', $id_category);
+        $cat_id = s($_GET['id']);
+        $cat_id = filter_var($cat_id, FILTER_VALIDATE_INT);
 
-            if (!$existe) {
-                $respuesta = [
-                    'tipo' => 'error',
-                    'datos' => 'No existe esa categoría'
-                ];
-
-                echo json_encode($respuesta);
-                return;
-            }
-
-            $incidencias = Incidencias::belongsTo('id_category', $id_category);
-
-            $respuesta = [
-                'tipo' => 'exito',
-                'datos' => $incidencias
-            ];
-
-            echo json_encode($respuesta);
-        } else {
-            $incidenciasAll = Incidencias::all();
-            echo json_encode($incidenciasAll);
+        if (!$cat_id) {
+            $incidencias = [[
+                'id' => "",
+                'id_category' => "0",
+                'name' => "--Seleccione una incidencia--"
+            ]];
+            echo json_encode($incidencias);
+            return;
         }
+
+        $incidencias = Incidencias::belongsTo('id_category', $cat_id);
+        echo json_encode($incidencias);
     }
 
     public static function prioridadesRep()
@@ -98,5 +88,14 @@ class GenericasController
         $cuentas = Cuentas::all();
 
         echo json_encode($cuentas);
+    }
+
+    public static function estadosReportes()
+    {
+        isAuth();
+
+        $estados = Estado::all();
+
+        echo json_encode($estados);
     }
 }

@@ -1,1 +1,0 @@
-export default class GetDatos{static#t=[];static async consultar(t){try{const a=await fetch(t);return this.#t=await a.json(),this.#t}catch(t){console.error(t)}}}

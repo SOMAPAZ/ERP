@@ -1,6 +1,4 @@
-<?php
-$cdn = '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />';
-require_once __DIR__ . '/../templates/nav-bar.php'; ?>
+<?php $cdn = '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />'; ?>
 <section class="py-4 antialiased md:py-8 h-auto">
 
     <article class="mx-auto max-w-screen-lg px-4 2xl:px-0">

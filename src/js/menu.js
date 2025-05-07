@@ -1,21 +1,86 @@
+import { saveLocalStorage, getLocalStorage, deleteLocalStorage } from "./helpers/index.js";
+
 (() => {
-  const menu = document.querySelector("#sidebar");
-  const btnMenu = document.querySelector("#btn-menu");
-  const btnCerrarMenu = document.querySelector("#btn-cerrar-menu");
-  const btnLinks = document.querySelector("#links-button");
-  const dropdownLinks = document.querySelector("#dropdown-links");
+  const sidebar = document.querySelector("#sidebar-navigation");
+  if(sidebar) {
+    const menuBtn = document.querySelector("#show-sidebar");
+    const hideBtn = document.querySelector("#hide-sidebar");
+    const btnDropdownAdmin = document.querySelector("#dropdown-admin");
+    const listAdmin = document.querySelector("#list-admin");
+    const btnDropdownCaja = document.querySelector("#dropdown-caja");
+    const listCaja = document.querySelector("#list-caja");
+    const btnDropdownReportes = document.querySelector("#dropdown-reportes");
+    const listReportes = document.querySelector("#list-reportes");
+    const btnDropdownTanques = document.querySelector("#dropdown-tanques");
+    const listTanques = document.querySelector("#list-tanques");
 
-  btnCerrarMenu.addEventListener("click", () => {
-    menu.classList.add("-translate-x-full");
-    menu.classList.remove("translate-none");
-  });
+    if(getLocalStorage("sidebar-open")) {
+      sidebar.classList.add("translate-x-0");
+    }
 
-  btnMenu.addEventListener("click", () => {
-    menu.classList.remove("-translate-x-full");
-    menu.classList.add("translate-none");
-  });
+    if(getLocalStorage("sidebar-admin-open") === true) {
+      listAdmin.classList?.remove("hidden");
+    }
 
-  btnLinks.addEventListener("click", () => {
-    dropdownLinks.classList.toggle("hidden");
-  });
+    if(getLocalStorage("sidebar-caja-open") === true) {
+      listCaja.classList?.remove("hidden");
+    }
+
+    if(getLocalStorage("sidebar-reportes-open") === true) {
+      listReportes.classList?.remove("hidden");
+    }
+
+    if(getLocalStorage("sidebar-tanques-open") === true) {
+      listTanques.classList?.remove("hidden");
+    }
+
+    menuBtn.addEventListener("click", () => {
+      sidebar.classList.remove("-translate-x-full");
+      sidebar.classList.add("translate-x-0");
+      saveLocalStorage("sidebar-open", true);
+    });
+    hideBtn.addEventListener("click", () => {
+      sidebar.classList.remove("translate-x-0");
+      sidebar.classList.add("-translate-x-full");
+      deleteLocalStorage("sidebar-open");
+    });
+    btnDropdownAdmin.addEventListener("click", () => {
+      listAdmin.classList.toggle("hidden");
+      if(getLocalStorage("sidebar-admin-open")){
+        saveLocalStorage("sidebar-admin-open", false)
+      } else {
+        saveLocalStorage("sidebar-admin-open", true);
+      }
+    });
+    btnDropdownCaja.addEventListener("click", () => {
+      listCaja.classList.toggle("hidden");
+      if(getLocalStorage("sidebar-caja-open")){
+        saveLocalStorage("sidebar-caja-open", false)
+      } else {
+        saveLocalStorage("sidebar-caja-open", true);
+      }
+    });
+    btnDropdownReportes.addEventListener("click", () => {
+      listReportes.classList.toggle("hidden");
+      if(getLocalStorage("sidebar-reportes-open")){
+        saveLocalStorage("sidebar-reportes-open", false)
+      } else {
+        saveLocalStorage("sidebar-reportes-open", true);
+      }
+    });
+    btnDropdownTanques.addEventListener("click", () => {
+      listTanques.classList.toggle("hidden");
+      if(getLocalStorage("sidebar-tanques-open")){
+        saveLocalStorage("sidebar-tanques-open", false)
+      } else {
+        saveLocalStorage("sidebar-tanques-open", true);
+      }
+    });
+
+    function toogleDropdown(storage){
+      if(getLocalStorage(storage)) {
+        listAdmin.classList.toggle("hidden");
+      }
+    }
+  }
 })();

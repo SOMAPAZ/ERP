@@ -4,6 +4,7 @@ import { glob } from 'glob'
 import { src, dest, watch, series } from 'gulp'
 import terser from 'gulp-terser'
 import sharp from 'sharp'
+import webpack from 'webpack-stream';
 
 const paths = {
     js: 'src/js/**/*.js'
@@ -11,6 +12,19 @@ const paths = {
 
 export function js( done ) {
     src(paths.js)
+        .pipe(webpack({
+            module: {
+                rules: [
+                    {
+                        test: /\.css$/i,
+                        use: ['style-loader', 'css-loader']
+                    }
+                ]
+            },
+            mode: 'production',
+            watch: true,
+            entry: './src/js/app.js'
+        }))
       .pipe(terser())
       .pipe(dest('./public/build/js'))
     done()

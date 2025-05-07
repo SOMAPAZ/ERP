@@ -36,4 +36,18 @@ class Material extends ActiveRecord
         $this->id_employee = $args['id_employee'] ?? null;
         $this->created = $args['created'] ?? '';
     }
+
+    public function validar()
+    {
+        if (!$this->material) {
+            self::$alertas['error']['material'] = "El material es obligatorio";
+        }
+        if (!$this->quantity) {
+            self::$alertas['error']['quantity'] = "La cantidad es obligatoria";
+        }
+        if (!$this->id_unity) {
+            self::$alertas['error']['id_unity'] = "La unidad es obligatoria";
+        }
+        return self::$alertas;
+    }
 }

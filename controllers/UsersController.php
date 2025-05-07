@@ -290,7 +290,7 @@ class UsersController
                         }
 
                         if ($agregado) {
-                            header("Location: buscar-usuario?id=" . $nuevo_usuario->id);
+                            header("Location: /buscar-usuario?id=" . $nuevo_usuario->id);
                         }
                     }
                 }

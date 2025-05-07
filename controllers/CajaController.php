@@ -33,7 +33,7 @@ class CajaController
         date_default_timezone_set('America/Mexico_City');
 
         $fecha = date('Y-m-d');
-        $fechaMensual = date('Y-m') . '-06';
+        $fechaMensual = date('Y-m') . '-08';
         $year = date('Y');
         $mes = date('m');
 

@@ -1,1 +1,0 @@
-export default class Generador{static definirURL(t,e){let r=e.map((t=>{let e=Object.keys(t)[0];return`${e}=${t[e]}`})).join("&");return`${location.origin}/${t}?${r}`}static getDatos(t,e=[]){if(0===e.length)return;return this.definirURL(t,e)}}

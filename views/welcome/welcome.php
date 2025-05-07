@@ -12,5 +12,4 @@
         <source srcset="build/img/smpz-dark.png" type="image/jpeg">
         <img class="w-full sm:w-auto sm:h-screen mx-auto aspect-square" src="build/img/smpz-dark.webp" alt="logo" id="logo-main-app">
     </picture>
-
 </div>

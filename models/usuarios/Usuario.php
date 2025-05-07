@@ -149,7 +149,7 @@ class Usuario extends ActiveRecord
 
     public static function getAllUniques($id = '')
     {
-        $query = "SELECT `id`, CONCAT(`user` , ' ' , `lastname`) AS nombre, `address` as direccion FROM " . self::$tabla;
+        $query = "SELECT `id`, CONCAT(`user` , ' ' , `lastname`) AS nombre, `address` as direccion, `phone` as telefono FROM " . self::$tabla;
         $id ? $query .= " WHERE id = $id LIMIT 1" : '';
         $consulta = self::$db->query($query);
 
