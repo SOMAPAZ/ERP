@@ -12,15 +12,15 @@
                     <button class="<?= (int) $reporte->id_status >= 1 ? "text-indigo-800 bg-indigo-200" : "text-gray-800 bg-gray-200" ?> flex items-center justify-center w-8 h-8 rounded-full shrink-0 font-bold" data-status="1">1</button>
                     <h3 class="font-medium leading-tight">Abierto</h3>
                 </li>
-                <li class="<?= (int) $reporte->id_status >= 2 ? 'text-indigo-600' : 'text-gray-600 dark:text-gray-400' ?> flex items-center text-gray-600 dark:text-gray-400 space-x-2.5 rtl:space-x-reverse" id="status-2">
+                <li class="<?= (int) $reporte->id_status >= 2 ? 'text-indigo-600' : 'text-gray-600 dark:text-gray-400' ?> flex items-center space-x-2.5 rtl:space-x-reverse" id="status-2">
                     <button class="<?= (int) $reporte->id_status >= 2 ? "text-indigo-800 bg-indigo-200" : "text-gray-800 bg-gray-200" ?> flex items-center justify-center w-8 h-8 rounded-full shrink-0 font-bold" data-status="2">2</button>
                     <h3 class="font-medium leading-tight">En proceso</h3>
                 </li>
-                <li class="<?= (int) $reporte->id_status >= 3 ? 'text-indigo-600' : 'text-gray-600 dark:text-gray-400' ?> flex items-center text-gray-600 dark:text-gray-400 space-x-2.5 rtl:space-x-reverse" id="status-3">
+                <li class="<?= (int) $reporte->id_status >= 3 ? 'text-indigo-600' : 'text-gray-600 dark:text-gray-400' ?> flex items-center space-x-2.5 rtl:space-x-reverse" id="status-3">
                     <button class="<?= (int) $reporte->id_status >= 3 ? "text-indigo-800 bg-indigo-200" : "text-gray-800 bg-gray-200" ?> flex items-center justify-center w-8 h-8 rounded-full shrink-0 font-bold" data-status="3">3</button>
                     <h3 class="font-medium leading-tight">Cerrado</h3>
                 </li>
-                <li class="<?= (int) $reporte->id_status >= 4 ? 'text-indigo-600' : 'text-gray-600 dark:text-gray-400' ?> flex items-center text-gray-600 dark:text-gray-400 space-x-2.5 rtl:space-x-reverse" id="status-4">
+                <li class="<?= (int) $reporte->id_status >= 4 ? 'text-indigo-600' : 'text-gray-600 dark:text-gray-400' ?> flex items-center space-x-2.5 rtl:space-x-reverse" id="status-4">
                     <button class="<?= (int) $reporte->id_status >= 4 ? "text-indigo-800 bg-indigo-200" : "text-gray-800 bg-gray-200" ?> flex items-center justify-center w-8 h-8 rounded-full shrink-0 font-bold" data-status="4">4</button>
                     <h3 class="font-medium leading-tight">Terminado</h3>
                 </li>
@@ -165,12 +165,25 @@
                                     alt="Imagen de nota folio <?= $nota->id_report ?>"
                                     data-imagen="<?= $nota->id ?>" />
                                 <div class="flex flex-col justify-between p-4 leading-normal">
-                                    <h5 class="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white"><?= $nota->empleado->name . ' ' . $nota->empleado->lastname ?></h5>
-                                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><?= $nota->note ?></p>
-                                    <p class="mb-3 font-semibold text-xs text-gray-700 dark:text-gray-400"><?= formatearFechaESLong($nota->created) ?></p>
+                                    <h5 class="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
+                                        <?= $nota->empleado->name . ' ' . $nota->empleado->lastname ?>
+                                    </h5>
+                                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                                        <?= $nota->note ?>
+                                    </p>
+                                    <p class="mb-3 font-semibold text-xs text-gray-700 dark:text-gray-400">
+                                        <?= formatearFechaESLong($nota->created) ?>
+                                    </p>
                                     <div class="flex justify-end items-center gap-2 p-2">
-                                        <label class="text-indigo-600 font-bold" for="nota_<?= $nota->id ?>"><?= $nota->id ?></label>
-                                        <input type="checkbox" class="size-6 cursor-pointer" id="nota_<?= $nota->id ?>" name="nota_<?= $nota->id ?>" value="<?= $nota->id ?>">
+                                        <label class="text-indigo-600 dark:text-gray-200 font-bold" for="nota_<?= $nota->id ?>">
+                                            <?= $nota->id ?>
+                                        </label>
+                                        <input
+                                            type="checkbox"
+                                            class="size-6 cursor-pointer"
+                                            id="nota_<?= $nota->id ?>"
+                                            name="nota_<?= $nota->id ?>"
+                                            value="<?= $nota->id ?>" />
                                     </div>
                                 </div>
                             </div>

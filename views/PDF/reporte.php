@@ -76,10 +76,10 @@
 
 <body>
     <?php
-        $background64 = base64_encode(file_get_contents('build/img/marca-agua.webp'));
-        $img_base64 = 'data:image/webp;base64,' . $background64;
+    $marca_agua = 'data:image/webp;base64,' . base64_encode(file_get_contents('build/img/marca-agua.webp'));
+    $unavailable = 'data:image/webp;base64,' . base64_encode(file_get_contents('build/img/unavailable.webp'));
     ?>
-    <img src="<?= $img_base64 ?>" alt="initial" class="img-fluid background">
+    <img src="<?= $marca_agua ?>" alt="initial" class="img-fluid background">
     <h1>Ficha de reportes atendidos</h1>
 
     <table class="table align-middle" style="font-size: 10px;">
@@ -120,9 +120,12 @@
                     <?= wordwrap($reporte->description, 40, "</br>\n") ?>
                 </td>
                 <td colspan="4" class="materiales">
-                    <?php foreach($materiales as $material): ?>
-                        <li><?= $material->quantity . " " . $material->id_unity . " de " . $material->material ?></li>
-                    <?php endforeach ?>
+                    <?php if (count($materiales)): foreach ($materiales as $material): ?>
+                            <li><?= $material->quantity . " " . $material->id_unity . " de " . $material->material ?></li>
+                        <?php endforeach;
+                    else: ?>
+                        <li>No hay materiales</li>
+                    <?php endif; ?>
                 </td>
             </tr>
         </tbody>
@@ -140,16 +143,27 @@
                 <th>Evidencia Final</th>
             </tr>
             <tr>
-                <?php foreach($evidencias as $evidencia):
-                    $imageName = trim($evidencia->image);
-                    $urlName = "images/" . $imageName;
-                    $image = base64_encode(file_get_contents($urlName));
-                    $evi = 'data:image/jpg;base64,' . $image;
+                <?php
+                if (count($evidencias) > 0):
+                    foreach ($evidencias as $evidencia):
+                        $image = base64_encode(file_get_contents("images/" . trim($evidencia->image)));
+                        $imagen = 'data:image/jpg;base64,' . $image;
                 ?>
-                    <td>
-                        <img src="<?= $evi ?>" alt="Evidencia Inicial" class="evidencias">
-                    </td>
-                <?php endforeach; ?>
+                        <td>
+                            <img src="<?= $imagen ?>" alt="Evidencia Inicial" class="evidencias">
+                        </td>
+                    <?php
+                    endforeach;
+                else:
+                    for ($i = 0; $i < 3; $i++):
+                    ?>
+                        ?>
+                        <td>
+                            <img src="<?= $unavailable ?>" alt="Evidencia Inicial" class="evidencias">
+                        </td>
+                <?php
+                    endfor;
+                endif; ?>
             </tr>
             <tr>
                 <th>Atendió</th>

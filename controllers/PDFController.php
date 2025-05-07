@@ -2,6 +2,7 @@
 
 namespace Controllers;
 
+use Classes\PDF;
 use Dompdf\Dompdf;
 use APIs\UsuariosAPI;
 use Reportes\Reporte;
@@ -136,11 +137,6 @@ class PDFController
 
         $reporte = Reporte::where('id', $folio);
 
-        if ($reporte->id_status != '3') {
-            header("Location: /reporte?folio=$folio");
-            return;
-        }
-
         $reporte->id_category = Categoria::find($reporte->id_category)->name;
         $reporte->id_incidence = Incidencias::find($reporte->id_incidence)->name;
         $empleado = Empleado::find($reporte->employee_id);
@@ -155,18 +151,10 @@ class PDFController
             $material->id_unity = Unidades::find($material->id_unity)->name;
         }
 
-        $completo = count($evidencias) !== 0 && count($materiales) !== 0;
-
         if (!$reporte) {
             header('Location: /reportes');
             return;
         }
-        if (!$completo) {
-            header("Location: /reporte?folio=$folio");
-            return;
-        }
-
-        $domPDF = new Dompdf();
 
         ob_start();
 
@@ -174,15 +162,8 @@ class PDFController
 
         $content = ob_get_clean();
 
-        $options = $domPDF->getOptions();
-        $options->set(array('isRemoteEnabled' => true));
-        $domPDF->setOptions($options);
-
-        $domPDF->loadHtml($content);
-        $domPDF->setPaper('A4');
-
-        $domPDF->render();
-        $domPDF->stream("Reporte $folio", array("Attachment" => false));
+        $pdf = new PDF($content, 'A4', "Reporte $folio", false);
+        $pdf->render();
     }
 
     public static function corteCaja()
