@@ -69,12 +69,19 @@ class ReportesController
 
         $instancia = new Reportes();
         $reportes = $instancia->consultarReportes($estado, $tipo);
-
+        $categorias = Categoria::all();
+        $incidencias = Incidencias::all();
+        foreach ($incidencias as $incidencia) {
+            $incidencia->incidencia = Categoria::find($incidencia->id_category)->name . " - " . $incidencia->name;
+        }
+        // dd($incidencias);
         $router->render('reports/reportes', [
             'titulo' => $titulo,
             'reportes' => $reportes['reportes'],
             'mes' => (string) $reportes['mes'],
-            'year' => (string) $reportes['year']
+            'year' => (string) $reportes['year'],
+            'categorias' => $categorias,
+            'incidencias' => $incidencias
         ]);
     }
 

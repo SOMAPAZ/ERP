@@ -15,57 +15,78 @@
                             <th class="p-3">
                                 <span class="flex items-center">
                                     Folio
-                                    <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
-                                    </svg>
                                 </span>
                             </th>
                             <th class="p-3">
                                 <span class="flex items-center">
                                     Prioridad
-                                    <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
-                                    </svg>
                                 </span>
                             </th>
                             <th class="p-3">
                                 <span class="flex items-center">
                                     Usuario
-                                    <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
-                                    </svg>
                                 </span>
                             </th>
                             <th class="p-3">
                                 <span class="flex items-center">
                                     Dirección
-                                    <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
-                                    </svg>
                                 </span>
                             </th>
                             <th class="p-3">
-                                <span class="flex items-center">
+                                <button
+                                    id="dropdownCategoryButton"
+                                    class="flex items-center cursor-pointer hover:text-indigo-700 dark:hover:text-indigo-200 uppercase">
                                     Categoria
-                                    <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4 ms-3">
+                                        <path d="M14 2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v2.172a2 2 0 0 0 .586 1.414l2.828 2.828A2 2 0 0 1 6 9.828v4.363a.5.5 0 0 0 .724.447l2.17-1.085A2 2 0 0 0 10 11.763V9.829a2 2 0 0 1 .586-1.414l2.828-2.828A2 2 0 0 0 14 4.172V2Z" />
                                     </svg>
-                                </span>
+                                </button>
+                                <div id="dropdownCategory" class="absolute z-20 hidden bg-white rounded-lg shadow-lg w-60 dark:bg-gray-950">
+                                    <ul class="h-48 px-3 py-3 overflow-y-auto text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownSearchButton">
+                                        <?php foreach ($categorias as $categoria): ?>
+                                            <li>
+                                                <div class="flex items-center p-2 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <input id="<?= $categoria->name ?>" type="checkbox" value="<?= $categoria->id ?>" class="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 rounded-sm dark:bg-gray-600 dark:border-gray-500">
+                                                    <label for="<?= $categoria->name ?>" class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300"><?= $categoria->name ?></label>
+                                                </div>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                    <div class="flex justify-center items-center p-3 text-sm font-medium text-indigo-600 border-t border-gray-200 rounded-b-lg bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-indigo-200 gap-3">
+                                        <button class="uppercase text-red-600 dark:text-red-300 hover:text-red-800 dark:hover:text-red-200" id="btnDropdownCategoryClose">Cerrar</button>
+                                        <a href="" class="hover:underline">Buscar</a>
+                                    </div>
+                                </div>
                             </th>
                             <th class="p-3">
-                                <span class="flex items-center">
+                                <button
+                                    id="dropdownIncidenceButton"
+                                    class="flex items-center cursor-pointer hover:text-indigo-700 dark:hover:text-indigo-200 uppercase">
                                     Incidencia
-                                    <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4 ms-3">
+                                        <path d="M14 2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v2.172a2 2 0 0 0 .586 1.414l2.828 2.828A2 2 0 0 1 6 9.828v4.363a.5.5 0 0 0 .724.447l2.17-1.085A2 2 0 0 0 10 11.763V9.829a2 2 0 0 1 .586-1.414l2.828-2.828A2 2 0 0 0 14 4.172V2Z" />
                                     </svg>
-                                </span>
+                                </button>
+                                <div id="dropdownIncidence" class="absolute z-20 hidden bg-white rounded-lg shadow-lg w-60 dark:bg-gray-950">
+                                    <ul class="h-48 px-3 py-3 overflow-y-auto text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownSearchButton">
+                                        <?php foreach ($incidencias as $incidencia): ?>
+                                            <li>
+                                                <div class="flex items-center p-2 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <input id="<?= $incidencia->incidencia ?>" type="checkbox" value="<?= $incidencia->id ?>" class="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 rounded-sm dark:bg-gray-600 dark:border-gray-500">
+                                                    <label for="<?= $incidencia->incidencia ?>" class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300"><?= $incidencia->incidencia ?></label>
+                                                </div>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                    <div class="flex justify-center items-center p-3 text-sm font-medium text-indigo-600 border-t border-gray-200 rounded-b-lg bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-indigo-200 gap-3">
+                                        <button class="uppercase text-red-600 dark:text-red-300 hover:text-red-800 dark:hover:text-red-200" id="btnDropdownIncidenceClose">Cerrar</button>
+                                        <a href="" class="hover:underline">Buscar</a>
+                                    </div>
+                                </div>
                             </th>
                             <th class="p-3">
                                 <span class="flex items-center">
                                     Emisión
-                                    <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
-                                    </svg>
                                 </span>
                             </th>
                             <th class="p-3">
@@ -109,8 +130,8 @@
                                 </td>
                                 <td class="p-2 py-3"><?= formatearFechaESLong($reporte->created) ?></td>
                                 <td class="px-4 py-3">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 text-red-600 cursor-pointer">
-                                        <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd" />
+                                    <svg class="size-6 text-red-600 cursor-pointer">
+                                        <use xlink:href="assets/sprite.svg#delete" />
                                     </svg>
                                 </td>
                             </tr>
