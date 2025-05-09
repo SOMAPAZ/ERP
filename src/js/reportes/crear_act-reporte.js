@@ -1,11 +1,13 @@
 import { getSearch, limpiarHTML } from "../helpers/index.js";
 import Alerta from "../classes/Alerta.js";
+import Swal from "sweetalert2";
 
 (()=> {
   const inputNombre = document.querySelector("#input-nombre");
   const inputID = document.querySelector("#id_user-input");
   const btnCopiar = document.querySelector("#copy-report");
   const olStatus = document.querySelector("#ol-status");
+  const btnEliminar = document.querySelector("#delete-report");
   
   if(inputNombre && inputID) {
     const categoriaSelect = document.querySelector("#categoria");
@@ -218,5 +220,60 @@ import Alerta from "../classes/Alerta.js";
     }
   }
 
+  if(btnEliminar) {
+    btnEliminar.addEventListener("click",() => {
+      Swal.fire({
+        title: "¿Eliminar reporte?",
+        text: "¿Está seguro de eliminar el reporte?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Eliminar",
+        cancelButtonText: "Cancelar",
+      }).then((result) => {
+          if (result.isConfirmed) {
+              eliminarReporte();
+          }
+      })
+    });
+  }
+
+  async function eliminarReporte() {
+    const URL = `${location.origin}/eliminar-reporte`;
+    const data = new FormData();
+    data.append("folio", getSearch().folio);
+    try {
+      const response = await fetch(URL, {
+        method: "POST",
+        body: data
+      });
+      const result = await response.json();
+      
+      if(result.tipo === "Error") {
+        Alerta.Toast.fire({
+          icon: "error",
+          title: "Error al eliminar",
+          text: result.mensaje
+        })
+  
+        return;
+      }
+  
+      Swal.fire({
+        title: "Eliminado correctamente",
+        text: result.mensaje,
+        icon: "success",
+        confirmButtonText: "Ok",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false, 
+      }).then((result) => {
+          if (result.isConfirmed) {
+              location.href = `${location.origin}/reportes-abiertos`;
+          }
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
 })();

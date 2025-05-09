@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
     <?= $cdn ?? '' ?>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" href="build/css/app.css">
 </head>
 
@@ -28,8 +29,6 @@
             <p>Todos los derechos reservados &copy; <?= date('Y') ?></p>
         </footer>
     <?php endif; ?>
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <?= $src ?? '' ?>
     <script src="build/js/main.js"></script>
 </body>

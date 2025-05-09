@@ -1,5 +1,7 @@
 import Dropzone from "dropzone";
 import Alerta from "../classes/Alerta.js";
+import Swal from "sweetalert2";
+
 (() => {
 
     const dropzoneElement = document.querySelector("#dropzone");
@@ -27,10 +29,7 @@ import Alerta from "../classes/Alerta.js";
             const idReporte = document.querySelector("#id_report").value;
     
             if (descripcion === "") {
-                new Alerta({
-                    msg: "Debes agregar una descripción",
-                    position: document.querySelector(".alerta-vacio"),
-                });
+                Alerta.ToastifyError("Debes agregar una descripción");
                 return;
             }
     
@@ -41,10 +40,7 @@ import Alerta from "../classes/Alerta.js";
     
             const archivos = dropzone.getAcceptedFiles();
             if (archivos.length === 0) {
-                new Alerta({
-                    msg: "Debes agregar al menos una imagen",
-                    position: document.querySelector(".alerta-vacio"),
-                });
+                Alerta.ToastifyError("Debes agregar al menos una imagen");
                 return;
             }
     

@@ -67,7 +67,8 @@ $router->post('/crear-nota_reporte', [ReportesController::class, 'generarNotaRep
 $router->get('/crear-material_reporte', [ReportesController::class, 'generarMaterialReporte']);
 $router->post('/crear-material_reporte', [ReportesController::class, 'generarMaterialReporte']);
 $router->post('/api/cambiar-estado_reporte', [ReportesController::class, 'cambiarEstado']);
-$router->get('/reporte/pdf', [PDFController::class, 'reportePDF']);
+$router->post('/eliminar-reporte', [ReportesController::class, 'eliminarReporte']);
+$router->post('/reporte/pdf', [PDFController::class, 'reportePDF']);
 
 //Actions Usuarios
 $router->get('/datos-usuarios-crear', [UsersController::class, 'crearUsuario']);

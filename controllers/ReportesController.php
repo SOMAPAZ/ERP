@@ -74,7 +74,7 @@ class ReportesController
         foreach ($incidencias as $incidencia) {
             $incidencia->incidencia = Categoria::find($incidencia->id_category)->name . " - " . $incidencia->name;
         }
-        // dd($incidencias);
+
         $router->render('reports/reportes', [
             'titulo' => $titulo,
             'reportes' => $reportes['reportes'],
@@ -481,6 +481,46 @@ class ReportesController
             }
 
             echo json_encode($resultado);
+        }
+    }
+
+    public static function eliminarReporte()
+    {
+        isAuth();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $folio = s($_POST['folio']);
+            $reporte = Reporte::where('id', $folio);
+
+            if (!$reporte) {
+                echo json_encode([
+                    'tipo' => 'Error',
+                    'mensaje' => 'El reporte no existe'
+                ]);
+                return;
+            }
+
+            $resultado = $reporte->eliminar();
+
+            if ($resultado) {
+                $registro = new Registros();
+                $registro->accion = 3;
+                $registro->empleado_id = s($_SESSION['empleado_id']);
+                $registro->folio_seccion = $reporte->id;
+                $registro->created_at = date('Y-m-d H:i:s');
+                $registro->comentario = "Reporte eliminado";
+
+                $registro->guardarRegistro(uuid());
+                echo json_encode([
+                    'tipo' => 'Exito',
+                    'mensaje' => 'Reporte eliminado correctamente'
+                ]);
+            } else {
+                echo json_encode([
+                    'tipo' => 'Error',
+                    'mensaje' => 'Hubo un error al eliminar el reporte'
+                ]);
+            }
         }
     }
 }
