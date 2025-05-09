@@ -1,4 +1,4 @@
-import GetDatos from "../classes/GetData_v1.js";
+import GetDatos from "../classes/GetData.js";
 import Formulario from "../classes/Formulario_v1.js";
 import Modal from "../classes/Modal.js";
 import PostDatos from "../classes/PostData.js";

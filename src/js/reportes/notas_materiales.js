@@ -9,18 +9,11 @@ const inputMaterial = document.querySelector('#material');
         imagenes.forEach(imagen => imagen.addEventListener('click', function() {
             const div = document.createElement('DIV');
             div.className = "w-full flex-col justify-center items-center";
-            
             const img = document.createElement('IMG');
             img.className = "rounded-lg p-5"
             img.src = imagen.getAttribute("src");
-    
             div.appendChild(img);
-    
-            const btnAdd = document.createElement('BUTTON');
-            btnAdd.className = "text-white bg-indigo-700 hover:bg-indigo-800 font-medium rounded text-sm px-5 py-2.5 text-center dark:bg-indigo-600 dark:hover:bg-indigo-700";
-            btnAdd.textContent = '';
-    
-            Modal.renderModal(div, btnAdd);
+            Modal.simpleRenderModal(div);
         }))
     }
     

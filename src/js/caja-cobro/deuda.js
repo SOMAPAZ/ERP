@@ -1,6 +1,6 @@
-import Alerta from "../classes/Alerta_v1.js";
-import { deleteLocalStorage, formatDateText, formatNum, getLocalStorage, limpiarHTML, saveLocalStorage } from "../helpers/index_v1.js";
-import GetDatos from "../classes/GetData_v1.js"
+import Alerta from "../classes/Alerta.js";
+import { deleteLocalStorage, formatDateText, formatNum, getLocalStorage, limpiarHTML, saveLocalStorage } from "../helpers/index.js";
+import GetDatos from "../classes/GetData.js"
 
 (() => {
   const form = document.querySelector("#formulario-busqueda");

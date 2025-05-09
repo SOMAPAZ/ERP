@@ -6,7 +6,6 @@
                 Consultar Usuario
             </h2>
 
-
             <form class="w-full mx-auto mt-5" id="formulario-busqueda" autocomplete="off">
                 <div id="error"></div>
                 <label for="busqueda" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -32,8 +31,3 @@
         <div id="boton" class="mt-6 flex flex-col md:flex-row gap-4"></div>
     </article>
 </section>
-
-<?php $scripts = [
-    'caja-cobro/busqueda_v2.js',
-    'caja-cobro/deuda_v2.js'
-]; ?>

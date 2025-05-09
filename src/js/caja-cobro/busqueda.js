@@ -1,5 +1,5 @@
-import { limpiarHTML } from "../helpers/index_v1.js";
-import GetDatos from "../classes/GetData_v1.js"
+import { limpiarHTML } from "../helpers/index.js";
+import GetDatos from "../classes/GetData.js"
 
 (() => {  
   const inputBusqueda = document.querySelector("#busqueda");
