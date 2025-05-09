@@ -472,7 +472,7 @@ class ReportesController
             }
 
             $reporte->id_status = $estado;
-
+            $reporte->id_employee_sup = s($_SESSION['empleado_id']);
 
             try {
                 $resultado = $reporte->guardar();
@@ -487,6 +487,7 @@ class ReportesController
     public static function eliminarReporte()
     {
         isAuth();
+        date_default_timezone_set('America/Mexico_City');
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $folio = s($_POST['folio']);

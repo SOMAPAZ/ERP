@@ -68,7 +68,7 @@ $router->get('/crear-material_reporte', [ReportesController::class, 'generarMate
 $router->post('/crear-material_reporte', [ReportesController::class, 'generarMaterialReporte']);
 $router->post('/api/cambiar-estado_reporte', [ReportesController::class, 'cambiarEstado']);
 $router->post('/eliminar-reporte', [ReportesController::class, 'eliminarReporte']);
-$router->post('/reporte/pdf', [PDFController::class, 'reportePDF']);
+$router->get('/reporte/pdf', [PDFController::class, 'reportePDF']);
 
 //Actions Usuarios
 $router->get('/datos-usuarios-crear', [UsersController::class, 'crearUsuario']);

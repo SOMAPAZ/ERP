@@ -21,6 +21,7 @@ use Usuarios\TipoConsumo;
 use Facturacion\CorteCaja;
 use Usuarios\TipoServicio;
 use Facturacion\PagosAdicionales;
+use Reportes\Notas;
 
 class PDFController
 {
@@ -145,14 +146,15 @@ class PDFController
         $reporte->employee_id = $empleado->name . " " . $empleado->lastname;
         $reporte->id_employee_sup = $empleadoSup->name . " " . $empleadoSup->lastname;
 
-        $evidencias = Evidencias::belongsTo('id_report', $folio);
+        $evidencias = Notas::belongsTo('id_report', $folio);
+
         $materiales = Material::belongsTo('id_report', $folio);
         foreach ($materiales as $material) {
             $material->id_unity = Unidades::find($material->id_unity)->name;
         }
 
         if (!$reporte) {
-            header('Location: /reportes');
+            header('Location: /reportes-abiertos?page=1');
             return;
         }
 

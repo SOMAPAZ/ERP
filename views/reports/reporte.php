@@ -169,17 +169,6 @@
                                     <p class="mb-3 font-semibold text-xs text-gray-700 dark:text-gray-400">
                                         <?= formatearFechaESLong($nota->created) ?>
                                     </p>
-                                    <div class="flex justify-end items-center gap-2 p-2">
-                                        <label class="text-indigo-600 dark:text-gray-200 font-bold" for="nota_<?= $nota->id ?>">
-                                            <?= $nota->id ?>
-                                        </label>
-                                        <input
-                                            type="checkbox"
-                                            class="size-6 cursor-pointer"
-                                            id="nota_<?= $nota->id ?>"
-                                            name="nota_<?= $nota->id ?>"
-                                            value="<?= $nota->id ?>" />
-                                    </div>
                                 </div>
                             </div>
                         </div>

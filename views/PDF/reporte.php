@@ -31,7 +31,7 @@
 
         table {
             border-collapse: collapse;
-            width: 700px;
+            min-width: 700px;
             margin: 0 auto;
             font-size: 10px;
             text-align: center;
@@ -39,7 +39,7 @@
 
         th,
         td {
-            border: 1px solid black;
+            border: 1px solid gray;
         }
 
         .gray {
@@ -54,8 +54,20 @@
             font-size: 14px;
         }
 
+        .div-evidencias {
+            border: 1px solid gray;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
         .table-ev thead {
             font-size: 14px;
+            background-color: rgb(206, 205, 219);
+        }
+
+        .table-ev td,
+        .table-ev th {
+            border: none;
         }
 
         .materiales {
@@ -64,12 +76,29 @@
         }
 
         .evidencias {
+            height: 120px;
+            max-width: 120px;
+            border-radius: 0.5rem;
+        }
+
+        .imagenes-evidencias {
+            padding: 0.2rem;
+        }
+
+        .imagenes-evidencias-unavailable {
+            padding: 0.2rem;
             height: 200px;
             max-width: 200px;
         }
 
         .firma {
-            padding: 80px 15px 15px 15px;
+            padding: 60px 15px 15px 15px;
+            border: 1px solid gray;
+        }
+
+        .footer {
+            margin-top: 1rem;
+            border: 1px solid gray;
         }
     </style>
 </head>
@@ -130,67 +159,72 @@
             </tr>
         </tbody>
     </table>
-    <table class="table-ev">
-        <thead>
-            <tr>
-                <th colspan="3">Evidencia Fotográfica</th>
-            </tr>
-        </thead>
+    <div class="div-evidencias">
+        <table class="table-ev">
+            <thead>
+                <tr>
+                    <th colspan="6">Evidencia Fotográfica</th>
+                </tr>
+            </thead>
+            <tbody class="body-evidencias">
+                <?php if (count($evidencias)): ?>
+                    <tr>
+                        <?php
+                        $totalEvidencias = count($evidencias);
+                        $contador = 0;
+                        foreach ($evidencias as $evidencia):
+                            $image = base64_encode(file_get_contents("images/" . trim($evidencia->image)));
+                            $imagen = 'data:image/jpg;base64,' . $image;
+                        ?>
+                            <td colspan="2" class="imagenes-evidencias">
+                                <img src="<?= $imagen ?>" alt="Evidencia <?= $folio ?>" class="evidencias">
+                                <p><?= formatearFechaESLong($evidencia->created) ?></p>
+                            </td>
+                            <?php
+                            $contador++;
+                            if ($contador % 3 === 0):
+                            ?>
+                    </tr>
+                    <tr>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+                    </tr>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="6">
+                            <img class="imagenes-evidencias-unavailable" src="<?= $unavailable ?>" alt="Unavailable Evidencia <?= $folio ?>">
+                            <p>No hay evidencias disponibles</p>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+    <table class="footer">
         <tbody>
             <tr>
-                <th>Evidencia Incial</th>
-                <th>Evidencia Proceso</th>
-                <th>Evidencia Final</th>
+                <th colspan="2">Atendió</th>
+                <th colspan="2">Sello</th>
+                <th colspan="2">Supervisó</th>
             </tr>
             <tr>
-                <?php
-                if (count($evidencias) > 0):
-                    foreach ($evidencias as $evidencia):
-                        $image = base64_encode(file_get_contents("images/" . trim($evidencia->image)));
-                        $imagen = 'data:image/jpg;base64,' . $image;
-                ?>
-                        <td>
-                            <img src="<?= $imagen ?>" alt="Evidencia Inicial" class="evidencias">
-                        </td>
-                    <?php
-                    endforeach;
-                else:
-                    for ($i = 0; $i < 3; $i++):
-                    ?>
-                        ?>
-                        <td>
-                            <img src="<?= $unavailable ?>" alt="Evidencia Inicial" class="evidencias">
-                        </td>
-                <?php
-                    endfor;
-                endif; ?>
-            </tr>
-            <tr>
-                <th>Atendió</th>
-                <th>Sello</th>
-                <th>Supervisó</th>
-            </tr>
-            <tr>
-                <td class="firma">
-                    <hr>
+                <td colspan="2" class="firma">
+                    <p>____________________________________</p>
                 </td>
-                <td class="firma">
-                    <hr>
+                <td colspan="2" class="firma">
+                    <p>____________________________________</p>
                 </td>
-                <td class="firma">
-                    <hr>
+                <td colspan="2" class="firma">
+                    <p>____________________________________</p>
                 </td>
             </tr>
             <tr>
-                <th>
-                    <?= $reporte->employee_id ?>
-                </th>
-                <th>Sello</th>
-                <th>
-                    <?= $reporte->id_employee_sup ?>
-                </th>
+                <th colspan="2"><?= $reporte->employee_id ?></th>
+                <th colspan="2">Sello</th>
+                <th colspan="2"><?= $reporte->id_employee_sup ?></th>
             </tr>
         </tbody>
+    </table>
     </table>
 </body>
 
