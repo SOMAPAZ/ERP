@@ -1,6 +1,7 @@
 import { limpiarHTML } from "../helpers/index.js";
 import GetDatos from "../classes/GetData.js"
 import Modal from "../classes/Modal.js";
+import Alerta from "../classes/Alerta.js";
 
 (() => {  
   const btnConsultar = document.querySelector("#btn-search-user");
@@ -22,7 +23,9 @@ import Modal from "../classes/Modal.js";
       const formulario = document.createElement('FORM');
       formulario.className = 'w-full mx-auto my-5';
       formulario.setAttribute('autocomplete', 'off');
-      formulario.onsubmit = buscarDeuda
+      formulario.onsubmit = (e) => {
+        e.preventDefault();
+      }
       const label = document.createElement('LABEL');
       label.className = 'block text-sm font-bold text-gray-700 dark:text-gray-200 uppercase mb-3';
       label.textContent = 'Nombre, Dirección o ID del usuario: (5 caracteres mínimo)';
@@ -43,7 +46,8 @@ import Modal from "../classes/Modal.js";
       const btnBuscar = document.createElement('BUTTON');
       btnBuscar.className = 'text-sm font-bold px-4 py-2 bg-indigo-600 rounded text-white hover:bg-indigo-700';
       btnBuscar.textContent = 'Consultar';
-      btnBuscar.setAttribute('type', 'submit');
+      btnBuscar.setAttribute('type', 'button');
+      btnBuscar.onclick = buscarDeuda;
 
       formulario.appendChild(label);
       formulario.appendChild(inputBusqueda);
@@ -96,9 +100,24 @@ import Modal from "../classes/Modal.js";
       limpiarHTML(document.querySelector("#listado-coincidencias ul"));
     }
 
-    function buscarDeuda(e) {
+    async function buscarDeuda(e) {
       e.preventDefault();
-      console.log(e.target)
+      const inputBusqueda = document.querySelector("#busqueda").value.trim();
+      if(!inputBusqueda) {
+        Alerta.ToastifyError("Por favor, ingrese un ID o nombre de usuario válido.");
+        return;
+      }
+
+      const contenido = inputBusqueda.split(" - ");
+      const idUsuario = contenido[0].trim();
+    
+      const response = await GetDatos.consultar(`${location.origin}/api/user?id=${idUsuario}`);
+      if(response.tipo === 'Error') {
+        Alerta.ToastifyError(response.msg);
+        return;
+      }
+
+      window.location.href = `${location.origin}/caja-cobro?usuario=${idUsuario}`;
     }
   }
 })();

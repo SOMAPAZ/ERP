@@ -71,7 +71,7 @@ class DeudaController
         }
     }
 
-    private static function calcularTotal($arr, $user)
+    public static function calcularTotal($arr, $user)
     {
         $agua_inicial = [];
         $drenaje_inicial = [];
@@ -235,7 +235,7 @@ class DeudaController
         return $arg;
     }
 
-    private static function calcularParciales($arr, $user)
+    public static function calcularParciales($arr, $user)
     {
         $args = [];
 

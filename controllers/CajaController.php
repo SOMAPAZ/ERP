@@ -3,18 +3,21 @@
 namespace Controllers;
 
 use MVC\Router;
-use APIs\UsuariosAPI;
-use Empleados\Empleado;
-use Facturacion\CorteCaja;
-use Facturacion\Facturacion;
-use Facturacion\FacturasPasadas;
-use Facturacion\Facturas;
-use Facturacion\PagosAdicionales;
 use Usuarios\Usuario;
+use Usuarios\TipoToma;
+use Empleados\Empleado;
+use Facturacion\Facturas;
+use Usuarios\TipoConsumo;
+use Usuarios\TipoUsuario;
+use Facturacion\CorteCaja;
+use Usuarios\TipoServicio;
+use Facturacion\Facturacion;
+use Usuarios\EstadoServicio;
+use Facturacion\FacturasPasadas;
+use Facturacion\PagosAdicionales;
 
 class CajaController
 {
-    private static $links = ['consultar', 'crear-corte'];
 
     public static function index(Router $router)
     {
@@ -23,8 +26,45 @@ class CajaController
 
         self::actualizarRezago();
 
+        $ultimosPagos = Facturas::get(10, 'DESC');
+        foreach ($ultimosPagos as $pago) {
+            $pago->usuario = Usuario::find($pago->id_user);
+            $pago->empleado = Empleado::find($pago->empleado_id);
+        }
+
         $router->render('caja/index', [
-            'links' => self::$links,
+            'ultimosPagos' => $ultimosPagos,
+        ]);
+    }
+
+    public static function getDeuda(Router $router)
+    {
+        isAuth();
+        permisosCaja();
+
+        $usuarioId = s($_GET['usuario']);
+        if (!$usuarioId) {
+            header('Location: /consultar');
+            return;
+        }
+        $usuario = Usuario::find($usuarioId);
+        if (!$usuario) {
+            header('Location: /consultar');
+            return;
+        }
+
+        $usuario->tipoUsuario = TipoUsuario::find($usuario->id_servicetype);
+        $usuario->tipoToma = TipoToma::find($usuario->id_intaketype);
+        $usuario->tipoServicio = TipoServicio::find($usuario->id_servicetype);
+        $usuario->estadoServicio = EstadoServicio::find($usuario->id_servicestatus);
+        $usuario->tipoConsumo = TipoConsumo::find($usuario->id_consumtype);
+
+        $meses = Facturacion::belongsToDeuda('id_user', $usuario->id);
+        $deuda = DeudaController::calcularTotal($meses, $usuario);
+
+        $router->render('caja/informacion', [
+            'usuario' => $usuario,
+            'deuda' => $deuda,
         ]);
     }
 

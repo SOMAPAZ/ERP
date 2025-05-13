@@ -133,6 +133,33 @@ class UsersController
         ]);
     }
 
+    public static function getUsuario()
+    {
+        isAuth();
+        $id = $_GET['id'];
+
+        if (!$id) {
+            $res = [
+                'tipo' => 'Error',
+                'msg' => 'El id no es válido o no existe el usuario'
+            ];
+
+            echo json_encode($res);
+            return;
+        }
+
+        $usuario = Usuario::find($id);
+        if (!$usuario) {
+            echo json_encode($res = [
+                'tipo' => 'Error',
+                'msg' => 'El usuario no existe'
+            ]);
+            return;
+        }
+
+        echo json_encode(['tipo' => 'Exito', 'user' => $usuario]);
+    }
+
     public static function usersAPI()
     {
         $users = new UsuariosAPI();

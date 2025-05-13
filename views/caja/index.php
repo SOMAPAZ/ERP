@@ -19,8 +19,36 @@
                 </button>
             </div>
 
-            <div>
-                <img src="build/img/bg-search-debt.svg" alt="buscar usuario" class="h-96">
+            <div class="overflow-x-auto lg:w-full">
+                <?php if (count($ultimosPagos)) : ?>
+                    <h1 class="text-2xl text-center font-bold my-10 dark:text-gray-200">Últimos con abonos realizados</h1>
+                    <table class="whitespace-nowrap w-full bg-white dark:bg-gray-800 shadow-md overflow-hidden">
+                        <thead class="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-200 uppercase text-sm leading-normal">
+                            <tr class="text-left">
+                                <th class="px-4 py-2">ID</th>
+                                <th class="px-4 py-2">Usuario</th>
+                                <th class="px-4 py-2">Fecha</th>
+                                <th class="px-4 py-2">Buscado por</th>
+                                <th class="px-4 py-2"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="whitespace-nowrap">
+                            <?php foreach ($ultimosPagos as $pago) : ?>
+                                <tr class="uppercase text-gray-600 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                    <td class="px-4 py-2 font-bold"><?= $pago->usuario->id ?></td>
+                                    <td class="px-4 py-2"><?= $pago->usuario->user . " " . $pago->usuario->lastname ?></td>
+                                    <td class="px-4 py-2"><?= formatearFechaESLong($pago->fecha) ?></td>
+                                    <td class="px-4 py-2"><?= $pago->empleado->name . " " . $pago->empleado->lastname ?></td>
+                                    <td class="px-4 py-2">
+                                        <a href="/caja-cobro?usuario=<?= $pago->usuario->id ?>" class="text-indigo-600 hover:underline dark:text-indigo-400 font-bold cursor-pointer">Ver</a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php else : ?>
+                    <img src="build/img/bg-search-debt.svg" alt="buscar usuario" class="h-96">
+                <?php endif; ?>
             </div>
         </div>
     </article>

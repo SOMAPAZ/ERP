@@ -207,11 +207,11 @@ class ActiveRecord
     }
 
     // Obtener Registros con cierta cantidad
-    public static function get($limite)
+    public static function get($limite, $order = 'ASC')
     {
-        $query = "SELECT * FROM " . static::$tabla . " LIMIT {$limite}";
+        $query = "SELECT * FROM " . static::$tabla . " ORDER BY id {$order} LIMIT {$limite}";
         $resultado = self::consultarSQL($query);
-        return array_shift($resultado);
+        return $resultado;
     }
 
     // crea un nuevo registro
