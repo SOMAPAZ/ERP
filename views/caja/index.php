@@ -14,7 +14,7 @@
 
                 <button
                     id="btn-search-user"
-                    class="text-sm font-bold uppercase px-6 py-2 bg-indigo-600 rounded text-white hover:bg-indigo-700">
+                    class="w-full sm:w-auto flex justify-center items-center bg-indigo-600 hover:bg-indigo-700 py-2 px-4 rounded-lg text-sm uppercase font-medium tracking-widest text-white">
                     Buscar
                 </button>
             </div>

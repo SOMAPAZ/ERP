@@ -44,7 +44,7 @@ import Alerta from "../classes/Alerta.js";
       listadoCoincidencias.appendChild(listadoCoincidenciasUl);
 
       const btnBuscar = document.createElement('BUTTON');
-      btnBuscar.className = 'text-sm font-bold px-4 py-2 bg-indigo-600 rounded text-white hover:bg-indigo-700';
+      btnBuscar.className = 'flex justify-center items-center bg-indigo-600 hover:bg-indigo-700 py-2 px-4 rounded-lg text-sm uppercase font-medium tracking-widest text-white';
       btnBuscar.textContent = 'Consultar';
       btnBuscar.setAttribute('type', 'button');
       btnBuscar.onclick = buscarDeuda;

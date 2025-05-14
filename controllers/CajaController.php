@@ -4,6 +4,7 @@ namespace Controllers;
 
 use MVC\Router;
 use Usuarios\Usuario;
+use DateTimeImmutable;
 use Usuarios\TipoToma;
 use Empleados\Empleado;
 use Facturacion\Facturas;
@@ -15,6 +16,7 @@ use Facturacion\Facturacion;
 use Usuarios\EstadoServicio;
 use Facturacion\FacturasPasadas;
 use Facturacion\PagosAdicionales;
+use FontLib\Table\Type\head;
 
 class CajaController
 {
@@ -41,6 +43,7 @@ class CajaController
     {
         isAuth();
         permisosCaja();
+        date_default_timezone_set('America/Mexico_City');
 
         $usuarioId = s($_GET['usuario']);
         if (!$usuarioId) {
@@ -53,6 +56,12 @@ class CajaController
             return;
         }
 
+        $years = [];
+        $meses_array = [];
+        $meses_year = [];
+
+        $year_mes_actual = date('Y') . '_12';
+
         $usuario->tipoUsuario = TipoUsuario::find($usuario->id_servicetype);
         $usuario->tipoToma = TipoToma::find($usuario->id_intaketype);
         $usuario->tipoServicio = TipoServicio::find($usuario->id_servicetype);
@@ -62,9 +71,150 @@ class CajaController
         $meses = Facturacion::belongsToDeuda('id_user', $usuario->id);
         $deuda = DeudaController::calcularTotal($meses, $usuario);
 
+        if (isset($deuda['periodo'])) {
+            $origin = new DateTimeImmutable($deuda['periodo']['inicio']);
+            $target = new DateTimeImmutable($deuda['periodo']['final']);
+            $year_mes_actual = $target->format('Y') . '_' . $target->format('m');
+
+            $interval = $origin->diff($target)->y;
+
+            if ($interval === 0) {
+                $year = (int) $origin->format('Y');
+                $interval_meses = $origin->diff($target)->m;
+                $meses_array = range(12 - $interval_meses, 12);
+                $meses_year = array_map(function ($mes) use ($year) {
+                    return [
+                        'id' => $mes . '_' . $year,
+                        'name' => formatearFechaES($year . '-'  . $mes . '-01')
+                    ];
+                }, $meses_array);
+            } else {
+                $years = range($origin->format('Y'), $target->format('Y'));
+
+                $years = array_map(function ($year) {
+                    return [
+                        'id' => $year,
+                        'name' => $year
+                    ];
+                }, $years);
+                $meses_year_tmp = [];
+                foreach ($years as $index => $year) {
+                    if ($index === 0) {
+                        $origin_anual = new DateTimeImmutable($origin->format('Y-m-d'));
+                        $target_anual = new DateTimeImmutable($year['id'] . '-12-31');
+                        $interval_anual = $origin_anual->diff($target_anual)->m;
+                        $meses_array = range(12 - $interval_anual, 12);
+                    } else {
+                        $meses_array = range(1, 12);
+                    }
+
+                    $meses_year_tmp = array_map(function ($mes) use ($year) {
+                        return [
+                            'id' => $mes . '_' . $year['id'],
+                            'name' => formatearFechaES($year['id'] . '-' . str_pad($mes, 2, '0', STR_PAD_LEFT) . '-01')
+                        ];
+                    }, $meses_array);
+
+                    $meses_year = array_merge($meses_year, $meses_year_tmp);
+                }
+            }
+        }
+
         $router->render('caja/informacion', [
             'usuario' => $usuario,
             'deuda' => $deuda,
+            'meses' => $meses_year,
+            'year_mes_actual' => $year_mes_actual,
+        ]);
+    }
+
+    public static function pagarServicio(Router $router)
+    {
+        isAuth();
+        permisosCaja();
+        date_default_timezone_set('America/Mexico_City');
+
+        $usuarioId = s($_GET['id']);
+        if (!$usuarioId) {
+            header('Location: /consultar');
+            return;
+        }
+        $usuario = Usuario::find($usuarioId);
+        if (!$usuario) {
+            header('Location: /consultar');
+            return;
+        }
+        $year_mes_actual = s($_GET['final']);
+        if (!$year_mes_actual) {
+            header('Location: /consultar');
+            return;
+        }
+        $meses = Facturacion::belongsToDeuda('id_user', $usuarioId);
+        $deuda = [];
+        $seleccionados = [];
+        $mensaje = [
+            'tipo' => 'Exito',
+            'msg' => 'Se ha realizado la consulta correctamente'
+        ];
+
+        if ($year_mes_actual === 'all') {
+            $deuda = DeudaController::calcularTotal($meses, $usuario);
+            if (count($deuda) === 0) {
+                header('Location: /consultar');
+                return;
+            }
+        } else {
+            $parciales = DeudaController::calcularParciales($meses, $usuario);
+            if (count($parciales) === 0) {
+                header('Location: /consultar');
+                return;
+            }
+
+            $existe_periodo = array_filter($parciales, function ($item) use ($year_mes_actual) {
+                $format = explode('-', $item['fecha']);
+                $valor = $format[1] . '_' . $format[0];
+                return $valor === $year_mes_actual;
+            });
+            if (!$existe_periodo) {
+                header('Location: /consultar');
+                return;
+            }
+            $limite = key($existe_periodo);
+            $seleccionados = array_slice($parciales, 0, $limite + 1);
+
+            $noContieneLectura = array_filter($seleccionados, function ($item) {
+                return (int)$item['medido']['lectura_actual'] === 0;
+            });
+
+            if (count($noContieneLectura) > 0) {
+                $mensaje = [
+                    'tipo' => 'Error',
+                    'msg' => 'No puedes pagar el servicio si no tienes lecturas'
+                ];
+            } else {
+                $deuda = [
+                    'periodo' => [
+                        'inicio' => $parciales[0]['fecha'],
+                        'final' => explode('_', $year_mes_actual)[1] . '-' . explode('_', $year_mes_actual)[0] . '-08',
+                    ],
+                    'agua_inicial' => array_sum(array_column($seleccionados, 'agua')),
+                    'drenaje_inicial' => array_sum(array_column($seleccionados, 'drenaje')),
+                    'agua' => array_sum(array_column($seleccionados, 'agua')) - array_sum(array_column($noContieneLectura, 'desc_agua')),
+                    'drenaje' => array_sum(array_column($seleccionados, 'drenaje')) - array_sum(array_column($noContieneLectura, 'desc_drenaje')),
+                    'm3_excedido_agua' =>  array_sum(array_map(function ($item) {
+                        return $item['medido']['excedido'];
+                    }, $seleccionados)),
+                ];
+            }
+            // dd($parciales);
+        }
+        // dd($mensaje);
+        dd($deuda);
+
+        $router->render('caja/pagar-servicio', [
+            'deuda' => $deuda,
+            'seleccionados' => $seleccionados,
+            'mensaje' => $mensaje,
         ]);
     }
 

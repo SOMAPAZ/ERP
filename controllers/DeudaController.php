@@ -4,18 +4,22 @@ namespace Controllers;
 
 use Facturacion\Facturacion;
 use Facturacion\Measured;
+use Facturacion\PercentajeDrain;
 use Notificaciones\Lecturas;
 use Usuarios\Usuario;
 
 class DeudaController
 {
+    public static $porcentaje_drenaje = 0.25;
+    public static $porcentaje_recargo = 0.0113;
+    public static $iva = 0.16;
+
     public static function totalDebt()
     {
         isAuth();
         permisosCaja();
         $str = $_SERVER["QUERY_STRING"] ?? '';
         !$str ? $id = '' : $id = s($_GET['id']);
-
         try {
             if (!$id) {
                 $res = [
@@ -95,11 +99,13 @@ class DeudaController
             if ($adeudo->estado === '0') {
                 $inicial_agua = $adeudo->monto_agua;
 
+                self::$porcentaje_drenaje = (PercentajeDrain::where('year', $adeudo->year)->percentaje) / 100 ?? 0.25;
+
                 array_push($agua_inicial, $adeudo->monto_agua);
 
                 if ($user->drain === '1') {
-                    $inicial_drenaje = $adeudo->monto_agua * 0.25;
-                    array_push($drenaje_inicial, $adeudo->monto_agua * 0.25);
+                    $inicial_drenaje = $adeudo->monto_agua * self::$porcentaje_drenaje;
+                    array_push($drenaje_inicial, $adeudo->monto_agua * self::$porcentaje_drenaje);
                 }
 
                 if (($user->id_usertype === "3" || $user->id_usertype === "4") && $adeudo->if_recargo !== "1") {
@@ -136,9 +142,9 @@ class DeudaController
                 array_push($agua, $adeudo->monto_agua);
 
                 if ($user->drain === '1') {
-                    array_push($drenaje, ($adeudo->monto_agua) * 0.25);
-                    array_push($excedidosM3Drenaje, $costo_excedido * 0.25);
-                    array_push($descuentosDrenaje, $inicial_drenaje - ($adeudo->monto_agua * 0.25));
+                    array_push($drenaje, ($adeudo->monto_agua) * self::$porcentaje_drenaje);
+                    array_push($excedidosM3Drenaje, $costo_excedido * self::$porcentaje_drenaje);
+                    array_push($descuentosDrenaje, $inicial_drenaje - ($adeudo->monto_agua * self::$porcentaje_drenaje));
                 }
 
                 if ($adeudo->if_recargo === '1') {
@@ -146,10 +152,10 @@ class DeudaController
                     $mesesContador = $meses;
 
                     if ($user->drain == 1) {
-                        if ($mesesContador > 0) array_push($recargoDrenaje, (($inicial_agua + $costo_excedido) * 0.25) * 0.0113 * $mesesContador);
+                        if ($mesesContador > 0) array_push($recargoDrenaje, (($inicial_agua + $costo_excedido) * self::$porcentaje_drenaje) * self::$porcentaje_recargo * $mesesContador);
                     }
 
-                    if ($mesesContador > 0) array_push($recargoAgua, ($inicial_agua + $costo_excedido) * 0.0113 * $mesesContador);
+                    if ($mesesContador > 0) array_push($recargoAgua, ($inicial_agua + $costo_excedido) * self::$porcentaje_recargo * $mesesContador);
 
                     $mesesContador--;
                     strlen($adeudo->mes) === 1 ? $mesFR = '0' . $adeudo->mes : $mesFR = $adeudo->mes;
@@ -173,12 +179,12 @@ class DeudaController
         $montoDescuentoDrenajeInicial = calcular($drenaje_inicial);
 
         if ($user->id_intaketype !== '2') {
-            $aguaIva = $montoAgua * 0.16;
-            $excedidosIVA = $montoMedicion * 0.16;
+            $aguaIva = $montoAgua * self::$iva;
+            $excedidosIVA = $montoMedicion * self::$iva;
         }
 
-        $drenajeIva = ($montoDrenaje) * 0.16;
-        $drenajeIvaExcedido = ($montoMedicionDrenaje) * 0.16;
+        $drenajeIva = ($montoDrenaje) * self::$iva;
+        $drenajeIvaExcedido = ($montoMedicionDrenaje) * self::$iva;
 
         $sumatoriaNatural = $montoAgua + $montoDrenaje + $montoMedicion + $montoMedicionDrenaje;
         $sumatoriaRecargo = $montoRecAgua + $montoRecDren;
@@ -276,29 +282,29 @@ class DeudaController
                     $excedido = $diferencia_lecturas - $measured->limsup > 0 ? $diferencia_lecturas - $measured->limsup : 0;
                     $costo_excedido = $excedido * $measured->excm3;
 
-                    $costo_excedido_drenaje = $user->drain === "1" ? ($costo_excedido * 0.25) : 0;
+                    $costo_excedido_drenaje = $user->drain === "1" ? ($costo_excedido * self::$porcentaje_drenaje) : 0;
 
                     if ($d->if_recargo !== "1" && $user->id_usertype === "2") {
                         $costo_excedido += $costo_excedido * 0.5;
                         $costo_excedido_drenaje += $costo_excedido_drenaje * 0.5;
                     }
 
-                    $iva_lim_exc = $user->id_intaketype !== '2' ? ($costo_excedido * 0.16) : 0;
-                    $iva_lim_exc_drenaje = $costo_excedido_drenaje * 0.16;
+                    $iva_lim_exc = $user->id_intaketype !== '2' ? ($costo_excedido * self::$iva) : 0;
+                    $iva_lim_exc_drenaje = $costo_excedido_drenaje * self::$iva;
                 }
 
                 //Montos
                 $agua = ($d->monto_agua);
-                $inicial_d = $user->drain == 1 ? ($inicial_a * 0.25) : 0;
-                $drain = $user->drain == 1 ? ($d->monto_agua * 0.25) : 0;
-                $desc_dren = $user->drain == 1 ? ($desc_a * 0.25) : 0;
-                $iva_agua = $user->id_intaketype !== '2' ? ($d->monto_agua * 0.16) : 0;
-                $iva_drain = ($drain * 0.16);
+                $inicial_d = $user->drain == 1 ? ($inicial_a * self::$porcentaje_drenaje) : 0;
+                $drain = $user->drain == 1 ? ($d->monto_agua * self::$porcentaje_drenaje) : 0;
+                $desc_dren = $user->drain == 1 ? ($desc_a * self::$porcentaje_drenaje) : 0;
+                $iva_agua = $user->id_intaketype !== '2' ? ($d->monto_agua * self::$iva) : 0;
+                $iva_drain = ($drain * self::$iva);
                 $m = $mesesRezagados > 0 ? $mesesRezagados : 0;
 
                 //recargos
-                $rec_agua = (($d->monto_agua + $costo_excedido) * 0.0113 * $m);
-                $rec_drain = ($drain * 0.0113 * $m);
+                $rec_agua = (($d->monto_agua + $costo_excedido) * self::$porcentaje_recargo * $m);
+                $rec_drain = ($drain * self::$porcentaje_recargo * $m);
 
                 //totales
                 $total_natural = ($agua + $drain);

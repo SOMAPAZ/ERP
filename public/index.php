@@ -88,6 +88,8 @@ $router->get('/api/user', [UsersController::class, 'getUsuario']);
 // // Actions CAJA
 $router->get('/consultar', [CajaController::class, 'index']);
 $router->get('/caja-cobro', [CajaController::class, 'getDeuda']);
+$router->get('/pagar-servicio', [CajaController::class, 'pagarServicio']);
+
 $router->get('/deuda-usuario', [DeudaController::class, 'totalDebt']);
 $router->get('/deuda-desglosada', [DeudaController::class, 'desgloseDebt']);
 $router->post('/api/pago-total', [CajaController::class, 'setPagoTotal']);

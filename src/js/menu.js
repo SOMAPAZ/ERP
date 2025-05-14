@@ -1,8 +1,22 @@
+
 import { saveLocalStorage, getLocalStorage, deleteLocalStorage } from "./helpers/index.js";
 
 (() => {
   const sidebar = document.querySelector("#sidebar-navigation");
   if(sidebar) {
+    document.addEventListener("keydown", (e) => {
+      if(e.ctrlKey && e.key.toLowerCase() === "q") {
+        if(getLocalStorage("sidebar-open")) {
+          sidebar.classList.remove("-translate-x-full");
+          sidebar.classList.add("translate-x-0");
+          deleteLocalStorage("sidebar-open");
+        } else {
+          sidebar.classList.remove("translate-x-0");
+          sidebar.classList.add("-translate-x-full");
+          saveLocalStorage("sidebar-open", true);
+        }
+      }
+    })
     const menuBtn = document.querySelector("#show-sidebar");
     const hideBtn = document.querySelector("#hide-sidebar");
     const btnDropdownAdmin = document.querySelector("#dropdown-admin");
@@ -76,11 +90,5 @@ import { saveLocalStorage, getLocalStorage, deleteLocalStorage } from "./helpers
         saveLocalStorage("sidebar-tanques-open", true);
       }
     });
-
-    function toogleDropdown(storage){
-      if(getLocalStorage(storage)) {
-        listAdmin.classList.toggle("hidden");
-      }
-    }
   }
 })();
