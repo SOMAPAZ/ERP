@@ -47,4 +47,15 @@ export default class Alerta {
         },
       }).showToast();
     }
+    static ToastifySuccess(msg) {
+      Toastify({
+        text: msg,
+        duration: 3000,
+        style: {
+            background: "linear-gradient(to right, #00b300, #007a00)",
+            color: "#fff",
+            boxShadow: "0 0 20px rgba(0, 0, 0, 0.5)",
+        },
+      }).showToast();
+    }
 }

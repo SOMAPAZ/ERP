@@ -5,9 +5,19 @@ define('CARPETA_IMAGENES_REPORTES', $_SERVER['DOCUMENT_ROOT'] . '/images/');
 
 function dd($variable): string
 {
-    echo "<pre>";
+    echo "<pre style='background-color: 000; color: white; padding: 10px; font-size: 1.2rem; font-family: monospace; font-weight: 500;'>";
     var_dump($variable);
     echo "</pre>";
+    exit;
+}
+
+function dda($array): string
+{
+    foreach ($array as $key => $value) {
+        echo "<pre style='background-color: gray; color: white; padding: 10px; font-size: 1.2rem; font-family: monospace; font-weight: 500;'>";
+        var_dump($value);
+        echo "</pre>";
+    }
     exit;
 }
 
@@ -173,9 +183,6 @@ function uuid(): string
     return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($datos), 4));
 }
 
-
-// Funciones caja
-
 function calcular($array): float
 {
     $monto = array_reduce($array, function ($acc, $act) {
@@ -192,4 +199,9 @@ function calcularTotales($array): float
     }, 0);
 
     return $monto;
+}
+
+function sumaPorColunmas($array, $colunm): float
+{
+    return array_sum(array_column($array, $colunm));
 }

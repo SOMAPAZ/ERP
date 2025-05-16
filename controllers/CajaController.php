@@ -11,12 +11,14 @@ use Facturacion\Facturas;
 use Usuarios\TipoConsumo;
 use Usuarios\TipoUsuario;
 use Facturacion\CorteCaja;
+use Facturacion\Cuentas;
 use Usuarios\TipoServicio;
 use Facturacion\Facturacion;
 use Usuarios\EstadoServicio;
 use Facturacion\FacturasPasadas;
 use Facturacion\PagosAdicionales;
-use FontLib\Table\Type\head;
+
+use function PHPSTORM_META\type;
 
 class CajaController
 {
@@ -140,6 +142,7 @@ class CajaController
             return;
         }
         $usuario = Usuario::find($usuarioId);
+        $usuario->tipoUsuario = TipoUsuario::find($usuario->id_usertype);
         if (!$usuario) {
             header('Location: /consultar');
             return;
@@ -163,6 +166,25 @@ class CajaController
                 header('Location: /consultar');
                 return;
             }
+            if ($usuario->id_servicetype === '3') {
+                $parciales = DeudaController::calcularParciales($meses, $usuario);
+                if (count($parciales) === 0) {
+                    header('Location: /consultar');
+                    return;
+                }
+
+                $existe_periodo = array_filter($parciales, function ($item) use ($year_mes_actual) {
+                    $format = explode('-', $item['fecha']);
+                    $valor = $format[1] . '_' . $format[0];
+                    return $valor === $year_mes_actual;
+                });
+                if (!$existe_periodo) {
+                    $mensaje = [
+                        'tipo' => 'Error',
+                        'msg' => 'No puedes pagar el servicio si no tienes lecturas'
+                    ];
+                }
+            }
         } else {
             $parciales = DeudaController::calcularParciales($meses, $usuario);
             if (count($parciales) === 0) {
@@ -182,41 +204,79 @@ class CajaController
             $limite = key($existe_periodo);
             $seleccionados = array_slice($parciales, 0, $limite + 1);
 
-            $noContieneLectura = array_filter($seleccionados, function ($item) {
-                return (int)$item['medido']['lectura_actual'] === 0;
-            });
+            if ($usuario->id_servicetype === '3') {
+                $noContieneLectura = array_filter($seleccionados, function ($item) {
+                    return (int)$item['medido']['lectura_actual'] === 0;
+                });
 
-            if (count($noContieneLectura) > 0) {
-                $mensaje = [
-                    'tipo' => 'Error',
-                    'msg' => 'No puedes pagar el servicio si no tienes lecturas'
-                ];
+                if (count($noContieneLectura) > 0) {
+                    $mensaje = [
+                        'tipo' => 'Error',
+                        'msg' => 'No puedes pagar el servicio si no tienes lecturas'
+                    ];
+                    $seleccionados = [];
+                }
+            }
+
+            if (count($seleccionados) === 0) {
+                $deuda = [];
             } else {
+                $periodo_inicio = $parciales[0]['fecha'];
+                $periodo_fin = explode('_', $year_mes_actual)[1] . '-' . explode('_', $year_mes_actual)[0] . '-08';
+                $array_medido_agua = array_map(function ($item) {
+                    return $item['medido']['costo_excedido'];
+                }, $seleccionados);
+                $array_medido_drain = array_map(function ($item) {
+                    return $item['medido']['costo_excedido'] * $item['porcentaje_drenaje'];
+                }, $seleccionados);
+                $total_excedido = array_map(function ($item) {
+                    return $item['total']['general_excedido'];
+                }, $seleccionados);
+
                 $deuda = [
                     'periodo' => [
-                        'inicio' => $parciales[0]['fecha'],
-                        'final' => explode('_', $year_mes_actual)[1] . '-' . explode('_', $year_mes_actual)[0] . '-08',
+                        'inicio' => $periodo_inicio,
+                        'final' => $periodo_fin,
                     ],
-                    'agua_inicial' => array_sum(array_column($seleccionados, 'agua')),
-                    'drenaje_inicial' => array_sum(array_column($seleccionados, 'drenaje')),
-                    'agua' => array_sum(array_column($seleccionados, 'agua')) - array_sum(array_column($noContieneLectura, 'desc_agua')),
-                    'drenaje' => array_sum(array_column($seleccionados, 'drenaje')) - array_sum(array_column($noContieneLectura, 'desc_drenaje')),
-                    'm3_excedido_agua' =>  array_sum(array_map(function ($item) {
-                        return $item['medido']['excedido'];
-                    }, $seleccionados)),
+                    'estado' => 'debe',
+                    'agua_inicial' => sumaPorColunmas($seleccionados, 'agua'),
+                    'drenaje_inicial' => sumaPorColunmas($seleccionados, 'drenaje'),
+                    'agua' => sumaPorColunmas($seleccionados, 'agua') - sumaPorColunmas($seleccionados, 'desc_agua'),
+                    'drenaje' => sumaPorColunmas($seleccionados, 'drenaje') - sumaPorColunmas($seleccionados, 'desc_drenaje'),
+                    'm3_excedido_agua' =>  array_sum($array_medido_agua),
+                    'm3_excedido_drenaje' =>  array_sum($array_medido_drain),
+                    'recargos' => [
+                        'agua' => sumaPorColunmas($seleccionados, 'rec_agua'),
+                        'drenaje' => sumaPorColunmas($seleccionados, 'rec_drain'),
+                        'total' => sumaPorColunmas($seleccionados, 'rec_agua') + sumaPorColunmas($seleccionados, 'rec_drain')
+                    ],
+                    'iva' => [
+                        'agua' => sumaPorColunmas($seleccionados, 'iva_agua'),
+                        'drenaje' => sumaPorColunmas($seleccionados, 'iva_drenaje'),
+                        'total' => sumaPorColunmas($seleccionados, 'iva_agua') + sumaPorColunmas($seleccionados, 'iva_drenaje')
+                    ],
+                    'descuentos' => [
+                        'agua' => sumaPorColunmas($seleccionados, 'desc_agua'),
+                        'drenaje' => sumaPorColunmas($seleccionados, 'desc_drenaje'),
+                        'total' => sumaPorColunmas($seleccionados, 'desc_agua') + sumaPorColunmas($seleccionados, 'desc_drenaje')
+                    ],
+                    'total' => array_sum($total_excedido),
                 ];
             }
-            // dd($parciales);
         }
-        // dd($mensaje);
-        dd($deuda);
+
+        $costos = Cuentas::all();
+        // dd($costos);
 
         $router->render('caja/pagar-servicio', [
             'deuda' => $deuda,
-            'seleccionados' => $seleccionados,
+            'usuario' => $usuario,
             'mensaje' => $mensaje,
+            'costos' => $costos,
         ]);
     }
+
+    //antiguos metodos
 
     public static function actualizarRezago()
     {
@@ -401,25 +461,6 @@ class CajaController
         }
     }
 
-    public static function getAvanzados(Router $router)
-    {
-        isAuth();
-        permisosCaja();
-        $usuarioId = s($_GET['usuario']);
-        if (!$usuarioId) {
-            header('Location: /consultar');
-            return;
-        }
-
-        $tipoServicio = Usuario::find($usuarioId)->id_servicetype;
-        $esMedido = $tipoServicio === "3" ? true : false;
-
-        $router->render('caja/avanzados', [
-            'links' => self::$links,
-            'esMedido' => $esMedido
-        ]);
-    }
-
     public static function getCondonaciones(Router $router)
     {
 
@@ -478,16 +519,6 @@ class CajaController
         }
 
         echo json_encode($respuesta);
-    }
-
-    public static function getPagosAdicionales(Router $router)
-    {
-        isAuth();
-        permisosCaja();
-
-        $router->render('caja/pagos-adicionales', [
-            'links' => self::$links,
-        ]);
     }
 
     public static function pagoCostosAdicionales()

@@ -95,11 +95,9 @@ $router->get('/deuda-desglosada', [DeudaController::class, 'desgloseDebt']);
 $router->post('/api/pago-total', [CajaController::class, 'setPagoTotal']);
 $router->post('/condonacion-parcial', [CajaController::class, 'setCondonaciones']);
 $router->get('/pagar-total', [CajaController::class, 'viewPagoTotal']);
-$router->get('/consultar-avanzados', [CajaController::class, 'getAvanzados']);
 $router->get('/consultar-condonaciones', [CajaController::class, 'getCondonaciones']);
 $router->get('/consultar-condonaciones-listado', [CajaController::class, 'getListadoCondonaciones']);
 $router->post('/deshacer-condonacion', [CajaController::class, 'deshacerCondonacion']);
-$router->get('/adicionales', [CajaController::class, 'getPagosAdicionales']);
 $router->post('/pago-parcial', [CajaController::class, 'pagoCostosAdicionales']);
 $router->get('/historial-recibos', [CajaController::class, 'getRecibos']);
 

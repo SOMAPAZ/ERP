@@ -326,6 +326,8 @@ class DeudaController
                     'iva_drenaje' => round($iva_drain, 2),
                     'rec_agua' => round($rec_agua, 2),
                     'rec_drain' => round($rec_drain, 2),
+                    'porcentaje_drenaje' => self::$porcentaje_drenaje,
+                    'porcentaje_recargo' => self::$porcentaje_recargo,
                     'medido' => [
                         'lectura_actual' => !isset($lectura) ? 0 : floatval($lectura),
                         'diferencia_lectura_anterior' => !isset($diferencia_lecturas) ? 0 : $diferencia_lecturas,
