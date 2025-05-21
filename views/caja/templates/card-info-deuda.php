@@ -59,7 +59,7 @@
                         <select name="final" id="final" class="bg-gray-200 py-3 px-6 text-sm rounded dark:bg-gray-700 dark:text-whit uppercase">
                             <option value="">--Seleccione un mes--</option>
                             <?php foreach ($meses as $mes): ?>
-                                <option value="<?= $mes['id'] ?>"><?= $mes['name'] ?></option>
+                                <option value="<?= $mes['id'] ?>"><?= $mes['name'] . ' - $ ' . formatoMiles($mes['totales']) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>

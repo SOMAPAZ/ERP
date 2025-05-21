@@ -122,6 +122,24 @@ class CajaController
             }
         }
 
+        $montos_por_mes = [];
+        $suma_mes_anterior = [];
+        $parciales = DeudaController::calcularParciales($meses, $usuario);
+
+        for ($i = 0; $i < count($parciales); $i++) {
+            $montos_por_mes[$i] = $parciales[$i]['total']['general_excedido'];
+        }
+
+        $suma = 0;
+        foreach ($montos_por_mes as $value) {
+            $suma += $value;
+            $suma_mes_anterior[] = round($suma, 2);
+        }
+
+        for ($i = 0; $i < count($suma_mes_anterior); $i++) {
+            $meses_year[$i]['totales'] = $suma_mes_anterior[$i];
+        }
+
         $router->render('caja/informacion', [
             'usuario' => $usuario,
             'deuda' => $deuda,

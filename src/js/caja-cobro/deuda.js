@@ -1,11 +1,13 @@
 import Alerta from "../classes/Alerta.js";
-import { limpiarHTML, formatNum, roundAndFloat } from '../helpers/index.js';
+import { limpiarHTML, formatNum, roundAndFloat, abrirModal, cerrarModal } from '../helpers/index.js';
 
 (() => {
   const formConsultarSig = document.querySelector("#formConsultarSig");
   const btnSelectorPeriodo = document.querySelector("#btn-selector-periodo");
   const btnPagarDeuda = document.querySelector("#realizar-pago");
   const mostrarModalCargosExtras = document.querySelector("#mostrarModalCargosExtras");
+  const mostrarModalDescSubtotal = document.querySelector("#mostrarModalDescSubtotal");
+  const mostrarModalDescRecargos = document.querySelector("#mostrarModalDescRecargos");
 
   if (formConsultarSig) {
     formConsultarSig.addEventListener("submit", (e) => {
@@ -20,6 +22,7 @@ import { limpiarHTML, formatNum, roundAndFloat } from '../helpers/index.js';
 
   if(btnSelectorPeriodo) {
     const btnClosePeriodoModal = document.querySelector("#btnClosePeriodoModal");
+    const selectorPeriodoModal = document.querySelector("#selectorPeriodoModal");
     const form = document.querySelector("#formPeriodo");
     const selectMes = document.querySelector("#mes_periodo");
     form.addEventListener("submit", (e) => {
@@ -29,17 +32,8 @@ import { limpiarHTML, formatNum, roundAndFloat } from '../helpers/index.js';
         return;
       }
     });
-    btnSelectorPeriodo.addEventListener("click", () => {
-      const selectorPeriodoModal = document.querySelector("#selectorPeriodoModal");
-      selectorPeriodoModal.classList.remove('hidden');
-      setTimeout(() => selectorPeriodoModal.classList.remove('opacity-0'), 10);
-    })
-
-    btnClosePeriodoModal.addEventListener("click", () => {
-      const selectorPeriodoModal = document.querySelector("#selectorPeriodoModal");
-      selectorPeriodoModal.classList.add('opacity-0');
-      setTimeout(() => selectorPeriodoModal.classList.add('hidden'), 300);
-    })
+    btnSelectorPeriodo.addEventListener("click", () => abrirModal(selectorPeriodoModal))
+    btnClosePeriodoModal.addEventListener("click", () => cerrarModal(selectorPeriodoModal))
   }
 
   if(btnPagarDeuda) {
@@ -55,8 +49,8 @@ import { limpiarHTML, formatNum, roundAndFloat } from '../helpers/index.js';
 
   if(mostrarModalCargosExtras) {
     const formCargoExtra = document.querySelector("#form-cargo-extra");
+    const modalCargosExtras = document.querySelector("#ModalCargosExtras")
     const btnAgregarCargoExtra = document.querySelector("#agregar-cargo-extra");
-    const montoTotal = document.querySelector("#monto-total").textContent;
     let cargosExtras = [];
     const IVA = 0.16;
 
@@ -97,41 +91,101 @@ import { limpiarHTML, formatNum, roundAndFloat } from '../helpers/index.js';
       }
       formCargoExtra.reset();
       mostrarEnPantalla(cargosExtras);
+      cerrarModal(modalCargosExtras);
     });
 
     const btnCloseExtrasModal = document.querySelector("#btnCloseExtrasModal");
-    mostrarModalCargosExtras.addEventListener('click', () => {
-      const modalCargosExtras = document.querySelector("#ModalCargosExtras");
-      modalCargosExtras.classList.remove('hidden');
-      setTimeout(() => modalCargosExtras.classList.remove('opacity-0'), 10);
-    })
-    btnCloseExtrasModal.addEventListener("click", () => {
-      const modalCargosExtras = document.querySelector("#ModalCargosExtras");
-      modalCargosExtras.classList.add('opacity-0');
-      setTimeout(() => modalCargosExtras.classList.add('hidden'), 300);
-    })
+    mostrarModalCargosExtras.addEventListener('click', () => abrirModal(modalCargosExtras))
+    btnCloseExtrasModal.addEventListener("click", () => cerrarModal(modalCargosExtras))
+    const montoTotalSpan = document.querySelector("#monto-total");
+    const spanIVA = document.querySelector("#monto-iva");
+    const monto = montoTotalSpan.textContent.replace(',', '');
+    const montoIVA = spanIVA.textContent.replace(',', '');
 
     function mostrarEnPantalla(cargosExtras) {
       Alerta.ToastifySuccess("Se ha agregado el cargo correctamente");
       const cardPago = document.querySelector("#desglose-extras");
-      const montoTotalSpan = document.querySelector("#monto-total");
       limpiarHTML(cardPago);
 
       cargosExtras.forEach(cargo => {
         const subTotal = Number(cargo.costo) * Number(cargo.cantidad);
-        const iva = cargo.costo_iva ? subTotal * IVA : 0;
-        const total = subTotal + iva;
+
         const paragraph = document.createElement("p");
-        paragraph.className = "text-gray-500 flex justify-between gap-3";
+        paragraph.className = "text-sky-700 flex justify-between gap-3";
         paragraph.innerHTML = `
           <span>${cargo.name}</span>
-          <span class="uppercase text-black">$ ${formatNum(roundAndFloat(total))}</span>
+          <span class="uppercase text-sky-900">$ ${formatNum(roundAndFloat(subTotal))}</span>
         `
         cardPago.appendChild(paragraph);
       })
 
-      const totalExtras = cargosExtras.reduce((acc, act) => Number(acc) + Number(act.costo) + (act.costo_iva ? Number(act.costo) * IVA : 0), 0);
-      montoTotalSpan.textContent = roundAndFloat(totalExtras + Number(montoTotal));
+      const subTotalExtras = cargosExtras.reduce((acc, act) => {
+        const subTot = Number(act.costo) * Number(act.cantidad);
+        return acc + subTot;
+      }, 0);
+
+      const subtotalIVA = cargosExtras.reduce((acc, act) => {
+        const subTot = Number(act.costo) * Number(act.cantidad);
+        const iva = act.costo_iva ? subTot * IVA : 0;
+        return acc + iva;
+      }, 0);
+      
+      montoTotalSpan.textContent = roundAndFloat(subTotalExtras + subtotalIVA + +monto);
+      spanIVA.textContent = roundAndFloat(subtotalIVA + +montoIVA);
     }
+  }
+
+  if(mostrarModalDescRecargos) {
+    const formDescRecargos = document.querySelector("#form-desc-recargos");
+    const modalDescRecargos = document.querySelector("#modalDescRecargos");
+    const inputDescRec = document.querySelector("#desc_recargos");
+    const inputsTipoDesc = document.querySelectorAll('input[name="tipo-desc-rec"]');
+    const btnCloseDescRecModal = document.querySelector("#btnCloseDescRecModal");
+    const valorRecargos = document.querySelector("#monto-recargos").textContent?.replace(',', '');
+    const btnCalcularDesc = document.querySelector("#btnCalcularDesc");
+    const spanMontoRecargos = document.querySelector("#span-monto-recargos");
+    let factorDesc = 100;
+    let descuentoInput = 0;
+    let nuevoRecargo = 0;
+
+    mostrarModalDescRecargos.addEventListener("click", () => abrirModal(modalDescRecargos))
+    btnCloseDescRecModal.addEventListener("click", () => {
+      cerrarModal(modalDescRecargos)
+      formDescRecargos.reset();
+      spanMontoRecargos.textContent = valorRecargos;
+    })
+
+    inputDescRec.addEventListener('input', e => descuentoInput = +e.target.value)
+    Array.from(inputsTipoDesc).forEach(inp => inp.addEventListener('input', e => {
+      factorDesc = +e.target.value
+      inputDescRec.value = 0;
+      descuentoInput = 0;
+      spanMontoRecargos.textContent = valorRecargos;
+    }))
+
+    btnCalcularDesc.addEventListener('click', () => {
+      if(descuentoInput === 0) {
+        Alerta.ToastifyError("Debe ingresar un valor para el descuento")
+        return;
+      }
+
+      if(factorDesc === 100) {
+        if (descuentoInput > 100) {
+          Alerta.ToastifyError("El valor ingresado es mayor al 100%")
+          return
+        }
+
+        nuevoRecargo = valorRecargos - (descuentoInput/100) * valorRecargos;
+      } else {
+        if (descuentoInput > valorRecargos) {
+          Alerta.ToastifyError("El valor ingresado es mayor al monto de recargos")
+          return
+        }
+
+        nuevoRecargo = valorRecargos - descuentoInput
+      }
+
+      spanMontoRecargos.textContent = roundAndFloat(nuevoRecargo);
+    })
   }
 })();

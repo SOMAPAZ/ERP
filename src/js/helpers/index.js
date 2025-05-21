@@ -48,4 +48,14 @@ const formatDateD = (date) => {
   return fecha.toLocaleDateString('es-MX', opciones)
 }
 
-export { limpiarHTML, formatNum, roundAndFloat, getSearch, saveLocalStorage, getLocalStorage, deleteLocalStorage, formatDateText, formatDateMY, formatDateD };
+const abrirModal = (modal) => {
+  modal.classList.remove('hidden');
+  setTimeout(() => modal.classList.remove('opacity-0'), 10);
+}
+
+const cerrarModal = (modal) => {
+  modal.classList.add('opacity-0');
+  setTimeout(() => modal.classList.add('hidden'), 300);
+}
+
+export { limpiarHTML, formatNum, roundAndFloat, getSearch, saveLocalStorage, getLocalStorage, deleteLocalStorage, formatDateText, formatDateMY, formatDateD, abrirModal, cerrarModal };

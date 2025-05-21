@@ -88,7 +88,7 @@ import Alerta from "../classes/Alerta.js";
         const li = document.createElement("li");
         li.className = "block shadow rounded-lg bg-gray-100 hover:bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200 uppercase cursor-pointer";
   
-        li.textContent = `${usuario.data}`;
+        li.textContent = `${usuario.id} - ${usuario.data}`;
         li.onclick = () => autocompletar(usuario);
         listadoCoincidencias.appendChild(li);
       });
