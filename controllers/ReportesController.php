@@ -3,18 +3,19 @@
 namespace Controllers;
 
 use MVC\Router;
-use Empleados\Empleado;
-use APIs\ReportesAPI;
-use Reportes\Categoria;
-use Reportes\Reporte;
 use Reportes\Notas;
-use Reportes\Incidencias;
-use Reportes\Prioridad;
+use Model\Registros;
+use APIs\ReportesAPI;
+use Reportes\Reporte;
 use Reportes\Material;
 use Reportes\Unidades;
+use Empleados\Empleado;
+use Reportes\Categoria;
+use Reportes\Prioridad;
+use Reportes\Evidencias;
+use Reportes\Incidencias;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
-use Reportes\Evidencias;
 
 class ReportesController
 {
@@ -49,6 +50,10 @@ class ReportesController
         $incidencia = Incidencias::where('id', $reporte->id_incidence);
         $prioridad = Prioridad::where('id', $reporte->id_priority);
         $realizado = Empleado::where('id', $reporte->employee_id);
+        $registros = Registros::belongsTo('folio_seccion', $reporte->id);
+        foreach ($registros as $reg) {
+            $reg->empleado_id = Empleado::find($reg->empleado_id)->name;
+        }
 
         $router->render('reports/reporte-unico', [
             'links' => self::$links,
@@ -59,6 +64,7 @@ class ReportesController
             'incidencia' => $incidencia,
             'prioridad' => $prioridad,
             'realizado' => $realizado,
+            'registros' => $registros
         ]);
     }
 
@@ -111,7 +117,7 @@ class ReportesController
 
             $anterior = Reporte::obtenerUltimoFolio();
             $folioAnterior = $anterior->id ?? 0;
-            
+
             if (intval(substr($folioAnterior, 0, 2)) !== intval(date('y')) || intval(substr($folioAnterior, 2, 2)) !== intval(date('m'))) {
                 $secuencial = 0;
             } else {
@@ -401,7 +407,7 @@ class ReportesController
         $offset = s($_GET['offset']);
 
         $reportes = Reporte::belongsToPaginacion('id_status', $status, $offset, $limit);
-        foreach($reportes as $reporte) {
+        foreach ($reportes as $reporte) {
             $reporte->id_priority = Prioridad::find($reporte->id_priority);
             $reporte->id_category = Categoria::find($reporte->id_category)->name;
             $reporte->id_incidence = Incidencias::find($reporte->id_incidence);
@@ -410,8 +416,8 @@ class ReportesController
         $total = Reporte::totalWhere('id_status', $status);
 
         $res = [
-            'reportes'=>$reportes,
-            'total'=>$total
+            'reportes' => $reportes,
+            'total' => $total
         ];
 
         echo json_encode($res);
@@ -434,14 +440,14 @@ class ReportesController
         $folio = s($_GET['id_report']);
         $materiales = Material::belongsTo('id_report', $folio);
 
-        foreach($materiales as $material) {
+        foreach ($materiales as $material) {
             $material->id_unity = Unidades::find($material->id_unity)->name;
         }
 
         echo json_encode($materiales);
     }
 
-    public static function JSONreporte() 
+    public static function JSONreporte()
     {
         isAuth();
 
@@ -472,56 +478,72 @@ class ReportesController
     public static function actualizarStatusReporte()
     {
         isAuth();
+        date_default_timezone_set('America/Mexico_City');
 
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $informacion = explode(',', $_POST['args']);
-            
+
             $reporte = Reporte::where('id', $informacion[1]);
 
             $reporte->id_status = $informacion[0];
 
-            if($reporte->employee_id === null) {
+            if ($reporte->employee_id === null) {
                 $reporte->employee_id = 0;
             }
 
-            if($informacion[0] == '3') {
+            if ($informacion[0] === '3' || $informacion[0] === '4') {
                 $reporte->id_employee_sup = s($_SESSION['empleado_id']);
             }
 
-            if($reporte->id_user == null) {
+            if ($reporte->id_user == null) {
                 $reporte->id_user = 0;
             }
 
             $res = $reporte->guardar();
 
-            if($res) {
+            $idx = uuid();
+            $registro = new Registros([
+                'id' => $idx,
+                'empleado_id' => $reporte->id_employee_sup,
+                'accion' => 1,
+                'folio_seccion' => $reporte->id,
+                'created_at' => date('Y-m-d H:i:s'),
+                'comentario' => 'Se confirmó que el usuario pagó el servicio correspondiente'
+            ]);
+
+            $reg = $registro->guardarRegistro($idx);
+
+
+            if ($res) {
                 $respuesta = [
                     'tipo' => 'Exito',
-                    'msg' => 'Estado del reporte actualizado'
+                    'msg' => 'Estado del reporte actualizado',
+                    'registro' => $reg
                 ];
                 echo json_encode($respuesta);
             }
         }
     }
 
-    public static function guardarEvidencias() {
+    public static function guardarEvidencias()
+    {
         isAuth();
 
-        if($_SERVER['REQUEST_METHOD'] === 'POST'){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $arrays = json_decode($_POST['args']);
                 $datos = [];
-                foreach($arrays as $array) {
+                foreach ($arrays as $array) {
                     $datos[] = [
-                        'id_report' => $array->id_report, 
-                        'image' =>$array->image
+                        'id_report' => $array->id_report,
+                        'image' => $array->image
                     ];
                 }
-                foreach($datos as $dato) {
+                foreach ($datos as $dato) {
                     $evidencia = new Evidencias($dato);
                     $res = $evidencia->guardar();
-    
-                    if(!$res) {
+
+                    if (!$res) {
                         echo json_encode([
                             'tipo' => 'Error',
                             'msg' => 'Hubo un error al guardar los datos'
@@ -534,7 +556,6 @@ class ReportesController
                     'msg' => 'Evidencias guardadas correctamente',
                     'datos' => $datos
                 ]);
-                
             } catch (\Throwable $th) {
                 echo json_encode([
                     'tipo' => 'Fail',
@@ -545,13 +566,14 @@ class ReportesController
         }
     }
 
-    public static function obtenerEvidencias() {
+    public static function obtenerEvidencias()
+    {
         isAuth();
 
         $folio = s($_GET['folio']);
         $evidencias = Evidencias::belongsTo('id_report', $folio);
-        
-        if(count($evidencias) === 0) {
+
+        if (count($evidencias) === 0) {
             $evidencias = [];
         }
 
@@ -569,34 +591,34 @@ class ReportesController
         ]);
     }
 
-    public static function filtrarReportes(){
+    public static function filtrarReportes()
+    {
         isAuth();
 
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $regex = "/^\d{4}-\d{4}$/";
 
             $explode = explode(',', $_POST['args']);
-            
-            if(count($explode) === 1) {
 
-                if(preg_match($regex, $explode[0]) === 1) {
+            if (count($explode) === 1) {
+
+                if (preg_match($regex, $explode[0]) === 1) {
                     $res = Reporte::consultarCoincidenciasID($explode[0]);
-                    if(count($res) === 0) $res = [];
-    
+                    if (count($res) === 0) $res = [];
+
                     echo json_encode($res);
                     return;
                 }
 
                 $res = Reporte::consultarCoincidencias($explode[0]);
-                if(count($res) === 0) $res = [];
+                if (count($res) === 0) $res = [];
 
                 echo json_encode($res);
                 return;
-
             }
 
             $res = Reporte::consultarCoincidenciasIds($explode[0], $explode[1]);
-            if(count($res) === 0) $res = [];
+            if (count($res) === 0) $res = [];
             echo json_encode($res);
         }
     }

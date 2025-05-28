@@ -10,6 +10,7 @@ import { getSearch } from "../helpers/index_v1.js"
     const btnCerrado = document.querySelector('#status-3 button')
     const btnTerminado = document.querySelector('#status-4 button')
     let estadoReporte = 1;
+    const incidencia = document.querySelector('#incidencia-id').value;
 
     document.addEventListener('DOMContentLoaded', () => {
         obtenerEstado();
@@ -27,7 +28,39 @@ import { getSearch } from "../helpers/index_v1.js"
         verificarEstado()
     }
 
-    const cambiarStatus = async (status) => {
+    const cambiarStatus = status => {
+        const isIncidece = incidencia === '7' 
+            || incidencia === '9'
+            || incidencia === '10'
+            || incidencia === '11'
+            || incidencia === '12'
+            || incidencia === '13'
+            || incidencia === '20'
+            || incidencia === '21'
+            || incidencia === '39'
+        ;
+        if(status === '3' && isIncidece) {
+            Swal.fire({
+                title: 'Requiere confirmación',
+                text: '¿Confirma que el usuario ya pagó el servicio correspondiente?',
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Confirmar pago",
+                cancelButtonText: "Cancelar",
+            }).then(result => {
+                if (!result.isConfirmed) {
+                    Swal.fire("Changes are not saved", "", "info");
+                    return;
+                }
+                aplicarCambio(status)
+            });
+        } else {
+            aplicarCambio(status)
+        }
+        
+    }
+
+    const aplicarCambio = async (status) => {
         const url = `${location.origin}/reporte/estado/actualizar`
         const estado = Number(status)
         const reporte = getSearch().folio;

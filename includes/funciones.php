@@ -182,3 +182,14 @@ function calcularTotales($array): float
 
     return $monto;
 }
+
+function uuid(): string
+{
+    $datos = random_bytes(16);
+
+    // Establecer versión (4) y variante (RFC 4122)
+    $datos[6] = chr((ord($datos[6]) & 0x0f) | 0x40); // versión 4
+    $datos[8] = chr((ord($datos[8]) & 0x3f) | 0x80); // variante RFC
+
+    return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($datos), 4));
+}
