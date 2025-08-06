@@ -2,9 +2,9 @@
 
 namespace Controllers;
 
-use Classes\PDF;
 use Dompdf\Dompdf;
 use APIs\UsuariosAPI;
+use Model\Registros;
 use Reportes\Reporte;
 use Usuarios\Usuario;
 use Reportes\Material;
@@ -21,7 +21,13 @@ use Usuarios\TipoConsumo;
 use Facturacion\CorteCaja;
 use Usuarios\TipoServicio;
 use Facturacion\PagosAdicionales;
-use Reportes\Notas;
+use Notificaciones\Notificacion;
+use Controllers\DeudaController;
+use Facturacion\Facturacion;
+use Controllers\NotificacionesController;
+
+
+
 
 class PDFController
 {
@@ -49,7 +55,7 @@ class PDFController
         }
 
         $usuario = Usuario::find($idUsuario);
-        $tipo_toma = TipoToma::find($usuario->id_servicetype);
+        $tipo_toma = TipoToma::find($usuario->id_intaketype);
         $tipo_consumo = TipoConsumo::find($usuario->id_consumtype);
         $empleado = Empleado::find($recibo->empleado_id);
 
@@ -138,6 +144,11 @@ class PDFController
 
         $reporte = Reporte::where('id', $folio);
 
+        if ($reporte->id_status != '3') {
+            header("Location: /reporte?folio=$folio");
+            return;
+        }
+
         $reporte->id_category = Categoria::find($reporte->id_category)->name;
         $reporte->id_incidence = Incidencias::find($reporte->id_incidence)->name;
         $empleado = Empleado::find($reporte->employee_id);
@@ -146,17 +157,24 @@ class PDFController
         $reporte->employee_id = $empleado->name . " " . $empleado->lastname;
         $reporte->id_employee_sup = $empleadoSup->name . " " . $empleadoSup->lastname;
 
-        $evidencias = Notas::belongsTo('id_report', $folio);
-
+        $evidencias = Evidencias::belongsTo('id_report', $folio);
         $materiales = Material::belongsTo('id_report', $folio);
         foreach ($materiales as $material) {
             $material->id_unity = Unidades::find($material->id_unity)->name;
         }
 
+        $completo = count($evidencias) !== 0 && count($materiales) !== 0;
+
         if (!$reporte) {
-            header('Location: /reportes-abiertos?page=1');
+            header('Location: /reportes');
             return;
         }
+        if (!$completo) {
+            header("Location: /reporte?folio=$folio");
+            return;
+        }
+
+        $domPDF = new Dompdf();
 
         ob_start();
 
@@ -164,8 +182,15 @@ class PDFController
 
         $content = ob_get_clean();
 
-        $pdf = new PDF($content, 'A4', "Reporte $folio", false);
-        $pdf->render();
+        $options = $domPDF->getOptions();
+        $options->set(array('isRemoteEnabled' => true));
+        $domPDF->setOptions($options);
+
+        $domPDF->loadHtml($content);
+        $domPDF->setPaper('A4');
+
+        $domPDF->render();
+        $domPDF->stream("Reporte $folio", array("Attachment" => false));
     }
 
     public static function corteCaja()
@@ -188,12 +213,12 @@ class PDFController
         $domPDF->setOptions($options);
 
         $domPDF->loadHtml($content);
-        $domPDF->setPaper('A4');
+        $domPDF->setPaper('letter');
 
         $domPDF->render();
         $domPDF->stream("Corte-caja-$folio", array("Attachment" => false));
     }
-
+    
     public static function contratoServicio()
     {
         isAuth();
@@ -230,5 +255,89 @@ class PDFController
 
         $domPDF->render();
         $domPDF->stream("Contrato Servicio de Agua de : " . $contrato->usuario->user, array("Attachment" => false));
+    }
+       public static function notificaciones()
+    {
+        isAuth();
+        $idUsuario = s($_GET['id_user']);
+
+        $usuario = Usuario::find($idUsuario);
+
+        $meses = Facturacion::belongsToDeudas('id_user', $idUsuario);
+        $datosDeuda = DeudaController::calcularTotal($meses, $usuario);
+        $datosDeudaparcial = DeudaController::calcularParciales($meses, $usuario);
+        $esMedido = $usuario->id_servicetype == 3;
+
+        $total_suma = array_reduce($datosDeudaparcial, function ($carry, $item) use ($esMedido) {
+            if ($esMedido) {
+                return $carry + $item['total']['general_excedido'];
+            } else {
+                return $carry + $item['total']['general'];
+            }
+        }, 0);
+
+        $fechaInicio = $datosDeuda['periodo']['inicio'];
+        $fechaFin = $datosDeuda['periodo']['final'];
+
+        $rangoFechas = NotificacionesController::formatearRangoFechas($fechaInicio, $fechaFin);
+
+        $notificacion = Notificacion::buscarPorUsuario($idUsuario);
+        if ($notificacion) {
+            $folio = $notificacion->idx;
+        } else {
+            $folio = 'No existe notificación para este usuario';
+        }
+        $fecha = NotificacionesController::obtenerFechaEnEspañol();
+        $empleadoId = $_SESSION['empleado_id'];
+        $empleado = Empleado::find($empleadoId);
+        $empleadoNombre = $empleado->name . ' ' . $empleado->lastname;
+
+        $domPDF = new Dompdf();
+        ob_start();
+
+        include_once __DIR__ . '/../views/PDF/notificaciones.php';
+
+        $content = ob_get_clean();
+
+        $options = $domPDF->getOptions();
+        $options->set(array('isRemoteEnabled' => true));
+        $domPDF->setOptions($options);
+
+        $domPDF->loadHtml($content);
+        $domPDF->setPaper('A4');
+        $domPDF->render();
+        $nombreFolio = str_replace('/', '-', $folio);
+        $domPDF->stream("{$nombreFolio}_{$idUsuario}.pdf", array("Attachment" => false));
+    }
+     public static function notRealizadas()
+    {
+        isAuth();
+        $domPDF = new Dompdf();
+        ob_start();
+
+        $notificaciones = Notificacion::notRealizadas();
+        $registrosnot = Registros::registrosNot();
+        if (empty($notificaciones) || empty($registrosnot)) {
+            $_SESSION['alerta'] = 'No hay notificaciones realizadas hoy.';
+            header('Location: /agenda');
+            exit;
+        }
+        $fecha = NotificacionesController::obtenerFechaEnEspañol();
+        // dd($registrosnot);
+
+        // dd($registrosnot);
+
+        include_once __DIR__ . '/../views/PDF/NotRealizadas.php';
+
+        $content = ob_get_clean();
+
+        $options = $domPDF->getOptions();
+        $options->set(array('isRemoteEnabled' => true));
+        $domPDF->setOptions($options);
+
+        $domPDF->loadHtml($content);
+        $domPDF->setPaper('A4');
+        $domPDF->render();
+        $domPDF->stream("notificaciones.pdf", array("Attachment" => false));
     }
 }

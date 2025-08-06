@@ -4,39 +4,20 @@
 namespace Controllers;
 
 use MVC\Router;
-use Usuarios\Usuario;
-use Classes\Paginacion;
 
 class UpdatesController
 {
-    private static $links = ['datos-usuarios', 'datos-tarifas', 'datos-generales'];
+    private static $links = ['consultar', 'crear-corte'];
 
     public static function index(Router $router)
     {
         isAuth();
 
-        if (
-            $_SESSION['empleado_rol'] === "1" ||
-            $_SESSION['empleado_rol'] === "3" ||
-            $_SESSION['empleado_rol'] === "2"
-        ) {
-            $pagina_actual = $_GET['page'];
-            $pagina_actual = filter_var($pagina_actual, FILTER_VALIDATE_INT);
-
-            if (!$pagina_actual || $pagina_actual < 1) {
-                header('Location: /datos-usuarios?page=1');
-            }
-
-            $por_pagina = 100;
-            $total = Usuario::total();
-            $paginacion = new Paginacion($pagina_actual, $por_pagina, $total);
-
-            $usuarios = Usuario::paginar($por_pagina, $paginacion->offset(), 'ASC');
-
+        if( $_SESSION['empleado_rol'] === "1" ||
+            $_SESSION['empleado_rol'] === "3" || 
+            $_SESSION['empleado_rol'] === "2") {
             $router->render('updates/index', [
                 'links' => self::$links,
-                'usuarios' => $usuarios,
-                'paginacion' => $paginacion->paginacion()
             ]);
 
             return;

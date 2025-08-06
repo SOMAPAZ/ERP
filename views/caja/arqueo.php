@@ -1,4 +1,6 @@
-<section class="py-4 antialiased md:py-8 h-auto">
+<?php $links[] = 'arqueos';
+require_once __DIR__ . '/../templates/nav-bar.php'; ?>
+<section class=" py-4 antialiased dark:bg-gray-900 md:py-8 h-auto">
 
     <article class="mx-auto max-w-screen-xl px-4 2xl:px-0">
         <div class="lg:flex lg:flex-col lg:items-center lg:gap-4">

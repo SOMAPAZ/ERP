@@ -1,4 +1,6 @@
-<?php $cdn = '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />'; ?>
+<?php
+$cdn = '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />';
+require_once __DIR__ . '/../templates/nav-bar.php'; ?>
 <section class="py-4 antialiased md:py-8 h-auto">
 
     <article class="mx-auto max-w-screen-lg px-4 2xl:px-0">
@@ -45,7 +47,7 @@
                     <h4 class="font-bold text-2xl uppercase text-indigo-600 dark:text-indigo-400 py-4">Datos de Usuario</h4>
                     <ul class="space-y-2 text-left uppercase text-gray-600 dark:text-gray-400">
                         <li><strong class="text-gray-900 dark:text-white me-2">Teléfono:</strong><?= !$usuario->phone || $usuario->phone === 0 ? 'Sin teléfono.' : $usuario->phone ?></li>
-                        <li><strong class="text-gray-900 dark:text-white me-2">Direccion:</strong><?= $usuario->address ?> <?= $usuario->int_num ? $usuario->int_num : '' ?></li>
+                        <li><strong class="text-gray-900 dark:text-white me-2">Direccion:</strong><?= $usuario->address ?></li>
                         <li><strong class="text-gray-900 dark:text-white me-2">Colonia:</strong><?= $usuario->colonia->name ?></li>
                         <li><strong class="text-gray-900 dark:text-white me-2">Zona:</strong><?= $usuario->zona->name ?></li>
                         <li><strong class="text-gray-900 dark:text-white me-2">Referencia:</strong><?= $usuario->reference ? $usuario->reference : 'Sin referencia.' ?></li>
@@ -114,7 +116,7 @@
                         </tbody>
                     </table>
                 <?php else: ?>
-                    <p class="text-center p-2 font-semibold text-gray-700 dark:text-gray-300">No hay beneficiarios registrados. <a href="/crear-beneficiario?id_user=<?= $usuario->id ?>" class="text-indigo-600">Tal Vez quieras agregar uno</a></p>
+                    <p class="text-center p-2 font-semibold text-gray-700 dark:text-gray-300">No hay beneficiarios registrados.</p>
                 <?php endif; ?>
             </div>
             <div class="w-full overflow-auto flex flex-col gap-4">
@@ -160,14 +162,16 @@
                         </thead>
                         <tbody>
                             <?php foreach ($notificaciones as $notificacion): ?>
+                            <?php if ($notificacion->id_status == 4): ?>
                                 <tr class=" whitespace-nowrap odd:bg-white odd:dark:bg-gray-700 even:bg-gray-200 even:dark:bg-gray-800 dark:text-white text-sm uppercase">
                                     <td class="py-2 px-2 font-bold"><?= $notificacion->idx ?></td>
                                     <td class="py-2 px-2"><?= $notificacion->tipo->name ?></td>
                                     <td class="py-2 px-2"><?= $notificacion->fecha_reporte ?></td>
                                     <td class="py-2 px-2 flex flex-row gap-4 justify-end">
-                                        <a href="#" class="flex flex-row pe-2 text-indigo-600 hover:text-orange-800 dark:text-indigo-200 dark:hover:text-indigo-400 font-semibold text-xs uppercase items-center">Acceder &raquo;</a>
+                                        <a href="/consulta-not?id=<?= $notificacion->idx ?>" class="flex flex-row pe-2 text-indigo-600 hover:text-orange-800 dark:text-indigo-200 dark:hover:text-indigo-400 font-semibold text-xs uppercase items-center">Acceder &raquo;</a>
                                     </td>
                                 </tr>
+                                <?php endif; ?>
                             <?php endforeach;  ?>
                         </tbody>
                     </table>
@@ -175,6 +179,43 @@
                     <p class="text-center p-2 font-semibold text-gray-700 dark:text-gray-300">No hay notificaciones para este usuario.</p>
                 <?php endif; ?>
             </div>
+                     <?php if ($usuario->tipo_servicio->id == 3): ?>
+                <div class="w-full overflow-auto flex flex-col gap-4">
+                    <h4 class="font-bold text-2xl uppercase text-indigo-600 dark:text-indigo-400">Lecturas</h4>
+                    <?php if ($lecturas): ?>
+                        <table class="w-full">
+                            <thead class="text-left bg-indigo-600 text-white text-sm uppercase">
+                                <tr>
+                                    <th class="whitespace-nowrap px-4 py-2 font-medium" scope="col">Id</th>
+                                    <th class="whitespace-nowrap px-4 py-2 font-medium" scope="col">Año</th>
+                                    <th class="whitespace-nowrap px-4 py-2 font-medium" scope="col">Mes</th>
+                                    <th class="whitespace-nowrap px-4 py-2 font-medium" scope="col">Lectura</th>
+                                    <th class="whitespace-nowrap px-4 py-2 font-medium" scope="col">Consumo global</th>
+                                    <th class="whitespace-nowrap px-4 py-2 font-medium" scope="col"></th>
+                                </tr>
+                            </thead>
+                            <?php foreach ($lecturas as $lectura): ?>
+                                <?php if ($lectura->id_status == 4): ?>
+                                    <tr class="whitespace-nowrap odd:bg-white odd:dark:bg-gray-700 even:bg-gray-200 even:dark:bg-gray-800 dark:text-white text-sm uppercase">
+                                        <td class="py-2 px-2 font-bold"><?= $lectura->id_user ?></td>
+                                        <td class="py-2 px-2"><?= $lectura->year ?></td>
+                                        <td class="py-2 px-2"><?= formatearFechas($lectura->mes) ?></td>
+                                        <td class="py-2 px-2"><?= $lectura->lectura ?></td>
+                                        <td class="py-2 px-2"><?= $lectura->consumo_global ?></td>
+                                        <td class="py-2 px-2 flex flex-row gap-4 justify-end">
+                                            <a href="/consulta-lec?id=<?= $lectura->id_user ?>&mes=<?= $lectura->mes ?>&year=<?= $lectura->year ?>" class="flex flex-row pe-2 text-indigo-600 hover:text-orange-800 dark:text-indigo-200 dark:hover:text-indigo-400 font-semibold text-xs uppercase items-center">Acceder &raquo;</a>
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+
+                        </table>
+                    <?php else: ?>
+                        <p class="text-center p-2 font-semibold text-gray-700 dark:text-gray-300">No hay lecturas para este usuario.</p>
+                    <?php endif; ?>
+
+                </div>
+            <?php endif ?>
             <div class="w-full overflow-auto flex flex-col gap-4">
                 <h4 class="font-bold text-2xl uppercase text-indigo-600 dark:text-indigo-400">Convenios</h4>
                 <?php if ($convenios): ?>
@@ -262,19 +303,11 @@
                 <?php endif; ?>
             </div>
         </section>
-        <div class="flex justify-end items-center mt-10">
-            <form action="/datos-usuarios-eliminar" method="POST" autocomplete="off">
-                <input type="hidden" name="id" value="<?= $usuario->id ?>">
-                <button type="submit" class="flex flex-row gap-1 py-2 px-2 text-white bg-red-600 hover:bg-red-800 font-semibold text-xs uppercase items-center rounded">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
-                        <path d="M10.375 2.25a4.125 4.125 0 1 0 0 8.25 4.125 4.125 0 0 0 0-8.25ZM10.375 12a7.125 7.125 0 0 0-7.124 7.247.75.75 0 0 0 .363.63 13.067 13.067 0 0 0 6.761 1.873c2.472 0 4.786-.684 6.76-1.873a.75.75 0 0 0 .364-.63l.001-.12v-.002A7.125 7.125 0 0 0 10.375 12ZM16 9.75a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5h-6Z" />
-                    </svg>
-                    Cancelar Usuario
-                </button>
-            </form>
+
+        <div class="mt-10 overflow-x-auto">
+
         </div>
     </article>
-
 
 </section>
 

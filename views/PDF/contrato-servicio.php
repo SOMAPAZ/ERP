@@ -243,8 +243,10 @@
         </section>
         <section class="section-fecha">
             <div class="section-fecha__contenedor">
+                <?php $fecha_numero = (int)date('d', strtotime($contrato->fecha))?>
                 <p class="section-fecha__texto">
-                    enteradas las partes del contenido de cada una de las cláusulas de este contrato, están de acuerdo en celebrarlo, no existiendo ningún vicio de la voluntad o del consentimiento que pudiera invalidarlo, lo firman a los <span class="section-fecha__subrayadas"><?= numeroALetras(date('d', strtotime($contrato->fecha))); ?> dias, del mes de <?= formatearFechaES($contrato->fecha); ?> </span>, en las oficinas de la direccion general en calle la concordia numero doce, colonia centro, zacapoaxtla, puebla.
+                    
+                    enteradas las partes del contenido de cada una de las cláusulas de este contrato, están de acuerdo en celebrarlo, no existiendo ningún vicio de la voluntad o del consentimiento que pudiera invalidarlo, lo firman a los <span class="section-fecha__subrayadas"><?= numeroALetras($fecha_numero); ?> dias, del mes de <?= formatearFechaES($contrato->fecha); ?> </span>, en las oficinas de la direccion general en calle la concordia numero doce, colonia centro, zacapoaxtla, puebla.
                     <span class="guiones-extras">
                         - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
                     </span>

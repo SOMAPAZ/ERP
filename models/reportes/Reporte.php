@@ -42,10 +42,10 @@ class Reporte extends ActiveRecord
     public function __construct($args = [])
     {
         $this->id = $args['id'] ?? null;
-        $this->id_user = $args['id_user'] ?? '';
+        $this->id_user = $args['id_user'] ?? null;
         $this->name = $args['name'] ?? "";
         $this->phone = $args['phone'] ?? "";
-        $this->beneficiary = $args['beneficiary'] ?? "";
+        $this->beneficiary = $args['beneficiary'] ?? null;
         $this->address = $args['address'] ?? "";
         $this->id_category = $args['id_category'] ?? null;
         $this->id_incidence = $args['id_incidence'] ?? null;
@@ -55,33 +55,6 @@ class Reporte extends ActiveRecord
         $this->id_employee_sup = $args['id_employee_sup'] ?? null;
         $this->id_status = $args['id_status'] ?? null;
         $this->created = $args['created'] ?? "";
-    }
-
-    public function validar()
-    {
-        if (!$this->name) {
-            self::$alertas['error']['name'] = "El nombre del usuario es obligatorio";
-        }
-        if (!$this->phone) {
-            self::$alertas['error']['phone'] = "El número de teléfono es obligatorio";
-        }
-        if (!$this->address) {
-            self::$alertas['error']['address'] = "La dirección es obligatoria";
-        }
-        if (!$this->id_category) {
-            self::$alertas['error']['id_category'] = "La categoría es obligatoria";
-        }
-        if (!$this->id_incidence) {
-            self::$alertas['error']['id_incidence'] = "La incidencia es obligatoria";
-        }
-        if (!$this->id_priority) {
-            self::$alertas['error']['id_priority'] = "La prioridad es obligatoria";
-        }
-        if (!$this->description) {
-            self::$alertas['error']['description'] = "La descripción es obligatoria";
-        }
-
-        return self::$alertas;
     }
 
     public static function obtenerUltimoFolio()
@@ -114,26 +87,40 @@ class Reporte extends ActiveRecord
         $resultado = self::$db->query($query);
         return $resultado;
     }
-
-    public static function consultarCoincidenciasID($value)
-    {
+    
+    public static function consultarCoincidenciasID($value){
         $query = "SELECT * FROM " . self::$tabla . " WHERE id = '$value';";
         $resultado = self::consultarSQL($query);
         return $resultado;
     }
 
-    public static function consultarCoincidencias($value)
-    {
+    public static function consultarCoincidencias($value){
         $query = "SELECT * FROM " . self::$tabla . " WHERE name LIKE '%$value%' OR address LIKE '%$value%' OR phone LIKE '%$value%';";
         $resultado = self::consultarSQL($query);
 
         return $resultado;
     }
 
-    public static function consultarCoincidenciasIds($id1, $id2)
-    {
+    public static function consultarCoincidenciasIds($id1, $id2){
         $query = "SELECT * FROM " . self::$tabla . " WHERE id_category = '$id1' AND id_incidence = '$id2';";
         $resultado = self::consultarSQL($query);
         return $resultado;
+    }
+     public static function consultarCoincidenciasIdsexact($folio)
+    {
+        $query = "SELECT * FROM " . self::$tabla . " WHERE id = '$folio' AND id_category = '1' AND id_incidence = '3';";
+        $resultado = self::consultarSQL($query);
+        return $resultado;
+    }
+      public static function obtenerUsuariosConReporteNotificacion()
+    {
+        $query = "SELECT DISTINCT id_user FROM " . self::$tabla . " 
+                  WHERE id_incidence = 10 
+                  AND description LIKE '%suspensión de agua y/o drenaje%' 
+                  AND description LIKE '%folio NOT/%' 
+                  AND description LIKE '%Monto: $%' 
+                  AND description LIKE '%Periodo:%'";
+        $resultado = self::consultarSQL($query);
+        return array_column($resultado, 'id_user');
     }
 }

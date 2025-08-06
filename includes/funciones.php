@@ -5,19 +5,9 @@ define('CARPETA_IMAGENES_REPORTES', $_SERVER['DOCUMENT_ROOT'] . '/images/');
 
 function dd($variable): string
 {
-    echo "<pre style='background-color: 000; color: white; padding: 10px; font-size: 1.2rem; font-family: monospace; font-weight: 500;'>";
+    echo "<pre>";
     var_dump($variable);
     echo "</pre>";
-    exit;
-}
-
-function dda($array): string
-{
-    foreach ($array as $key => $value) {
-        echo "<pre style='background-color: gray; color: white; padding: 10px; font-size: 1.2rem; font-family: monospace; font-weight: 500;'>";
-        var_dump($value);
-        echo "</pre>";
-    }
     exit;
 }
 
@@ -138,6 +128,8 @@ function numeroALetras($numero): string
 
     if ($numero < 10) {
         return $unidades[$numero];
+    }  elseif ($numero == 10) {
+             return 'diez';
     } elseif ($numero < 20) {
         return $especiales[$numero - 11];
     } elseif ($numero < 100) {
@@ -172,16 +164,8 @@ function obtenerMesesRestantes(): array
     return $meses;
 }
 
-function uuid(): string
-{
-    $datos = random_bytes(16);
 
-    // Establecer versión (4) y variante (RFC 4122)
-    $datos[6] = chr((ord($datos[6]) & 0x0f) | 0x40); // versión 4
-    $datos[8] = chr((ord($datos[8]) & 0x3f) | 0x80); // variante RFC
-
-    return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($datos), 4));
-}
+// Funciones caja
 
 function calcular($array): float
 {
@@ -200,8 +184,13 @@ function calcularTotales($array): float
 
     return $monto;
 }
-
-function sumaPorColunmas($array, $colunm): float
+function uuid(): string
 {
-    return array_sum(array_column($array, $colunm));
+    $datos = random_bytes(16);
+
+    // Establecer versión (4) y variante (RFC 4122)
+    $datos[6] = chr((ord($datos[6]) & 0x0f) | 0x40); // versión 4
+    $datos[8] = chr((ord($datos[8]) & 0x3f) | 0x80); // variante RFC
+
+    return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($datos), 4));
 }

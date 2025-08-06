@@ -24,8 +24,6 @@ class LoginController
                     Empleado::setAlerta('error', 'El usuario no existe o no ha sido validado');
                 } else {
                     if (password_verify($auth->password, $empleado->password)) {
-                        ini_set('session.gc_maxlifetime', 28800);
-                        session_set_cookie_params(28800);
 
                         session_start();
                         $_SESSION['empleado_id'] = $empleado->id;

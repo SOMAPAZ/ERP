@@ -1,3 +1,5 @@
+<?php require_once __DIR__ . '/../templates/nav-bar.php'; ?>
+
 <section class="py-4 antialiased md:py-8 h-auto">
 
     <article class="mx-auto max-w-screen-xl px-4 2xl:px-0">
@@ -23,7 +25,6 @@
                     Agregar usuario
                 </a>
             </div>
-
             <?= $paginacion; ?>
             <table class="w-full">
                 <thead class="text-left bg-indigo-600 text-white text-sm uppercase">

@@ -5,6 +5,3 @@
 
 <div class="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"></div>
 <div class="bg-gray-300 text-gray-800 dark:bg-gray-600 dark:text-gray-100"></div>
-
-<div class="border-red-600 "></div>
-<div class=" border-gray-300 dark:border-gray-600"></div>

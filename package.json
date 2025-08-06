@@ -12,18 +12,13 @@
   "devDependencies": {
     "glob": "^10.3.12",
     "gulp": "^5.0.0",
-    "gulp-rename": "^2.0.0",
     "gulp-terser": "^2.1.0",
     "sharp": "^0.33.3",
     "tailwind-scrollbar": "^3.1.0",
-    "tailwindcss": "^3.4.14",
-    "webpack": "^5.99.7"
+    "tailwindcss": "^3.4.14"
   },
   "dependencies": {
-    "dropzone": "^6.0.0-beta.2",
-    "jquery": "^3.7.1",
-    "sweetalert2": "^11.21.0",
-    "toastify-js": "^1.12.0",
-    "webpack-stream": "^7.0.0"
+    "@sweetalert2/theme-borderless": "^5.0.18",
+    "sweetalert2": "^11.14.5"
   }
 }

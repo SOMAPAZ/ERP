@@ -78,10 +78,10 @@
 
     <main>
         <p class="texto-descriptivo">
-            <strong><?= $empleado_entrega->name . ' ' . $empleado_entrega->lastname; ?></strong>, entrega el efectivo con el que se cuenta en caja a <strong><?= $empleado_recibe->name . ' ' . $empleado_recibe->lastname; ?></strong> el día <strong><?= $corte->fecha; ?></strong> a las <strong><?= $corte->hora; ?></strong>, importe que se compone de la siquiente manera:
+            <strong><?= $empleado_entrega->name . ' ' . $empleado_entrega->lastname; ?></strong>, entrega el efectivo con el que se cuenta en caja a <strong><?= $empleado_recibe->name . ' ' . $empleado_recibe->lastname; ?></strong> el día <strong><?= $corte->fecha; ?></strong> a las <strong><?= $corte->hora; ?></strong>, importe que se compone de la siguiente manera:
         </p>
 
-        <table>
+         <table>
             <tbody>
                 <tr>
                     <td>Total sistema</td>
@@ -104,7 +104,7 @@
                     <td>$ <?= formatoMiles($corte->total_transferencias_usuario); ?></td>
                 </tr>
                 <tr>
-                    <td>Total T.P.V.</td>
+                    <td>Total T.P.V</td>
                     <td>$ <?= formatoMiles($corte->total_tpvs_usuario); ?></td>
                 </tr>
                 <tr>

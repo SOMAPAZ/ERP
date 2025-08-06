@@ -61,6 +61,36 @@ class AdminController
             'apartado' => self::$apartado
         ]);
     }
+    
+    public static function bempleados()
+    {
+        isAuth();
+
+
+        $str = $_SERVER["QUERY_STRING"] ?? '';
+        !$str ? $id = '' : $id = s($_GET['id']);
+
+        if (!$id === '') {
+            $res = [
+                'tipo' => 'Error',
+                'msg' => 'Es requerido el id'
+            ];
+
+            echo json_encode($res);
+            return;
+        }
+
+        $usuario = Empleado::find($id);
+        if (!$usuario) {
+            echo json_encode($res = [
+                'tipo' => 'Error',
+                'msg' => 'El usuario no existe'
+            ]);
+            return;
+        }
+        echo json_encode($usuario);
+    }
+
 
     public static function guardarRol(Router $router)
     {
@@ -339,6 +369,8 @@ class AdminController
     public static function empleadosAPI()
     {
         isAuth();
+
+        $auth = intval($_SESSION['empleado_rol']);
 
         $employees = new EmployeesAPI();
         $resultado = $employees->consulta();

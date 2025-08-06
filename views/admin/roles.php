@@ -1,3 +1,5 @@
+<?php require_once __DIR__ . '/../templates/nav-bar.php'; ?>
+
 <section class="bg-white py-4 antialiased dark:bg-gray-900 md:py-8 h-auto">
     <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
         <div class="lg:flex lg:items-center lg:justify-between lg:gap-4">
@@ -31,3 +33,7 @@
     </div>
 
 </section>
+
+<?php $scripts = [
+    'admin/roles_v1.js'
+]; ?>

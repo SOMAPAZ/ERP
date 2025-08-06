@@ -1,3 +1,5 @@
+<?php include_once __DIR__ . '/../templates/nav-bar.php'; ?>
+
 <main class="container mx-auto px-4 mt-10 dark:text-dark-font">
     <section>
         <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 ">
@@ -29,16 +31,16 @@
 
             <div class="flow-root">
                 <dl class="-my-3 divide-y divide-gray-100 text-sm dark:divide-gray-700 grid grid-cols-1 gap-4 sm:grid-cols-3">
-                    <?php foreach ($empleados as $empleado):
-                        if ($empleado->id !== '0' && $empleado->id !== '1'): ?>
-                            <div class="flex flex-col sm:gap-4 bg-white dark:bg-gray-700 p-4 rounded shadow">
-                                <dt class="font-bold text-gray-900 dark:text-white p-2">
-                                    ID:<span class="font-normal"> <?= $empleado->id; ?></span>
-                                </dt>
-                                <dd class="font-bold text-gray-700 sm:col-span-2 dark:text-gray-200 p-2">
-                                    Nombre: <span class="font-normal"><?= $empleado->name . ' ' . $empleado->lastname; ?></span>
-                                </dd>
-                            </div>
+                    <?php foreach ($empleados as $empleado): 
+                        if($empleado->id !== '0' && $empleado->id !== '1'): ?>
+                        <div class="flex flex-col sm:gap-4 bg-white dark:bg-gray-700 p-4 rounded shadow">
+                            <dt class="font-bold text-gray-900 dark:text-white p-2">
+                                ID:<span class="font-normal"> <?= $empleado->id; ?></span>
+                            </dt>
+                            <dd class="font-bold text-gray-700 sm:col-span-2 dark:text-gray-200 p-2">
+                                Nombre: <span class="font-normal"><?= $empleado->name . ' ' . $empleado->lastname; ?></span>
+                            </dd>
+                        </div>
                     <?php
                         endif;
                     endforeach; ?>

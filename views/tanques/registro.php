@@ -1,3 +1,5 @@
+<?php require_once __DIR__ . '/../templates/nav-bar.php'; ?>
+
 <section class="py-4 antialiased md:py-8 h-auto">
     <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
         <div class="lg:flex lg:items-center lg:justify-center lg:gap-4">
@@ -22,7 +24,7 @@
             </div>
             <div>
                 <label for="fecha" class="text-gray-600 font-bold text-sm uppercase block dark:text-gray-200 mb-1">Fecha</label>
-                <input type="date" name="fecha" id="fecha" class="w-full px-4 py-2 rounded border bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:text-white input-form" value="<?= date('Y-m-d') ?>" />
+                <input type="date" name="fecha" id="fecha" class="w-full px-4 py-2 rounded border bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:text-white input-form" value="<?= date('Y-m-d')?>" />
             </div>
             <div>
                 <label for="tanque_id" class="text-gray-600 font-bold text-sm uppercase block dark:text-gray-200 mb-1">Tanque</label>
@@ -30,7 +32,7 @@
                     <option value="">--Seleccione el tanque--</option>
                 </select>
             </div>
-
+    
             <div class="mb-10">
                 <input type="submit" class="w-full bg-gray-200 px-4 py-2 rounded font-bold text-xs hover:bg-gray-300 uppercase dark:bg-gray-600 dark:text-white dark:hover:bg-gray-700 cursor-pointer" value="Guardar Registro" />
             </div>
@@ -43,5 +45,5 @@
     </div>
 </section>
 
-<?php $src = '<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>'; ?>
+<?php $src = '<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>'; ?>  
 <?php $scripts = ['tanques/tanques_form_v1.js']; ?>

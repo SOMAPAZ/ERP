@@ -140,11 +140,24 @@ class Facturacion extends ActiveRecord
         $resultado = self::$db->query($query);
         return $resultado;
     }
-
+    
     public function insertNew($id_user, $year, $mes, $monto_agua)
     {
         $query = "INSERT INTO " . self::$tabla . " (id_user, year, mes, monto_agua, estado, folio, if_recargo) VALUES ({$id_user}, {$year}, {$mes}, {$monto_agua}, 0, 0, 0)";
         $resultado = self::$db->query($query);
         return $resultado;
+    }
+    public static function belongsToDeudas($columna, $valor)
+    {
+        $query = "SELECT * FROM " . static::$tabla  . " WHERE {$columna} = '{$valor}' and if_recargo = 1 ORDER BY `year`, mes ";
+        $resultado = self::consultarSQL($query);
+
+        return $resultado;
+    }
+    public static function totalrezago($id_user)
+    {
+        $query = "SELECT SUM(if_recargo) AS total FROM " . self::$tabla . " WHERE id_user = $id_user AND if_recargo = 1 AND estado = 0";
+        $resultado = self::$db->query($query);
+        return $resultado->fetch_array()[0];
     }
 }

@@ -207,11 +207,11 @@ class ActiveRecord
     }
 
     // Obtener Registros con cierta cantidad
-    public static function get($limite, $order = 'ASC')
+    public static function get($limite)
     {
-        $query = "SELECT * FROM " . static::$tabla . " ORDER BY id {$order} LIMIT {$limite}";
+        $query = "SELECT * FROM " . static::$tabla . " LIMIT {$limite}";
         $resultado = self::consultarSQL($query);
-        return $resultado;
+        return array_shift($resultado);
     }
 
     // crea un nuevo registro
@@ -226,6 +226,7 @@ class ActiveRecord
         $query .= " ) VALUES ('";
         $query .= join("', '", array_values($atributos));
         $query .= "') ";
+
         $resultado = self::$db->query($query);
         return $resultado;
     }
@@ -256,7 +257,7 @@ class ActiveRecord
     // Eliminar un Registro por su ID
     public function eliminar()
     {
-        $query = "DELETE FROM "  . static::$tabla . " WHERE id = '" . self::$db->escape_string($this->id) . "' LIMIT 1";
+        $query = "DELETE FROM "  . static::$tabla . " WHERE id = " . self::$db->escape_string($this->id) . " LIMIT 1";
         $resultado = self::$db->query($query);
         return $resultado;
     }
@@ -292,16 +293,15 @@ class ActiveRecord
         $resultado = self::$db->query($query);
         return $resultado;
     }
-
-    public static function paginar($por_pagina, $offset, $order = 'DESC')
+    
+        public static function paginar($por_pagina, $offset, $order = 'DESC')
     {
         $query = "SELECT * FROM " . static::$tabla . " ORDER BY id {$order} LIMIT {$por_pagina} OFFSET {$offset} ";
         $resultado = self::consultarSQL($query);
         return $resultado;
     }
-
-    // Busqueda Where con DOS Columnas
-    public static function whereArray($array = [])
+    
+        public static function whereArray($array = [])
     {
         $query = "SELECT * FROM " . static::$tabla . " WHERE ";
         foreach ($array as $key => $value) {

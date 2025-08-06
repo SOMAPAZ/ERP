@@ -1,3 +1,5 @@
+<?php require_once __DIR__ . '/../templates/nav-bar.php'; ?>
+
 <section class="py-4 antialiased md:py-8 h-auto">
     <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
         <div class="lg:flex lg:items-center lg:justify-between lg:gap-4">
@@ -41,7 +43,7 @@
                     </select>
                 </div>
             </div>
-
+    
             <div class="mb-10 flex justify-end">
                 <input type="submit" class="w-full inline sm:w-auto bg-gray-300 px-4 py-2 rounded font-bold text-xs hover:bg-gray-400 uppercase dark:bg-gray-600 dark:text-white dark:hover:bg-gray-700 cursor-pointer" value="Graficar" />
             </div>
@@ -54,5 +56,5 @@
     </div>
 </section>
 
-<?php $src = '<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>'; ?>
-<?php $scripts = ['tanques/tanques_charts_v1.js']; ?>
+<?php $src = '<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>'; ?>  
+<?php $scripts = ['tanques/tanques_charts_v2.js']; ?>

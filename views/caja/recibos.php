@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/../templates/nav-bar.php'; ?>
 <section class=" py-4 antialiased dark:bg-gray-900 md:py-8 h-auto">
 
     <article class="mx-auto max-w-screen-xl px-4 2xl:px-0">
@@ -125,13 +126,13 @@
                                 <?php
                                 if ($recibos_pasados) :
                                     foreach ($recibos_pasados as $recibo) : ?>
-                                        <?php if ($recibo->cancelado): ?>
+                                        <?php if ($recibo->id_cancelado): ?>
                                             <tr class="whitespace-nowrap odd:bg-red-400 odd:dark:bg-gray-700 even:bg-red-600 even:dark:bg-gray-800 dark:text-white">
                                             <?php else: ?>
                                             <tr class="whitespace-nowrap odd:bg-white odd:dark:bg-gray-700 even:bg-gray-200 even:dark:bg-gray-800 dark:text-white">
                                             <?php endif; ?>
                                             <td class="py-2 px-2 font-bold"><?= $recibo->folio ?></td>
-                                            <td class="py-2 px-2"><?= $recibo->cancelado ? "Cancelado" : "No cancelado" ?></td>
+                                            <td class="py-2 px-2"><?= $recibo->id_cancelado ? "Cancelado" : "No cancelado" ?></td>
                                             <td class="py-2 px-2"><?= formatearFechaESLong($recibo->date_invoice) ?></td>
                                             <td class="py-2 px-2"><?= explode(' ', $recibo->date_initial)[0] ?></td>
                                             <td class="py-2 px-2"><?= explode(' ', $recibo->date_final)[0] ?></td>
@@ -154,5 +155,5 @@
 
 <?php
 $scripts = [
-    'caja-cobro/invalidar-recibo_v2.js'
+    'caja-cobro/invalidar-recibo_v3.js'
 ]; ?>

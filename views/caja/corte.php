@@ -1,3 +1,5 @@
+<?php $links[] = 'arqueos';
+require_once __DIR__ . '/../templates/nav-bar.php'; ?>
 <section class=" py-4 antialiased dark:bg-gray-900 md:py-8 h-auto">
 
     <article class="mx-auto max-w-screen-lg px-4 2xl:px-0">
@@ -109,5 +111,5 @@
 </section>
 
 <?php $scripts = [
-    'caja-cobro/sumar-billetes_v2.js'
+    'caja-cobro/sumar-billetes_v3.js'
 ];

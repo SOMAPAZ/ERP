@@ -190,24 +190,26 @@ $imagenBase64 = "data:image/png;base64," . base64_encode(file_get_contents($nomb
         text-align: left;
     }
 
-    .note-total-container {
+ .note-total-container {
         text-transform: uppercase;
         font-size: 10px;
-        margin-top: 15px;
         display: flex;
-        font-weight: bold;
         align-items: center;
     }
 
     .note-label {
         text-transform: uppercase;
-        font-size: 12px;
-        background-color: blue;
-        color: white;
+        font-size: 10px;
+        color: black;
         padding: 5px 10px;
         margin-left: -45px;
         font-family: 'DM Sans Variable', sans-serif;
         border-radius: 10px;
+        margin-right: 50%;
+        line-height: 1.0rem;
+        text-align: justify;
+        margin-left: 100%;
+        margin-bottom: 50px;
     }
 
     .total-label {
@@ -431,19 +433,7 @@ $imagenBase64 = "data:image/png;base64," . base64_encode(file_get_contents($nomb
                 </tr>
             </tbody>
         </table>
-        <div class="note-total-container" style="margin-top: auto;">
-            <span class="note-label">
-                notas: <?= $recibo->nota ?? '' ?>
-            </span>
-
-            <span class="total-label">
-                total:
-            </span>
-            <span class="total-amount">
-                $ <?= formatoMiles($total_pago) ?>
-            </span>
-        </div>
-        <?php
+          <?php
         $separados = explode('.', $total_pago);
         $texto = numeroALetras($separados[0]);
         $decimales = ($separados[1] ?? 0) . '/100'; ?>
@@ -452,6 +442,18 @@ $imagenBase64 = "data:image/png;base64," . base64_encode(file_get_contents($nomb
             <span class="amount-text">(<?= $texto ?> pesos <?= $decimales ?>) MN.</span><br />
             <span class="date-text"><?= $recibo->fecha ?></span>
         </div>
+        <div class="note-total-container">
+            <span class="total-label">
+                total:
+            </span>
+            <span class="total-amount">
+                $ <?= formatoMiles($total_pago) ?>
+            </span>
+            <span class="note-label">
+                <strong>Notas:</strong> <?= $recibo->nota ?? '' ?>
+            </span>
+        </div>
+      
 
         <div class="footer-section" style=" margin-top: 65px; ">
             <span class="footer-line"></span>
@@ -581,22 +583,22 @@ $imagenBase64 = "data:image/png;base64," . base64_encode(file_get_contents($nomb
                 </tr>
             </tbody>
         </table>
-        <div class="note-total-container" style="margin-top: auto;">
-            <span class="note-label">
-                notas: <?= $recibo->nota ?? '' ?>
-            </span>
-
+         <div class="amount-date-container" style="margin-top: 10px;">
+            <span class="amount-text">(<?= $texto ?> pesos <?= $decimales ?>) MN.</span><br />
+            <span class="date-text"><?= $recibo->fecha ?></span>
+        </div>
+        <div class="note-total-container">
             <span class="total-label">
                 total:
             </span>
             <span class="total-amount">
                 $ <?= formatoMiles($total_pago) ?>
             </span>
+            <span class="note-label">
+                <strong>Notas:</strong> <?= $recibo->nota ?? '' ?>
+            </span>
         </div>
-        <div class="amount-date-container" style="margin-top: 10px;">
-            <span class="amount-text">(<?= $texto ?> pesos <?= $decimales ?>) MN.</span><br />
-            <span class="date-text"><?= $recibo->fecha ?></span>
-        </div>
+       
 
         <div class="footer-section" style=" margin-top: 65px; ">
             <span class="footer-line"></span>
@@ -608,7 +610,7 @@ $imagenBase64 = "data:image/png;base64," . base64_encode(file_get_contents($nomb
                 somapaz, no la produce, solo la conduce "por un dulce futuro, ¡cuidemos el agua!"
             </p>
             <p class="contact-info">
-                Tel. Oficina: 233 314 3148 | WhatsApp: 233 108 53 31 | correo:
+                Tel. Oficina: 233 314 3148 | WhatsApp: 233 108 55 81 | correo:
                 <span class="contact-email">somapaz.zaca@gmail.com</span>
             </p>
             <p class="original">copia</p>

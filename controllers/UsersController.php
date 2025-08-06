@@ -17,6 +17,13 @@ use Convenios\Convenios;
 use Facturacion\Facturas;
 use Facturacion\Measured;
 use Usuarios\Observaciones;
+
+use Notificaciones\Lecturas;
+use Notificaciones\Medidores;
+use Notificaciones\Notificacion;
+use Notificaciones\TipoNotificacion;
+use Notificaciones\Historial_lecturas;
+
 use Reportes\Incidencias;
 use Usuarios\AltaUsuario;
 use Usuarios\TipoConsumo;
@@ -28,13 +35,12 @@ use Facturacion\Facturacion;
 use Facturacion\TomaConsumo;
 use Usuarios\EstadoServicio;
 use Facturacion\FacturasPasadas;
-use Notificaciones\Notificacion;
 use Usuarios\TipoAlmacenamiento;
 use Facturacion\PagosAdicionales;
 use Intervention\Image\ImageManager;
-use Notificaciones\TipoNotificacion;
-use Intervention\Image\Drivers\Gd\Driver;
 
+
+use Intervention\Image\Drivers\Gd\Driver;
 
 class UsersController
 {
@@ -64,7 +70,7 @@ class UsersController
             'links' => self::$links,
             'apartado' => self::$apartado,
             'usuarios' => $usuarios,
-            'paginacion' => $paginacion->paginacion(),
+            'paginacion' => $paginacion->paginacion()
         ]);
     }
 
@@ -97,7 +103,6 @@ class UsersController
         $beneficiarios = Beneficiarios::belongsTo('id_user', $id);
 
         $reportes = Reporte::belongsTo('id_user', $id);
-
         foreach ($reportes as $reporte) {
             $reporte->categoria = Categoria::find($reporte->id_category);
             $reporte->incidencia = Incidencias::find($reporte->id_incidence);
@@ -107,10 +112,14 @@ class UsersController
         foreach ($notificaciones as $notificacion) {
             $notificacion->tipo = TipoNotificacion::find($notificacion->id_tiponotificacion);
         }
+        
+          $lecturas = Lecturas::belongsTo('id_user', $id);
 
-        $recibos_anterior = FacturasPasadas::belongsTo('id_user', $id, 'ASC');
-        $recibos_actuales = Facturas::belongsTo('id_user', $id, 'ASC');
-        $recibos_pagos_adicionales = PagosAdicionales::belongsTo('id_user', $id, 'ASC');
+        $lecturas = array_reverse($lecturas); // solo invierte el orden, sin límite
+
+        $recibos_anterior = FacturasPasadas::belongsTo('id_user', $id);
+        $recibos_actuales = Facturas::belongsTo('id_user', $id);
+        $recibos_pagos_adicionales = PagosAdicionales::belongsTo('id_user', $id);
 
         $convenios = Convenios::belongsTo('id_user', $id);
         foreach ($convenios as $convenio) {
@@ -129,35 +138,9 @@ class UsersController
             'recibos_anterior' => $recibos_anterior,
             'recibos_actuales' => $recibos_actuales,
             'recibos_pagos_adicionales' => $recibos_pagos_adicionales,
+            'lecturas' => $lecturas,
             'convenios' => $convenios
         ]);
-    }
-
-    public static function getUsuario()
-    {
-        isAuth();
-        $id = $_GET['id'];
-
-        if (!$id) {
-            $res = [
-                'tipo' => 'Error',
-                'msg' => 'El id no es válido o no existe el usuario'
-            ];
-
-            echo json_encode($res);
-            return;
-        }
-
-        $usuario = Usuario::find($id);
-        if (!$usuario) {
-            echo json_encode($res = [
-                'tipo' => 'Error',
-                'msg' => 'El usuario no existe'
-            ]);
-            return;
-        }
-
-        echo json_encode(['tipo' => 'Exito', 'user' => $usuario]);
     }
 
     public static function usersAPI()
@@ -215,10 +198,11 @@ class UsersController
 
         echo json_encode($usuario);
     }
-
+    
     public static function crearUsuario(Router $router)
     {
         isAuth();
+        date_default_timezone_set('America/Mexico_City');
 
         $alertas = [];
 
@@ -318,6 +302,8 @@ class UsersController
 
                         if ($agregado) {
                             header("Location: /buscar-usuario?id=" . $nuevo_usuario->id);
+                        } else {
+                             header("Location: /usuarios?page=1");
                         }
                     }
                 }
@@ -361,8 +347,13 @@ class UsersController
         $tipo_almacenamiento = TipoAlmacenamiento::all();
         $tipo_persona = TipoPersona::all();
         $observaciones = Observaciones::all();
+        $medidor = Medidores::obtenerPorUsuario($usuario->id);
+
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+             if (isset($_POST['drain'])) {
+                $usuario->drain = $_POST['drain'];
+            }
             if ($_FILES['image']['tmp_name']) {
                 $carpeta_imagenes = 'image_house_user/';
 
@@ -391,8 +382,30 @@ class UsersController
             if (empty($alertas)) {
                 $resultado = $usuario->guardar();
 
-                if ($resultado) {
-                    header("Location: buscar-usuario?id=" . $id);
+               if ($resultado) {
+                    if (!empty($_POST['id_medidor'])) {
+                        $lecturaAnterior = $medidor->medidor ?? null;
+                        $lecturaNueva = $_POST['id_medidor'];
+
+                        // Insertar nuevo medidor
+                        $nuevoMedidor = new Medidores;
+                        $nuevoMedidor->id_user = $usuario->id;
+                        $nuevoMedidor->medidor = $lecturaNueva;
+                        date_default_timezone_set('America/Mexico_City');
+                        $nuevoMedidor->fecha_instalacion = date('Y-m-d H:i:s');
+                        $nuevoMedidor->crearm();
+
+                        if ($lecturaAnterior && $lecturaAnterior !== $lecturaNueva) {
+                            $historial = new Historial_lecturas;
+                            $historial->id_user = $usuario->id;
+                            $historial->id_medidor = $nuevoMedidor->id;
+                            $historial->numero_anterior = $lecturaAnterior;
+                            $historial->numero_nuevo = $lecturaNueva;
+                            $historial->fecha_cambio = date('Y-m-d H:i:s');
+                            $historial->crear();
+                            // dd($historial);
+                        }
+                    }
                 }
             }
         }
@@ -410,6 +423,7 @@ class UsersController
             'tipo_almacenamiento' => $tipo_almacenamiento,
             'tipo_persona' => $tipo_persona,
             'observaciones' => $observaciones,
+            'medidor' => $medidor,
             'usuario' => $usuario,
             'alertas' => $alertas
         ]);

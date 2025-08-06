@@ -31,7 +31,7 @@
 
         table {
             border-collapse: collapse;
-            min-width: 700px;
+            width: 700px;
             margin: 0 auto;
             font-size: 10px;
             text-align: center;
@@ -39,7 +39,7 @@
 
         th,
         td {
-            border: 1px solid gray;
+            border: 1px solid black;
         }
 
         .gray {
@@ -54,20 +54,8 @@
             font-size: 14px;
         }
 
-        .div-evidencias {
-            border: 1px solid gray;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
         .table-ev thead {
             font-size: 14px;
-            background-color: rgb(206, 205, 219);
-        }
-
-        .table-ev td,
-        .table-ev th {
-            border: none;
         }
 
         .materiales {
@@ -76,39 +64,22 @@
         }
 
         .evidencias {
-            height: 120px;
-            max-width: 120px;
-            border-radius: 0.5rem;
-        }
-
-        .imagenes-evidencias {
-            padding: 0.2rem;
-        }
-
-        .imagenes-evidencias-unavailable {
-            padding: 0.2rem;
             height: 200px;
             max-width: 200px;
         }
 
         .firma {
-            padding: 60px 15px 15px 15px;
-            border: 1px solid gray;
-        }
-
-        .footer {
-            margin-top: 1rem;
-            border: 1px solid gray;
+            padding: 80px 15px 15px 15px;
         }
     </style>
 </head>
 
 <body>
     <?php
-    $marca_agua = 'data:image/webp;base64,' . base64_encode(file_get_contents('build/img/marca-agua.webp'));
-    $unavailable = 'data:image/webp;base64,' . base64_encode(file_get_contents('build/img/unavailable.webp'));
+        $background64 = base64_encode(file_get_contents('build/img/marca-agua.webp'));
+        $img_base64 = 'data:image/webp;base64,' . $background64;
     ?>
-    <img src="<?= $marca_agua ?>" alt="initial" class="img-fluid background">
+    <img src="<?= $img_base64 ?>" alt="initial" class="img-fluid background">
     <h1>Ficha de reportes atendidos</h1>
 
     <table class="table align-middle" style="font-size: 10px;">
@@ -149,82 +120,63 @@
                     <?= wordwrap($reporte->description, 40, "</br>\n") ?>
                 </td>
                 <td colspan="4" class="materiales">
-                    <?php if (count($materiales)): foreach ($materiales as $material): ?>
-                            <li><?= $material->quantity . " " . $material->id_unity . " de " . $material->material ?></li>
-                        <?php endforeach;
-                    else: ?>
-                        <li>No hay materiales</li>
-                    <?php endif; ?>
+                    <?php foreach($materiales as $material): ?>
+                        <li><?= $material->quantity . " " . $material->id_unity . " de " . $material->material ?></li>
+                    <?php endforeach ?>
                 </td>
             </tr>
         </tbody>
     </table>
-    <div class="div-evidencias">
-        <table class="table-ev">
-            <thead>
-                <tr>
-                    <th colspan="6">Evidencia Fotográfica</th>
-                </tr>
-            </thead>
-            <tbody class="body-evidencias">
-                <?php if (count($evidencias)): ?>
-                    <tr>
-                        <?php
-                        $totalEvidencias = count($evidencias);
-                        $contador = 0;
-                        foreach ($evidencias as $evidencia):
-                            $image = base64_encode(file_get_contents("images/" . trim($evidencia->image)));
-                            $imagen = 'data:image/jpg;base64,' . $image;
-                        ?>
-                            <td colspan="2" class="imagenes-evidencias">
-                                <img src="<?= $imagen ?>" alt="Evidencia <?= $folio ?>" class="evidencias">
-                                <p><?= formatearFechaESLong($evidencia->created) ?></p>
-                            </td>
-                            <?php
-                            $contador++;
-                            if ($contador % 3 === 0):
-                            ?>
-                    </tr>
-                    <tr>
-                    <?php endif; ?>
-                <?php endforeach; ?>
-                    </tr>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="6">
-                            <img class="imagenes-evidencias-unavailable" src="<?= $unavailable ?>" alt="Unavailable Evidencia <?= $folio ?>">
-                            <p>No hay evidencias disponibles</p>
-                        </td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
-    <table class="footer">
+    <table class="table-ev">
+        <thead>
+            <tr>
+                <th colspan="3">Evidencia Fotográfica</th>
+            </tr>
+        </thead>
         <tbody>
             <tr>
-                <th colspan="2">Atendió</th>
-                <th colspan="2">Sello</th>
-                <th colspan="2">Supervisó</th>
+                <th>Evidencia Incial</th>
+                <th>Evidencia Proceso</th>
+                <th>Evidencia Final</th>
             </tr>
             <tr>
-                <td colspan="2" class="firma">
-                    <p>____________________________________</p>
+                <?php foreach($evidencias as $evidencia):
+                    $imageName = trim($evidencia->image);
+                    $urlName = "images/" . $imageName;
+                    $image = base64_encode(file_get_contents($urlName));
+                    $evi = 'data:image/jpg;base64,' . $image;
+                ?>
+                    <td>
+                        <img src="<?= $evi ?>" alt="Evidencia Inicial" class="evidencias">
+                    </td>
+                <?php endforeach; ?>
+            </tr>
+            <tr>
+                <th>Atendió</th>
+                <th>Sello</th>
+                <th>Supervisó</th>
+            </tr>
+            <tr>
+                <td class="firma">
+                    <hr>
                 </td>
-                <td colspan="2" class="firma">
-                    <p>____________________________________</p>
+                <td class="firma">
+                    <hr>
                 </td>
-                <td colspan="2" class="firma">
-                    <p>____________________________________</p>
+                <td class="firma">
+                    <hr>
                 </td>
             </tr>
             <tr>
-                <th colspan="2"><?= $reporte->employee_id ?></th>
-                <th colspan="2">Sello</th>
-                <th colspan="2"><?= $reporte->id_employee_sup ?></th>
+                <th>
+                    <?= $reporte->employee_id ?>
+                </th>
+                <th>Sello</th>
+                <th>
+                    <?= $reporte->id_employee_sup ?>
+                </th>
             </tr>
         </tbody>
-    </table>
     </table>
 </body>
 

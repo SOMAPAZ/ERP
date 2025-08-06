@@ -225,10 +225,39 @@
                 <p class="text-xs uppercase bg-red-600 p-2 text-white text-center font-bold rounded mt-2"><?= $alertas['error']['id_consumtype'] ?></p>
             <?php endif; ?>
         </div>
-        <div class="flex items-center mb-4">
-            <input id="drain" name="drain" type="checkbox" value="1" class="w-6 h-6 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 cursor-pointer" <?= $usuario->id_usertype ? 'checked' : ''; ?>>
-            <label for="drain" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer">Drenaje</label>
+        <div>
+        <label for="id_medidor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Num. Medidor
+        </label>
+        <div class="flex items-center">
+            <input
+                type="number"
+                name="id_medidor"
+                id="id_medidor"
+                class="bg-gray-50 border text-gray-900 <?= isset($alertas['error']['name']) ? 'border-red-600' : 'border-gray-300 dark:border-gray-600' ?> text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white"
+                placeholder="45851245"
+                value="<?= $medidor->medidor ?? ''; ?>"
+                disabled>
+            <a id="medidor-btn" class="border border-blue-500 bg-blue-100 text-blue-600   space-x-4 rounded-lg block p-2.5">
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 17q.425 0 .713-.288Q13 16.425 13 16q0-.425-.287-.712Q12.425 15 12 15q-.425 0-.712.288Q11 15.575 11 16q0 .425.288.712.287.288.712.288Zm-6 4q-.825 0-1.412-.587Q4 19.825 4 19v-7q0-.825.588-1.413Q5.175 10 6 10h.5V7q0-2.075 1.463-3.538Q9.425 2 11.5 2q2.05 0 3.525 1.462Q16.5 4.925 16.5 7v3H17q.825 0 1.413.587Q19 11.175 19 12v7q0 .825-.587 1.413Q17.825 21 17 21Zm0-2h12v-7H6v7Zm2-9h8V7q0-1.675-1.162-2.838Q13.675 3 12 3q-1.675 0-2.837 1.162Q8 5.325 8 7Z" />
+                </svg>
+            </a>
         </div>
+
+        <?php if (isset($alertas['error']['name'])) : ?>
+            <p class="text-xs uppercase bg-red-600 p-2 text-white text-center font-bold rounded mt-2">
+                <?= $alertas['error']['name'] ?>
+            </p>
+        <?php endif; ?>
+    </div>
+        <div class="mb-4">
+        <label for="drain" class="block mb-1 text-sm font-medium text-gray-900 dark:text-gray-300">¿Tiene drenaje?</label>
+        <select id="drain" name="drain" class="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:text-white">
+            <option value="1" <?= $usuario->drain == 1 ? 'selected' : '' ?>>Sí</option>
+            <option value="0" <?= $usuario->drain == 0 ? 'selected' : '' ?>>No</option>
+        </select>
+    </div>
     </div>
     <h3 class="text-xl font-bold my-4 text-gray-600 dark:text-gray-300">Información extra</h3>
     <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 sm:gap-6 mt-2">
@@ -250,3 +279,4 @@
             <input type="number" name="inhabitants" id="inhabitants" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Habitantes del lugar" min="0" value="<?= $usuario->inhabitants ?? ''; ?>">
         </div>
     </div>
+    <?php $scripts = ['usuarios/usermodal.js']; ?>

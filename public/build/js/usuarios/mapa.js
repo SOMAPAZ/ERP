@@ -1,0 +1,1 @@
+!function(){const e=+document.querySelector("#lat").value,t=+document.querySelector("#lng").value,o=L.map("mapa").setView([e,t],16);let r;L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(o),r=new L.marker([e,t]).addTo(o)}();
